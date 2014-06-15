@@ -2,6 +2,8 @@
 
 namespace JNMFW\helpers;
 
+use JNMFW\classes\databases\DBFactory;
+
 abstract class HServer {
 	private static $status_codes = array (
             100 => 'Continue',
@@ -72,15 +74,18 @@ abstract class HServer {
 	}
 	
 	static public function sendOK() {
+		DBFactory::getInstance()->transaccionCommit();
 		static::close();
 	}
 	
 	static public function sendServerError($msg) {
+		DBFactory::getInstance()->transaccionRollback();
 		HLog::logError($msg);
 		static::sendStatus(500, true);
 	}
 	
 	static public function sendInvalidRequest($msg_key, $param) {
+		DBFactory::getInstance()->transaccionRollback();
 		$msg = HLang::get($msg_key);
 		HLog::logError($msg);
 		static::sendStatus(412);
@@ -90,6 +95,7 @@ abstract class HServer {
 	}
 	
 	static public function sendConflictRequest($msg_key, $param, $errno) {
+		DBFactory::getInstance()->transaccionRollback();
 		$msg = HLang::get($msg_key);
 		HLog::logError($msg);
 		static::sendStatus(409);
@@ -99,6 +105,7 @@ abstract class HServer {
 	}
 	
 	static public function sendSessionTimeout() {
+		DBFactory::getInstance()->transaccionRollback();
 		static::sendStatus(419);
 		$data = array('msg' => HLang::get(Lang::USER_LOST_SESSION));
 		static::sendJSON($data);
@@ -106,6 +113,7 @@ abstract class HServer {
 	}
 	
 	static public function sendUserNotVerified() {
+		DBFactory::getInstance()->transaccionRollback();
 		static::sendStatus(403);
 		$data = array('msg' => HLang::get(Lang::USER_NOT_VERIFIED));
 		static::sendJSON($data);
@@ -113,15 +121,18 @@ abstract class HServer {
 	}
 	
 	static public function sendForbidden() {
+		DBFactory::getInstance()->transaccionRollback();
 		static::sendStatus(403, true);
 	}
 	
 	static public function sendData($data) {
+		DBFactory::getInstance()->transaccionCommit();
 		static::sendJSON($data);
 		static::close();
 	}
 	
 	static private function sendJSON(&$data) {
+		DBFactory::getInstance()->transaccionCommit();
 		\header('Content-type: application/json');
 		echo \json_encode($data, \JSON_NUMERIC_CHECK);
 	}
