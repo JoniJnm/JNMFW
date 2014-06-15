@@ -10,6 +10,7 @@ abstract class BaseModel {
 	 */
 	protected $db;
 	protected static $instances = array();
+	protected static $tableName;
 	
 	protected function __construct() {
 		$this->db = \JNMFW\classes\databases\DBFactory::getInstance();

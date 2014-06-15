@@ -3,15 +3,22 @@
 namespace JNMFW;
 
 use JNMFW\classes\databases\Database;
+use JNMFW\classes\cache\CacheGlobal;
 
 abstract class BaseTable {
 	private $tableName;
 	private $cols = null;
 	private $primaryKey;
+	private $cache;
 	
-	public function __construct($tableName, $primaryKey) {
-		$this->tableName = $tableName;
-		$this->primaryKey = $primaryKey;
+	abstract static protected function getTableName();
+	abstract static protected function getPrimaryKey();
+	abstract static protected function isCacheEnabled();
+	
+	public function __construct() {
+		$this->tableName = static::getTableName();
+		$this->primaryKey = static::getPrimaryKey();
+		$this->cache = static::isCacheEnabled();
 	}
 	
 	private function getColums() {
@@ -19,6 +26,21 @@ abstract class BaseTable {
 			$this->cols = array_keys(array_diff_key(get_object_vars($this), get_class_vars(__CLASS__)));
 		}
 		return $this->cols;
+	}
+	
+	static private function getIDCache($idTable) {
+		if (!$idTable) helpers\HServer::sendServerError("Can't get cache ID because Obj is not ready");
+		return 'table_'.static::getTableName().'_'.$idTable;
+	}
+	
+	static protected function getCachedTable($idTable) {
+		if (static::isCacheEnabled()) return CacheGlobal::getInstance()->load(static::getIDCache($idTable));
+		else return null;
+	}
+	
+	private function getPKValue() {
+		$pk = $this->primaryKey;
+		return $this->$pk;
 	}
 	
 	/**
@@ -45,8 +67,11 @@ abstract class BaseTable {
 				->execute();
 		if ($ok) {
 			$pk = $this->primaryKey;
-			if ($this->$pk !== null) {
+			if ($this->$pk === null) {
 				$this->$pk = $db->getLastInsertedId();
+			}
+			if ($this->cache) {
+				CacheGlobal::getInstance()->save(static::getIDCache($this->getPKValue()), $this);
 			}
 		}
 		return $ok;
@@ -63,6 +88,9 @@ abstract class BaseTable {
 	}
 	
 	public function delete() {
+		if ($this->cache) {
+			CacheGlobal::getInstance()->delete(static::getIDCache($this->getPKValue()));
+		}
 		$db = $this->getDB();
 		$pk = $this->primaryKey;
 		return 1 == $db->getQueryBuilderDelete($this->tableName)
@@ -71,6 +99,9 @@ abstract class BaseTable {
 	}
 	
 	public function update() {
+		if ($this->cache) {
+			CacheGlobal::getInstance()->save(static::getIDCache($this->getPKValue()), $this);
+		}
 		$db = $this->getDB();
 		$pk = $this->primaryKey;
 		return 1 == $db->getQueryBuilderUpdate($this->tableName)
