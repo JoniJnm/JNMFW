@@ -258,7 +258,7 @@ abstract class Database {
 	 * Inicio de una transacción
 	 */
 	public function transaccionBegin() {
-		HLog::logInfo("dbTransaccion: BEGIN");
+		HLog::logVerbose("dbTransaccion: BEGIN");
 		$this->conn->transaccionBegin();
 	}
 	
@@ -266,7 +266,7 @@ abstract class Database {
 	 * Commit de una transacción
 	 */
 	public function transaccionCommit() {
-		HLog::logInfo("dbTransaccion: COMMIT");
+		HLog::logVerbose("dbTransaccion: COMMIT");
 		$this->conn->commit();
 	}
 	
@@ -274,7 +274,7 @@ abstract class Database {
 	 * Rollback de una transacción
 	 */
 	public function transaccionRollback() {
-		HLog::logInfo("dbTransaccion: ROLLBACK");
+		HLog::logVerbose("dbTransaccion: ROLLBACK");
 		$this->conn->rollback();
 	}
 	
