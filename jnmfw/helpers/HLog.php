@@ -10,7 +10,14 @@ abstract class HLog {
 	}
 	
 	static public function logError($msg) {
-		static::log('ERROR', $msg);
+		$trace = array();
+		foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $t) {
+			if (isset($t['file']))
+				$trace[] = $t['function'].'() at '.basename($t['file']).':'.$t['line'];
+			else
+				$trace[] = $t['function'].'()';
+		}
+		static::log('ERROR', $msg.' - '.implode(', ', $trace));
 	}
 	
 	static public function logWarning($msg) {
