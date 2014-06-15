@@ -132,7 +132,6 @@ abstract class HServer {
 	}
 	
 	static private function sendJSON(&$data) {
-		DBFactory::getInstance()->transaccionCommit();
 		\header('Content-type: application/json');
 		echo \json_encode($data, \JSON_NUMERIC_CHECK);
 	}
