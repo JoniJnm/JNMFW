@@ -16,6 +16,11 @@ abstract class Database {
 	protected $query;
 	
 	/**
+	 * @var string
+	 */
+	protected $prefix = null;
+	
+	/**
 	 * @var int
 	 */
 	private $num_rows = 0;
@@ -55,6 +60,10 @@ abstract class Database {
 	 */
 	abstract public function getQueryBuilderDelete($table);
 	
+	public function setPrefix($prefix) {
+		$this->prefix = $prefix;
+	}
+	
 	/**
 	 * Prepara una variable para ser insertada con seguridad.
 	 * @param string $val
@@ -86,6 +95,9 @@ abstract class Database {
 	 */
 	public function quoteName($value) {
 		if (!preg_match('/^[A-Z0-9_\.-]+$/i', $value)) return $value;
+		if ($this->prefix && substr($value, 0, 3) == '#__') {
+			$value = str_replace('#__', $this->prefix, $value);
+		}
 		if (strpos($value, '.') === false) return '`'.$value.'`'; //si no tiene partes...
 		$parts = explode('.', $value); //hacer quote a table.colum por separado
 		return '`'.implode('`.`', $parts).'`';
