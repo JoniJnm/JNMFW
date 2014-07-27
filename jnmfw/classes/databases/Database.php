@@ -99,8 +99,9 @@ abstract class Database {
 			$value = str_replace('#__', $this->prefix, $value);
 		}
 		if (strpos($value, '.') === false) return '`'.$value.'`'; //si no tiene partes...
-		$parts = explode('.', $value); //hacer quote a table.colum por separado
-		return '`'.implode('`.`', $parts).'`';
+		/*$parts = explode('.', $value); //hacer quote a table.colum por separado
+		return '`'.implode('`.`', $parts).'`';*/
+		return $value;
 	}
 	
 	/**
@@ -114,7 +115,7 @@ abstract class Database {
 			$arr[] = $this->quoteName($value);
 		}
 		if ($complete) return '('.\implode(',', $arr).')';
-		else return \implode(',', $arr);
+		else return \implode(', ', $arr);
 	}
 	
 	/**
