@@ -18,6 +18,10 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
+	public function whereLike($column, $value);
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
 	public function whereCustom($condition, $data=null);
 	/**
 	 * @return DBQueryBuilderSelect

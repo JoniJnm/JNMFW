@@ -8,6 +8,10 @@ interface DBQueryBuilderDelete extends DBQueryBuilder {
 	 */
 	public function where($column, $value);
 	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function whereLike($column, $value);
+	/**
 	 * @return DBQueryBuilderDelete
 	 */
 	public function whereCustom($condition, $data=null);

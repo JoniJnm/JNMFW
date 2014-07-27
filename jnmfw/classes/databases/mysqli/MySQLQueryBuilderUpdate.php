@@ -16,6 +16,10 @@ class MySQLQueryBuilderUpdate extends MySQLQueryBuilder implements DBQueryBuilde
 		return parent::where($column, $value);
 	}
 	
+	public function whereLike($column, $value) {
+		return parent::whereLike($column, $value);
+	}
+	
 	public function whereCustom($condition, $data=null) {
 		return parent::whereCustom($condition, $data);
 	}
