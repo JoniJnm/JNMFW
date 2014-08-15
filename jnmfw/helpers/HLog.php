@@ -7,7 +7,7 @@ abstract class HLog {
 	const LEVEL_VERBOSE = 1;
 	const LEVEL_DEBUG = 2;
 	const LEVEL_WARNING = 3;
-	const LEVLE_ERROR = 4;
+	const LEVEL_ERROR = 4;
 	
 	static private $level = 2;
 	static private $file;
