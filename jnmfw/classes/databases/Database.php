@@ -94,9 +94,11 @@ abstract class Database {
 	 * @param string $value
 	 */
 	public function quoteName($value) {
-		if (!preg_match('/^[A-Z0-9_\.-]+$/i', $value)) return $value;
 		if ($this->prefix && substr($value, 0, 3) == '#__') {
 			$value = str_replace('#__', $this->prefix, $value);
+		}
+		if (!preg_match('/^[A-Z0-9_\.-]+$/i', $value)) {
+			return $value;
 		}
 		if (strpos($value, '.') === false) return '`'.$value.'`'; //si no tiene partes...
 		/*$parts = explode('.', $value); //hacer quote a table.colum por separado
