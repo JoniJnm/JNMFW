@@ -34,6 +34,11 @@ abstract class MySQLQueryBuilder implements DBQueryBuilder {
 		$this->wheres[] = $this->db->quoteName($column.' LIKE '.$this->db->quote($value));
 		return $this;
 	}
+		
+	public function whereIn($column, $values) {
+		$this->wheres[] = $this->db->quoteName($column.' IN '.$this->db->quoteArray($values));
+		return $this;
+	}
 	
 	protected function whereCustom($condition, $data=null) {
 		if ($data) {

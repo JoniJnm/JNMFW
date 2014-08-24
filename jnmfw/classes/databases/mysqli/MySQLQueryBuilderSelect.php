@@ -34,6 +34,10 @@ class MySQLQueryBuilderSelect extends MySQLQueryBuilder implements DBQueryBuilde
 		return parent::whereLike($column, $value);
 	}
 	
+	public function whereIn($column, $values) {
+		return parent::whereIn($column, $values);
+	}
+	
 	public function whereCustom($condition, $data=null) {
 		return parent::whereCustom($condition, $data);
 	}
@@ -71,6 +75,7 @@ class MySQLQueryBuilderSelect extends MySQLQueryBuilder implements DBQueryBuilde
 	}
 
 	public function loadObject() {
+		if (!$this->limit) $this->limit(1);
 		return $this->db->loadObject($this->build());
 	}
 
@@ -79,6 +84,7 @@ class MySQLQueryBuilderSelect extends MySQLQueryBuilder implements DBQueryBuilde
 	}
 
 	public function loadResult() {
+		if (!$this->limit) $this->limit(1);
 		return $this->db->loadResult($this->build());
 	}
 

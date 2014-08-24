@@ -22,6 +22,10 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
+	public function whereIn($column, $values);
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
 	public function whereCustom($condition, $data=null);
 	/**
 	 * @return DBQueryBuilderSelect

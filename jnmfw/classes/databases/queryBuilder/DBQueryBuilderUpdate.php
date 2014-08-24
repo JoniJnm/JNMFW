@@ -16,6 +16,10 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder {
 	 */
 	public function whereLike($column, $value);
 	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function whereIn($column, $values);
+	/**
 	 * @return DBQueryBuilderUpdate
 	 */
 	public function whereCustom($condition, $data=null);
