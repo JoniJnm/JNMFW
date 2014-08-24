@@ -112,7 +112,7 @@ class Filter {
 		if ($max_range !== null) $options['max_range'] = $max_range;
 		$result = \filter_var($source, \FILTER_VALIDATE_INT, array('options' => $options));
 
-		if ($result) return $result;
+		if ($result !== false) return $result;
 		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
 		else return $def;
 	}
@@ -124,7 +124,7 @@ class Filter {
 	 */
 	public function getUInt($key, $def=0, $max_range=null) {
 		$out = $this->getInt($key, $def, 0, $max_range);
-		if ($out) return $out;
+		if ($out !== false) return $out;
 		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
 		else return $def;
 	}
@@ -141,7 +141,7 @@ class Filter {
 		if ($min_range !== null && $result < $min_range) return $def;
 		if ($max_range !== null && $result > $max_range) return $def;
 		
-		if ($result) return $result;
+		if ($result !== false) return $result;
 		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
 		else return $def;
 	}
@@ -155,7 +155,7 @@ class Filter {
 	public function getBool($key, $def=false) {
 		$source = $this->isset_else($key, $def);
 		$result = \filter_var($source, \FILTER_VALIDATE_BOOLEAN, array('flags' => \FILTER_NULL_ON_FAILURE));
-		if ($result) return $result;
+		if ($result !== null) return $result;
 		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
 		else return $def;
 	}
@@ -229,5 +229,18 @@ class Filter {
 		if ($result) return $result;
 		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
 		else return $def;
+	}
+	
+	/**
+	 * Devuelve un array, null si es inválido o no existe
+	 * @param string $key
+	 * @return String
+	 */
+	public function getJSON($key) {
+		$source = $this->isset_else($key, null);
+		$result = @json_decode($source, true);
+		if ($result) return $result;
+		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		else return null;
 	}
 }
