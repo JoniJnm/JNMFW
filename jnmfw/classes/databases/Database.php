@@ -71,7 +71,7 @@ abstract class Database {
 	 */
 	public function quote($val) {
 		if ($val === null) return 'NULL';
-		elseif (\is_int($val) || \is_float($val)) return $val;
+		elseif (\is_numeric($val)) return $val;
 		else return "'".$this->conn->escape($val)."'";
 	}
 	
