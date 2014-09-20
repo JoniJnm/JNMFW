@@ -243,4 +243,17 @@ class Filter {
 		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
 		else return null;
 	}
+	
+	/**
+	 * Devuelve un valor sin filtro
+	 * @param string $key
+	 * @param string $def
+	 * @return String
+	 */
+	public function get($key, $def='') {
+		$source = $this->isset_else($key, null);
+		if ($source) return $source;
+		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		else return $def;
+	}
 }
