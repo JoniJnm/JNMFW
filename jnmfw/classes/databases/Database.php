@@ -70,8 +70,8 @@ abstract class Database {
 	 * @return string
 	 */
 	public function quote($val) {
-		if ($val === null) return 'NULL';
-		elseif (\is_numeric($val)) return $val;
+		if (is_null($var)) return 'NULL';
+		//elseif (\is_numeric($val)) return $val;
 		else return "'".$this->conn->escape($val)."'";
 	}
 	
