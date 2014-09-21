@@ -3,8 +3,7 @@
 namespace JNMFW\classes\databases\mysqli;
 
 class DatabaseMySQLi extends \JNMFW\classes\databases\Database {	
-	public static function connect($host=null, $user=null, $pass=null, $dbname='') {
-		if (!$host) return null;
+	public static function connect($host, $user, $pass, $dbname='') {
 		$conn = new MySQLiAdapter($host, $user, $pass, $dbname);
 		if ($conn->getError()) {
 			\JNMFW\helpers\HLog::logError('Error de Conexión MySQLi '.$conn->getError());
