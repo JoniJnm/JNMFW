@@ -293,6 +293,10 @@ abstract class Database {
 		$this->conn->rollback();
 	}
 	
+	public function getLastError() {
+		return $this->getError();
+	}
+	
 	/**
 	 * Inicia el acceso
 	 */
