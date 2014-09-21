@@ -78,6 +78,12 @@ abstract class HServer {
 		static::close();
 	}
 	
+	static public function sendNotFound($msg) {
+		DBFactory::getInstance()->transaccionRollback();
+		HLog::logError($msg);
+		static::sendStatus(404, true);
+	}
+	
 	static public function sendServerError($msg) {
 		DBFactory::getInstance()->transaccionRollback();
 		HLog::logError($msg);
