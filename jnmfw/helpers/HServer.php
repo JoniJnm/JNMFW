@@ -126,8 +126,12 @@ abstract class HServer {
 		static::close();
 	}
 	
-	static public function sendForbidden() {
+	static public function sendForbidden($msg = null) {
 		DBFactory::getInstance()->transaccionRollback();
+		if ($msg) {
+			$data = array('msg' => $msg);
+			static::sendJSON($data);
+		}
 		static::sendStatus(403, true);
 	}
 	
