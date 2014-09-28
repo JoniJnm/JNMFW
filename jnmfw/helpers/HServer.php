@@ -64,7 +64,7 @@ abstract class HServer {
 			$status_string = $statusCode . ' ' . self::$status_codes[$statusCode];
 			\header($_SERVER['SERVER_PROTOCOL'] . ' ' . $status_string, true, $statusCode);
 			if ($close) {
-				echo $statusCode.' '.self::$status_codes[$statusCode];
+				if ($statusCode >= 300) echo $statusCode.' '.self::$status_codes[$statusCode];
 				self::close();
 			}
 		}
