@@ -31,17 +31,21 @@ abstract class HLang {
 		return static::$lang;
 	}
 	
-	public static function toJS($folder) {
-		$filename = strtolower(static::$lang).'-'.
-				constant('\\'.static::$namespace.'\Lang'.static::$lang.'::VERSION').'-'.
-				constant('\\'.static::$namespace.'\Lang'.static::$default.'::VERSION').'.js';
+	public static function toJS($folder, $keys = null) {
+		if (!is_array($keys)) {
+			$class = '\\'.static::$namespace.'\Lang';
+			$refl = new \ReflectionClass($class);
+			$keys = $refl->getConstants();
+		}
+		sort($keys);
+		$md5 = md5(constant('\\'.static::$namespace.'\Lang'.static::$lang.'::VERSION').'-'.
+				constant('\\'.static::$namespace.'\Lang'.static::$default.'::VERSION').'-'.
+				print_r($keys, true));
+		$filename = strtolower(static::$lang).'-'.$md5.'.js';
 		$file = $folder.'/'.$filename;
 		if (file_exists($file)) return $filename;
-		$class = '\\'.static::$namespace.'\Lang';
-		$refl = new \ReflectionClass($class);
-		$consts = $refl->getConstants();
 		$data = array();
-		foreach ($consts as $key) {
+		foreach ($keys as $key) {
 			$data[$key] = static::get($key);
 		}
 		file_put_contents($file, 'lang = '.json_encode($data).';');
