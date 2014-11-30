@@ -75,6 +75,7 @@ abstract class HServer {
 	
 	static public function sendOK() {
 		DBFactory::getInstance()->transaccionCommit();
+		static::sendJSON(null);
 		static::close();
 	}
 	
@@ -141,7 +142,7 @@ abstract class HServer {
 		static::close();
 	}
 	
-	static private function sendJSON(&$data) {
+	static private function sendJSON($data) {
 		\header('Content-type: application/json');
 		echo \json_encode($data, \JSON_NUMERIC_CHECK);
 	}
