@@ -215,7 +215,7 @@ abstract class Database {
 	}
 
 	/**
-	 * Devuelte el valor de la primera fila y columna a elegir de la consulta. Null en caso de error o no resultados encontrados
+	 * Devuelte el valor de la primera fila y columna a elegir de la consulta. False en caso de error o no resultados encontrados
 	 * @param string $query La consulta SQL
 	 * @param int $col El número de columna a obtener (por defecto la primera, es decir número 0)
 	 * @return El valor de la primera fila y columna
@@ -223,7 +223,7 @@ abstract class Database {
 	public function loadResult($query, $col = 0) {
 		$this->iniciarAcceso();
 		$res = $this->query($query);
-		$value = null;
+		$value = false;
 		if ($res) {
 			if ($row = $res->fetch_row()) {
 				$value = $row[$col];
