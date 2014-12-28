@@ -28,14 +28,12 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	 * @param string $dbname
 	 */
 	public function __construct($host, $user, $pass, $dbname='') {
-		if ($host) {
-			$this->conn = new \mysqli($host, $user, $pass, $dbname);
-			if ($this->conn->connect_error) {
-				$this->error = $this->conn->connect_error.' ('.$this->conn->connect_errno.')';
-			}
-			else {
-				$this->conn->set_charset("utf8");
-			}
+		$this->conn = new \mysqli($host, $user, $pass, $dbname);
+		if ($this->conn->connect_error) {
+			$this->error = $this->conn->connect_error.' ('.$this->conn->connect_errno.')';
+		}
+		else {
+			$this->conn->set_charset("utf8");
 		}
 	}
 	
