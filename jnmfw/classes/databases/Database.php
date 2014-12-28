@@ -26,6 +26,11 @@ abstract class Database {
 	private $num_rows = 0;
 	
 	/**
+	 * @var boolean
+	 */
+	private $strict = true;
+	
+	/**
 	 * Constructor
 	 * @param DBAdapter $conn La conexión devuelta por connect()
 	 */
@@ -62,6 +67,10 @@ abstract class Database {
 	
 	public function setPrefix($prefix) {
 		$this->prefix = $prefix;
+	}
+	
+	public function setStrict($strict) {
+		$this->strict = $strict;
 	}
 	
 	/**
@@ -317,7 +326,9 @@ abstract class Database {
 		}
 		elseif (!$res) {
 			$this->num_rows = -1;
-			\JNMFW\helpers\HServer::sendServerError("Error BD al ejecutar ".$this->query.": ".$this->conn->getError());
+			$msg = "Error BD al ejecutar ".$this->query.": ".$this->conn->getError();
+			if ($this->strict) \JNMFW\helpers\HServer::sendServerError($msg);
+			else HLog::logDebug($msg);
 		}
 		else {
 			$this->num_rows = $res->getNumRows();
