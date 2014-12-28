@@ -294,7 +294,7 @@ abstract class Database {
 	}
 	
 	public function getLastError() {
-		return $this->getError();
+		return $this->conn->getError();
 	}
 	
 	/**
