@@ -76,7 +76,7 @@ abstract class HServer {
 	static public function sendOK() {
 		DBFactory::getInstance()->transaccionCommit();
 		static::sendJSON(null);
-		static::close();
+		self::close();
 	}
 	
 	static public function sendNotFound($msg) {
@@ -98,7 +98,7 @@ abstract class HServer {
 		static::sendStatus(412);
 		$data = array('msg' => $msg, 'invalid_params' => $param);
 		static::sendJSON($data);
-		static::close();
+		self::close();
 	}
 	
 	static public function sendConflictRequest($msg_key, $param, $errno) {
@@ -108,7 +108,7 @@ abstract class HServer {
 		static::sendStatus(409);
 		$data = array('msg' => $msg, 'invalid_params' => $param, 'errno' => $errno);
 		static::sendJSON($data);
-		static::close();
+		self::close();
 	}
 	
 	static public function sendSessionTimeout() {
@@ -116,7 +116,7 @@ abstract class HServer {
 		static::sendStatus(419);
 		$data = array('msg' => HLang::get(Lang::USER_LOST_SESSION));
 		static::sendJSON($data);
-		static::close();
+		self::close();
 	}
 	
 	static public function sendUserNotVerified() {
@@ -124,22 +124,23 @@ abstract class HServer {
 		static::sendStatus(403);
 		$data = array('msg' => HLang::get(Lang::USER_NOT_VERIFIED));
 		static::sendJSON($data);
-		static::close();
+		self::close();
 	}
 	
 	static public function sendForbidden($msg = null) {
 		DBFactory::getInstance()->transaccionRollback();
+		static::sendStatus(403);
 		if ($msg) {
 			$data = array('msg' => $msg);
 			static::sendJSON($data);
 		}
-		static::sendStatus(403, true);
+		self::close();
 	}
 	
 	static public function sendData($data) {
 		DBFactory::getInstance()->transaccionCommit();
 		static::sendJSON($data);
-		static::close();
+		self::close();
 	}
 	
 	static private function sendJSON($data) {
