@@ -3,6 +3,7 @@
 namespace JNMFW;
 
 use JNMFW\classes\Request;
+
 class BaseController {
 	/**
 	 * @var Request
