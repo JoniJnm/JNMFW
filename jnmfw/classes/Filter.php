@@ -106,12 +106,11 @@ class Filter {
 	 * @return integer
 	 */
 	public function getInt($key, $def=0, $min_range=null, $max_range=null) {
-		$source = $this->isset_else($key, $def);
+		$source = $this->isset_else($key, null);
 		$options = array();
 		if ($min_range !== null) $options['min_range'] = $min_range;
 		if ($max_range !== null) $options['max_range'] = $max_range;
 		$result = \filter_var($source, \FILTER_VALIDATE_INT, array('options' => $options));
-
 		if ($result !== false) return $result;
 		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
 		else return $def;
@@ -135,7 +134,7 @@ class Filter {
 	 * @return float
 	 */
 	public function getFloat($key, $def=0, $min_range=null, $max_range=null) {
-		$source = $this->isset_else($key, $def);
+		$source = $this->isset_else($key, null);
 		$result = \filter_var($source, \FILTER_VALIDATE_FLOAT);
 		if ($result === false) return $def;
 		if ($min_range !== null && $result < $min_range) return $def;
@@ -153,7 +152,7 @@ class Filter {
 	 * @return boolean
 	 */
 	public function getBool($key, $def=false) {
-		$source = $this->isset_else($key, $def);
+		$source = $this->isset_else($key, null);
 		$result = \filter_var($source, \FILTER_VALIDATE_BOOLEAN, array('flags' => \FILTER_NULL_ON_FAILURE));
 		if ($result !== null) return $result;
 		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
