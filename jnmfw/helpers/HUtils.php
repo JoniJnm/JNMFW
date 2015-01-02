@@ -6,4 +6,12 @@ abstract class HUtils {
 	static public function createToken() {
 		return \sha1(\mt_rand());
 	}
+	
+	static public function formatDate($date) {
+		return \JNMFW\classes\databases\DBFactory::getInstance()->formatDate($date);
+	}
+	
+	static public function formatDateTime($date) {
+		return \JNMFW\classes\databases\DBFactory::getInstance()->formatDateTime($date);
+	}
 }
