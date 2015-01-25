@@ -79,8 +79,8 @@ class MySQLQueryBuilderSelect extends MySQLQueryBuilder implements DBQueryBuilde
 		return $this->db->loadObject($this->build());
 	}
 
-	public function loadObjectList() {
-		return $this->db->loadObjectList($this->build());
+	public function loadObjectList($keycol = null) {
+		return $this->db->loadObjectList($this->build(), $keycol);
 	}
 
 	public function loadResult() {

@@ -198,16 +198,18 @@ abstract class Database {
 	/**
 	 * Devuelte un array de objetos, que serán cada fila de respuesta. Null en caso de error. Array vacío si no hubo resultados
 	 * @param string $query La consulta SQL
+	 * @param string $keycol Columna para crear los índices del array
 	 * @return array de objetos stdclass
 	 */
-	public function loadObjectList($query) {
+	public function loadObjectList($query, $keycol = null) {
 		$this->iniciarAcceso();
 		$res = $this->query($query);
 		$array = null;
 		if ($res) {
 			$array = array();
 			while ($row = $res->fetch_object()) {
-				$array[] = $row;
+				if ($keycol) $array[$row->$keycol] = $row;
+				else $array[] = $row;
 			}
 		}
 		$this->finalizarAcceso($res);

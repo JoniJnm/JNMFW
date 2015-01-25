@@ -41,7 +41,11 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	public function limit($offset, $limit);
 	
 	public function loadObject();
-	public function loadObjectList();
+	
+	/**
+	 * @param string $keycol Columna para crear los índices del array
+	 */
+	public function loadObjectList($keycol = null);
 	public function loadResult();
 	public function loadResultArray();
 }
