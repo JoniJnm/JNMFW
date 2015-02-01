@@ -114,16 +114,12 @@ abstract class HServer {
 	static public function sendSessionTimeout() {
 		DBFactory::getInstance()->transaccionRollback();
 		static::sendStatus(419);
-		$data = array('msg' => HLang::get(Lang::USER_LOST_SESSION));
-		static::sendJSON($data);
 		self::close();
 	}
 	
 	static public function sendUserNotVerified() {
 		DBFactory::getInstance()->transaccionRollback();
 		static::sendStatus(403);
-		$data = array('msg' => HLang::get(Lang::USER_NOT_VERIFIED));
-		static::sendJSON($data);
 		self::close();
 	}
 	
