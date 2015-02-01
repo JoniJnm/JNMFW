@@ -26,11 +26,18 @@ class MySQLQueryBuilderSelect extends MySQLQueryBuilder implements DBQueryBuilde
 		return $this;
 	}
 	
-	public function leftJoinMulti($table, $alias, $assoc) {
+	public function leftJoinMulti($table, $alias, $assoc, $autoQuote = true) {
 		if (!$assoc) return $this;
 		$where = array();
 		foreach ($assoc as $key => $value) {
-			//$value should quoted manually (column or value?)
+			if ($autoQuote) {
+				if (preg_match('/^[\w]+\.[\w]+$/', $value)) { //columna
+					$value = $this->db->quoteName($value);
+				}
+				else {
+					$value = $this->db->quote($value);
+				}
+			}
 			$where[] = $this->db->quoteName($key).' = '.$value;
 		}
 		$this->joins[] = 'LEFT JOIN '.$this->db->quoteName($table).' AS '.$alias

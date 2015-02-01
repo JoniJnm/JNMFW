@@ -5,10 +5,13 @@ namespace JNMFW\classes\databases\mysqli;
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderUpdate;
 
 class MySQLQueryBuilderUpdate extends MySQLQueryBuilder implements DBQueryBuilderUpdate {
-	private $data = array();
+	private $set = array();
 	
-	public function set($data) {
-		$this->data += $data;
+	public function set($data, $autoQuote = true) {
+		foreach ($data as $key => $value) {
+			if ($autoQuote) $value = $this->db->quote($autoQuote);
+			$this->set[] = $this->db->quoteName($key).'='.$value;
+		}
 		return $this;
 	}
 	
@@ -28,21 +31,13 @@ class MySQLQueryBuilderUpdate extends MySQLQueryBuilder implements DBQueryBuilde
 		return parent::whereCustom($condition, $data);
 	}
 	
-	private function buildSet() {
-		$arr = array();
-		foreach ($this->data as $key => $value) {
-			$arr[] = $this->db->quoteName($key).'='.$this->db->quote($value);
-		}
-		return ' SET '.\implode(',', $arr);
-	}
-	
 	public function execute() {
 		return parent::execute();
 	}
 
 	public function build() {
 		$sql = 'UPDATE '.$this->db->quoteName($this->table);
-		$sql .= $this->buildSet();
+		$sql .= ' SET '.implode(', ', $this->set);
 		$sql .= $this->buildWhere();
 		return $sql;
 	}

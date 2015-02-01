@@ -14,12 +14,9 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	public function leftJoin($table, $alias, $col1, $col2);
 	
 	/**
-	 * @param string $table
-	 * @param string $alias
-	 * @param array $assoc key (column) => value. The value must be quoted manually
 	 * @return DBQueryBuilderSelect
 	 */
-	public function leftJoinMulti($table, $alias, $assoc);
+	public function leftJoinMulti($table, $alias, $assoc, $autoQuote = true);
 	
 	/**
 	 * @return DBQueryBuilderSelect
