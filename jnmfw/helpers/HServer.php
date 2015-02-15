@@ -101,12 +101,12 @@ abstract class HServer {
 		self::close();
 	}
 	
-	static public function sendConflict($msg_key, $errno) {
+	static public function sendConflict($msg, $errno = null) {
 		DBFactory::getInstance()->transaccionRollback();
-		$msg = HLang::get($msg_key);
 		HLog::logError($msg);
 		static::sendStatus(409);
-		$data = array('msg' => $msg, 'errno' => $errno);
+		$data = array('msg' => $msg);
+		if ($errno) $data['errno'] = $errno;
 		static::sendJSON($data);
 		self::close();
 	}
