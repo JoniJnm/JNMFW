@@ -41,6 +41,9 @@ abstract class MySQLQueryBuilder implements DBQueryBuilder {
 	}
 	
 	protected function whereCustom($condition, $data=null) {
+		if (stripos($condition, 'OR') !== false) {
+			$condition = '('.$condition.')';
+		}
 		if ($data) {
 			$from = array();
 			$to = array();
