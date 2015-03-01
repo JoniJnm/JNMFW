@@ -9,7 +9,7 @@ class MySQLQueryBuilderUpdate extends MySQLQueryBuilder implements DBQueryBuilde
 	
 	public function set($data, $autoQuote = true) {
 		foreach ($data as $key => $value) {
-			if ($autoQuote) $value = $this->db->quote($autoQuote);
+			if ($autoQuote) $value = $this->db->quote($value);
 			$this->set[] = $this->db->quoteName($key).'='.$value;
 		}
 		return $this;
