@@ -9,12 +9,12 @@ abstract class BaseTable {
 	private $cols = null;
 	private $primaryKey;
 	
-	abstract static protected function getTableName();
-	abstract static protected function getPrimaryKey();
+	abstract protected function getTableName();
+	abstract protected function getPrimaryKey();
 	
 	public function __construct() {
-		$this->tableName = static::getTableName();
-		$this->primaryKey = static::getPrimaryKey();
+		$this->tableName = $this->getTableName();
+		$this->primaryKey = $this->getPrimaryKey();
 	}
 	
 	private function getColums() {
