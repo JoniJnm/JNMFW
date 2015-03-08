@@ -2,7 +2,7 @@
 
 namespace JNMFW;
 
-use JNMFW\classes\databases\Database;
+use JNMFW\classes\databases\DatabaseConnection;
 
 abstract class BaseTable {
 	private $tableName;
@@ -25,7 +25,7 @@ abstract class BaseTable {
 	}
 	
 	/**
-	 * @return Database
+	 * @return DatabaseConnection
 	 */
 	private function getDB() {
 		return \JNMFW\classes\databases\DBFactory::getInstance();

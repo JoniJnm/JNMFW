@@ -2,9 +2,11 @@
 
 namespace JNMFW;
 
+use JNMFW\classes\databases\DatabaseConnection;
+
 abstract class BaseObj {
 	/**
-	 * @var \JNMFW\classes\databases\Database
+	 * @var DatabaseConnection
 	 */
 	protected $db;
 	protected $item;

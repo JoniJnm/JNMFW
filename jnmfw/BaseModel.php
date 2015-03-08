@@ -2,11 +2,11 @@
 
 namespace JNMFW;
 
-use JNMFW\classes\databases\Database;
+use JNMFW\classes\databases\DatabaseConnection;
 
 abstract class BaseModel {
 	/**
-	 * @var Database
+	 * @var DatabaseConnection
 	 */
 	protected $db;
 	protected static $instances = array();
