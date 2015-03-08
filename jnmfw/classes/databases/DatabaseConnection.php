@@ -4,7 +4,7 @@ namespace JNMFW\classes\databases;
 
 use JNMFW\helpers\HLog;
 
-abstract class Database {
+abstract class DatabaseConnection {
 	/**
 	 * @var DBAdapter
 	 */
@@ -37,16 +37,6 @@ abstract class Database {
 	public function __construct(DBAdapter $conn) {
 		$this->conn = $conn;
 	}
-	
-	/**
-	 * Conector
-	 * @param string $host El servidor de la base de datos (generalmente localhost)
-	 * @param string $user El usuario para conexión
-	 * @param string $pass La contraseña del usuario
-	 * @param string $dbname El nombre de la base de datos donde conectarse (vacio para no conectarse a una db en concreto)
-	 * @return Database Una instancia de conexión a MySQL
-	 */
-	abstract public static function connect($host, $user, $pass, $dbname='');
 	
 	/**
 	 * @return \JNMFW\classes\databases\queryBuilder\DBQueryBuilderInsert

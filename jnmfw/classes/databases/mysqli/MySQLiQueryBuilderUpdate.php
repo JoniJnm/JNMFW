@@ -4,7 +4,7 @@ namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderUpdate;
 
-class MySQLQueryBuilderUpdate extends MySQLQueryBuilder implements DBQueryBuilderUpdate {
+class MySQLiQueryBuilderUpdate extends MySQLiQueryBuilder implements DBQueryBuilderUpdate {
 	private $set = array();
 	
 	public function set($data, $autoQuote = true) {

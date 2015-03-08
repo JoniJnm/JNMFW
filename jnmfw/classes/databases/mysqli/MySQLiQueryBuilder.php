@@ -5,7 +5,7 @@ namespace JNMFW\classes\databases\mysqli;
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilder;
 use JNMFW\classes\databases\Database;
 
-abstract class MySQLQueryBuilder implements DBQueryBuilder {
+abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 	/**
 	 * @var Database
 	 */

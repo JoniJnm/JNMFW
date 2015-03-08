@@ -4,7 +4,7 @@ namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderSelect;
 
-class MySQLQueryBuilderSelect extends MySQLQueryBuilder implements DBQueryBuilderSelect {
+class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuilderSelect {
 	private $joins = array();
 	private $groups = array();
 	private $orders = array();

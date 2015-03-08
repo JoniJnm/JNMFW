@@ -4,7 +4,7 @@ namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderDelete;
 
-class MySQLQueryBuilderDelete extends MySQLQueryBuilder implements DBQueryBuilderDelete {
+class MySQLiQueryBuilderDelete extends MySQLiQueryBuilder implements DBQueryBuilderDelete {
 	public function where($column, $value) {
 		return parent::where($column, $value);
 	}

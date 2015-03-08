@@ -4,7 +4,7 @@ namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderInsert;
 
-class MySQLQueryBuilderInsert extends MySQLQueryBuilder implements DBQueryBuilderInsert {
+class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuilderInsert {
 	private $vals = array();
 	private $onDuplicate = array();
 	
