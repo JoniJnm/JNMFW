@@ -9,6 +9,8 @@ abstract class BaseTable {
 	private $cols = null;
 	private $primaryKey;
 	
+	static private $dummyItems = array();
+	
 	abstract protected function getTableName();
 	abstract protected function getPrimaryKey();
 	
@@ -24,13 +26,6 @@ abstract class BaseTable {
 		return $this->cols;
 	}
 	
-	/**
-	 * @return DatabaseConnection
-	 */
-	private function getDB() {
-		return \JNMFW\classes\databases\DBFactory::getInstance();
-	}
-	
 	private function getValues($assoc) {
 		$tmp = array();
 		foreach ($this->getColums() as $col) {
@@ -41,7 +36,7 @@ abstract class BaseTable {
 	}
 	
 	public function insert() {
-		$db = $this->getDB();
+		$db = self::getDB();
 		$ok = 1 == $db->getQueryBuilderInsert($this->tableName)
 				->columns($this->getColums())
 				->values($this->getValues(false))
@@ -55,14 +50,6 @@ abstract class BaseTable {
 		return $ok;
 	}
 	
-	public function load($id) {
-		$db = $this->getDB();
-		$obj = $db->getQueryBuilderSelect($this->tableName)->columns('*')->where($this->primaryKey, $id)->loadObject();
-		if (!$obj) return false;
-		$this->fill($obj);
-		return true;
-	}
-	
 	public function fill($obj) {
 		foreach ($this->getColums() as $col) {
 			$this->$col = $obj->$col;
@@ -70,7 +57,7 @@ abstract class BaseTable {
 	}
 	
 	public function delete() {
-		$db = $this->getDB();
+		$db = self::getDB();
 		$pk = $this->primaryKey;
 		return 1 == $db->getQueryBuilderDelete($this->tableName)
 				->where($pk, $this->$pk)
@@ -78,11 +65,56 @@ abstract class BaseTable {
 	}
 	
 	public function update() {
-		$db = $this->getDB();
+		$db = self::getDB();
 		$pk = $this->primaryKey;
 		return 1 == $db->getQueryBuilderUpdate($this->tableName)
 				->set($this->getValues(true))
 				->where($pk, $this->$pk)
 				->execute();
+	}
+	
+	
+	// STATIC
+	
+	public static function get($id) {
+		$db = self::getDB();
+		$obj = $db->getQueryBuilderSelect(self::tableName())
+				->columns('*')
+				->where(self::primaryKey(), $id)
+				->loadObject();
+		if (!$obj) return null;
+		$item = new static;
+		$item->fill($obj);
+		return $item;
+	}
+	
+	/**
+	 * @return BaseTable
+	 */
+	static private function getDummyItem() {
+		$className = get_called_class();
+		if (!isset(self::$dummyItems[$className])) {
+			self::$dummyItems[$className] = new $className;
+		}
+		return self::$dummyItems[$className];
+	}
+	
+	static private function tableName() {
+		return self::getDummyItem()->getTableName();
+	}
+	
+	static private function primaryKey() {
+		return self::getDummyItem()->getPrimaryKey();
+	}
+	
+	static private function columns() {
+		return self::getDummyItem()->getColums();
+	}
+	
+	/**
+	 * @return DatabaseConnection
+	 */
+	private static function getDB() {
+		return \JNMFW\classes\databases\DBFactory::getInstance();
 	}
 }
