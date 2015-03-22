@@ -59,10 +59,14 @@ abstract class BaseTable {
 		$db = $this->getDB();
 		$obj = $db->getQueryBuilderSelect($this->tableName)->columns('*')->where($this->primaryKey, $id)->loadObject();
 		if (!$obj) return false;
+		$this->fill($obj);
+		return true;
+	}
+	
+	public function fill($obj) {
 		foreach ($this->getColums() as $col) {
 			$this->$col = $obj->$col;
 		}
-		return true;
 	}
 	
 	public function delete() {
