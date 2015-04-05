@@ -135,6 +135,7 @@ class Filter {
 	 */
 	public function getFloat($key, $def=0, $min_range=null, $max_range=null) {
 		$source = $this->isset_else($key, null);
+		$source = str_replace(',', '.', $source);
 		$result = \filter_var($source, \FILTER_VALIDATE_FLOAT);
 		if ($result === false) return $def;
 		if ($min_range !== null && $result < $min_range) return $def;
