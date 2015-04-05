@@ -79,13 +79,27 @@ abstract class BaseTable {
 	public static function get($id) {
 		$db = self::getDB();
 		$obj = $db->getQueryBuilderSelect(self::tableName())
-				->columns('*')
 				->where(self::primaryKey(), $id)
 				->loadObject();
 		if (!$obj) return null;
 		$item = new static;
 		$item->fill($obj);
 		return $item;
+	}
+	
+	public static function getMulti($ids, $col = null) {
+		if (!$col) $col = self::primaryKey();
+		$db = self::getDB();
+		$objs = $db->getQueryBuilderSelect(self::tableName())
+				->whereIn(self::primaryKey(), $ids)
+				->loadObjectList();
+		$out = array();
+		foreach ($objs as $obj) {
+			$item = new static;
+			$item->fill($obj);
+			$out[] = $item;
+		}
+		return $out;
 	}
 	
 	/**
@@ -99,15 +113,15 @@ abstract class BaseTable {
 		return self::$dummyItems[$className];
 	}
 	
-	static private function tableName() {
+	static protected function tableName() {
 		return self::getDummyItem()->getTableName();
 	}
 	
-	static private function primaryKey() {
+	static protected function primaryKey() {
 		return self::getDummyItem()->getPrimaryKey();
 	}
 	
-	static private function columns() {
+	static protected function columns() {
 		return self::getDummyItem()->getColums();
 	}
 	
