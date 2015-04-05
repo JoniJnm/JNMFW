@@ -15,6 +15,10 @@ abstract class HUtils {
 		return '0000-00-00 00:00:00';
 	}
 	
+	static public function isNullDate($date) {
+		return !$date || $date == static::getNullDate() || $date == static::getNullDateTime();
+	}
+	
 	static public function formatDate($date) {
 		return \JNMFW\classes\databases\DBFactory::getInstance()->formatDate($date);
 	}
