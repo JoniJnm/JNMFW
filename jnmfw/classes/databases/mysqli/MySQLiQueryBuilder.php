@@ -25,6 +25,11 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 		return $this;
 	}
 	
+	protected function clearColums() {
+		$this->cols = array();
+		return $this;
+	}
+	
 	protected function where($column, $value) {
 		$this->wheres[] = $this->db->quoteName($column.' = '.$this->db->quote($value));
 		return $this;

@@ -20,6 +20,10 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		return parent::columns($columns);
 	}
 	
+	public function clearColums() {
+		return parent::clearColums();
+	}
+	
 	public function leftJoin($table, $alias, $col1, $col2) {
 		$this->joins[] = 'LEFT JOIN '.$this->db->quoteName($table).' AS '.$alias
 				. ' ON '.$this->db->quoteName($col1).' = '.$this->db->quoteName($col2);

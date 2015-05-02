@@ -11,6 +11,11 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
+	public function clearColums();
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
 	public function leftJoin($table, $alias, $col1, $col2);
 	
 	/**
