@@ -96,9 +96,19 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		$sql .= $this->limit;
 		return $sql;
 	}
+	
+	private function setLimit1IfNeeded() {
+		if ($this->limit) return;
+		//no se puede añadir limit 1 si alguna columna tiene alguna función
+		//como count(*)
+		foreach ($this->cols as $col) {
+			if (strpos($col, '(') !== false) return;
+		}
+		$this->limit(1);
+	}
 
 	public function loadObject() {
-		if (!$this->limit) $this->limit(1);
+		$this->setLimit1IfNeeded();
 		return $this->db->loadObject($this->build());
 	}
 
@@ -107,7 +117,7 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	}
 
 	public function loadResult() {
-		if (!$this->limit) $this->limit(1);
+		$this->setLimit1IfNeeded();
 		return $this->db->loadResult($this->build());
 	}
 

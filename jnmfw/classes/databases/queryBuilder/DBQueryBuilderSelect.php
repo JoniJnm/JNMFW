@@ -56,7 +56,7 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
-	public function limit($offset, $limit);
+	public function limit($limit, $offset=0);
 	
 	public function loadObject();
 	
