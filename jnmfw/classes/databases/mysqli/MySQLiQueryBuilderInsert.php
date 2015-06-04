@@ -40,6 +40,14 @@ class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuil
 		return $this;
 	}
 	
+	public function onDuplicateUpdateColums($colums) {
+		foreach ($colums as $colum) {
+			$name = $this->db->quoteName($colum);
+			$this->onDuplicate[] = $name.'=VALUES('.$name.')';
+		}
+		return $this;
+	}
+	
 	public function execute() {
 		return parent::execute();
 	}
