@@ -5,6 +5,21 @@ namespace JNMFW\classes\databases\mysqli;
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderDelete;
 
 class MySQLiQueryBuilderDelete extends MySQLiQueryBuilder implements DBQueryBuilderDelete {
+	private $tableAlias;
+	
+	public function __construct($db, $table, $alias=null) {
+		parent::__construct($db, $table);
+		$this->tableAlias = $alias;
+	}
+	
+	public function leftJoin($table, $alias, $col1, $col2) {
+		return parent::leftJoin($table, $alias, $col1, $col2);
+	}
+	
+	public function leftJoinMulti($table, $alias, $assoc, $autoQuote = true) {
+		return parent::leftJoinMulti($table, $alias, $assoc, $autoQuote);
+	}
+	
 	public function where($column, $value) {
 		return parent::where($column, $value);
 	}
@@ -26,6 +41,10 @@ class MySQLiQueryBuilderDelete extends MySQLiQueryBuilder implements DBQueryBuil
 	}
 
 	public function build() {
-		return 'DELETE FROM '.$this->db->quoteName($this->table) . $this->buildWhere();
+		$sql = 'DELETE FROM '.$this->db->quoteName($this->table);
+		if ($this->tableAlias) $sql .= ' AS '.$this->tableAlias;
+		if ($this->joins) $sql .= ' '.implode(' ', $this->joins);
+		$sql .= $this->buildWhere();
+		return $sql;
 	}
 }

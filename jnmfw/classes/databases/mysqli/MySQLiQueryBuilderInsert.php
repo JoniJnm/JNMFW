@@ -53,12 +53,12 @@ class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuil
 	}
 
 	public function build() {
-		$query = 'INSERT INTO '.$this->db->quoteName($this->table).''
-				. ' '.$this->db->quoteNames($this->cols)
-				. ' VALUES '.$this->db->quoteArray($this->vals);
+		$sql = 'INSERT INTO '.$this->db->quoteName($this->table);
+		$sql .= ' '.$this->db->quoteNames($this->cols);
+		$sql .= ' VALUES '.$this->db->quoteArray($this->vals);
 		if ($this->onDuplicate) {
-			$query .= ' ON DUPLICATE KEY UPDATE '.implode(', ', $this->onDuplicate);
+			$sql .= ' ON DUPLICATE KEY UPDATE '.implode(', ', $this->onDuplicate);
 		}
-		return $query;
+		return $sql;
 	}
 }

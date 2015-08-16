@@ -5,7 +5,6 @@ namespace JNMFW\classes\databases\mysqli;
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderSelect;
 
 class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuilderSelect {
-	private $joins = array();
 	private $groups = array();
 	private $orders = array();
 	private $limit = '';
@@ -25,28 +24,11 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	}
 	
 	public function leftJoin($table, $alias, $col1, $col2) {
-		$this->joins[] = 'LEFT JOIN '.$this->db->quoteName($table).' AS '.$alias
-				. ' ON '.$this->db->quoteName($col1).' = '.$this->db->quoteName($col2);
-		return $this;
+		return parent::leftJoin($table, $alias, $col1, $col2);
 	}
 	
 	public function leftJoinMulti($table, $alias, $assoc, $autoQuote = true) {
-		if (!$assoc) return $this;
-		$where = array();
-		foreach ($assoc as $key => $value) {
-			if ($autoQuote) {
-				if (preg_match('/^[\w]+\.[\w]+$/', $value)) { //columna
-					$value = $this->db->quoteName($value);
-				}
-				else {
-					$value = $this->db->quote($value);
-				}
-			}
-			$where[] = $this->db->quoteName($key).' = '.$value;
-		}
-		$this->joins[] = 'LEFT JOIN '.$this->db->quoteName($table).' AS '.$alias
-				. ' ON '.implode(' AND ', $where);
-		return $this;
+		return parent::leftJoinMulti($table, $alias, $assoc, $autoQuote);
 	}
 	
 	public function where($column, $value) {
