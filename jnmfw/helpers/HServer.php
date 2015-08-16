@@ -127,6 +127,7 @@ abstract class HServer {
 			self::sendStatus(403);
 			$data = array('msg' => $msg_user);
 			self::sendJSON($data);
+			self::close();
 		}
 		else {
 			self::sendStatus(403, true);
