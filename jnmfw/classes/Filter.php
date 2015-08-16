@@ -54,9 +54,11 @@ class Filter {
 	 * @return boolean
 	 */
 	public function is_empty($key, $cero_is_empty = true) {
-		return empty($this->data[$key])
-			|| (!$cero_is_empty && isset($this->data[$key]) && 
-					($this->data[$key] === 0 || $this->data[$key] === '0' || $this->data[$key] === 0.0));
+		return empty($this->data[$key]) || 
+			(
+				!$cero_is_empty && isset($this->data[$key]) && 
+				in_array($this->data[$key], array(0, 0.0, '0'), true)
+			);
 	}
 	
 	/**
