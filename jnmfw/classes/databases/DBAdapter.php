@@ -17,7 +17,7 @@ interface DBAdapter {
 	public function getAffectedRows();
 	public function getInsertedID();
 	public function getError();
-	public function transaccionBegin();
+	public function transactionBegin();
 	public function commit();
 	public function rollback();
 }

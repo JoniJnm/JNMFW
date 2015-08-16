@@ -273,24 +273,24 @@ abstract class DatabaseConnection {
 	/**
 	 * Inicio de una transacción
 	 */
-	public function transaccionBegin() {
-		HLog::logVerbose("dbTransaccion: BEGIN");
-		$this->conn->transaccionBegin();
+	public function transactionBegin() {
+		HLog::logVerbose("dbTransaction: BEGIN");
+		$this->conn->transactionBegin();
 	}
 	
 	/**
 	 * Commit de una transacción
 	 */
-	public function transaccionCommit() {
-		HLog::logVerbose("dbTransaccion: COMMIT");
+	public function transactionCommit() {
+		HLog::logVerbose("dbTransaction: COMMIT");
 		$this->conn->commit();
 	}
 	
 	/**
 	 * Rollback de una transacción
 	 */
-	public function transaccionRollback() {
-		HLog::logVerbose("dbTransaccion: ROLLBACK");
+	public function transactionRollback() {
+		HLog::logVerbose("dbTransaction: ROLLBACK");
 		$this->conn->rollback();
 	}
 	

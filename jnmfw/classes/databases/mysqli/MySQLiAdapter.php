@@ -61,7 +61,7 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 		return $this->error;
 	}
 	
-	public function transaccionBegin() {
+	public function transactionBegin() {
 		$this->conn->autocommit(false);
 	}
 	
