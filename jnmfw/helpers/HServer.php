@@ -69,79 +69,87 @@ abstract class HServer {
 			}
 		}
 		else {
-			static::sendServerError("No existe el status ".$statusCode);
+			self::sendServerError("No existe el status ".$statusCode);
 		}
 	}
 	
 	static public function sendOK() {
-		DBFactory::getInstance()->transaccionCommit();
-		static::sendJSON(null);
+		self::transactionCommit();
+		self::sendJSON(null);
 		self::close();
 	}
 	
-	static public function sendNotFound($msg) {
-		DBFactory::getInstance()->transaccionRollback();
-		HLog::logError($msg);
-		static::sendStatus(404, true);
+	static public function sendNotFound($msg_log) {
+		self::transactionRollback();
+		HLog::logError($msg_log);
+		self::sendStatus(404, true);
 	}
 	
-	static public function sendServerError($msg) {
-		DBFactory::getInstance()->transaccionRollback();
-		HLog::logError($msg);
-		static::sendStatus(500, true);
+	static public function sendServerError($msg_log) {
+		self::transactionRollback();
+		HLog::logError($msg_log);
+		self::sendStatus(500, true);
 	}
 	
 	static public function sendInvalidRequest($msg_key, $param) {
-		DBFactory::getInstance()->transaccionRollback();
+		self::transactionRollback();
 		$msg = HLang::get($msg_key);
 		HLog::logError($msg);
-		static::sendStatus(412);
+		self::sendStatus(412);
 		$data = array('msg' => $msg, 'invalid_params' => $param);
-		static::sendJSON($data);
+		self::sendJSON($data);
 		self::close();
 	}
 	
-	static public function sendConflict($msg, $errno = null) {
-		DBFactory::getInstance()->transaccionRollback();
-		HLog::logError($msg);
-		static::sendStatus(409);
-		$data = array('msg' => $msg);
+	static public function sendConflict($msg_user, $errno = null) {
+		self::transactionRollback();
+		HLog::logError($msg_user);
+		self::sendStatus(409);
+		$data = array('msg' => $msg_user);
 		if ($errno) $data['errno'] = $errno;
-		static::sendJSON($data);
+		self::sendJSON($data);
 		self::close();
 	}
 	
 	static public function sendSessionTimeout() {
-		DBFactory::getInstance()->transaccionRollback();
-		static::sendStatus(419);
-		self::close();
+		self::transactionRollback();
+		self::sendStatus(419, true);
 	}
 	
 	static public function sendUserNotVerified() {
-		DBFactory::getInstance()->transaccionRollback();
-		static::sendStatus(403);
-		self::close();
+		self::transactionRollback();
+		self::sendStatus(403, true);
 	}
 	
-	static public function sendForbidden($msg = null) {
-		DBFactory::getInstance()->transaccionRollback();
-		static::sendStatus(403);
-		if ($msg) {
-			$data = array('msg' => $msg);
-			static::sendJSON($data);
+	static public function sendForbidden($msg_user = null) {
+		self::transactionRollback();
+		if ($msg_user) {
+			self::sendStatus(403);
+			$data = array('msg' => $msg_user);
+			self::sendJSON($data);
 		}
-		self::close();
+		else {
+			self::sendStatus(403, true);
+		}
 	}
 	
 	static public function sendData($data) {
-		DBFactory::getInstance()->transaccionCommit();
-		static::sendJSON($data);
+		self::transactionCommit();
+		self::sendJSON($data);
 		self::close();
 	}
 	
 	static private function sendJSON($data) {
 		\header('Content-type: application/json');
 		echo \json_encode($data, \JSON_NUMERIC_CHECK);
+	}
+	
+	static private function transactionCommit() {
+		DBFactory::getInstance()->transactionCommit();
+	}
+	
+	static private function transactionRollback() {
+		DBFactory::getInstance()->transactionRollback();
 	}
 	
 	static private function close() {
