@@ -60,13 +60,7 @@ abstract class DBFactory {
 	 */
 	static public function getInstance($name = 'default') {
 		if (self::instanceExists($name)) return self::$instances[$name];
-		if ($name == 'default') {
-			self::registerDefaultInstance();
-			return self::getInstance($name);
-		}
-		else {
-			HServer::sendServerError("No se ha registrado una instancia para '".$name."'");
-		}
+		HServer::sendServerError("No se ha registrado una instancia para '".$name."'");
 	}
 	
 	/**
