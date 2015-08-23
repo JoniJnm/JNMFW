@@ -16,12 +16,12 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
-	public function leftJoin($table, $alias, $col1, $col2);
+	public function innerJoin($table, $alias, $col1, $col2);
 	
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
-	public function leftJoinMulti($table, $alias, $assoc, $autoQuote = true);
+	public function customJoin($type, $table, $alias, $conditions);
 	
 	/**
 	 * @return DBQueryBuilderSelect

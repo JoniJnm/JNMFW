@@ -31,28 +31,15 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 		return $this;
 	}
 	
-	public function leftJoin($table, $alias, $col1, $col2) {
-		$this->joins[] = 'LEFT JOIN '.$this->db->quoteName($table).' AS '.$alias
+	public function innerJoin($table, $alias, $col1, $col2) {
+		$this->joins[] = 'INNER JOIN '.$this->db->quoteName($table).' AS '.$alias
 				. ' ON '.$this->db->quoteName($col1).' = '.$this->db->quoteName($col2);
 		return $this;
 	}
 	
-	public function leftJoinMulti($table, $alias, $assoc, $autoQuote = true) {
-		if (!$assoc) return $this;
-		$where = array();
-		foreach ($assoc as $key => $value) {
-			if ($autoQuote) {
-				if (preg_match('/^[\w]+\.[\w]+$/', $value)) { //columna
-					$value = $this->db->quoteName($value);
-				}
-				else {
-					$value = $this->db->quote($value);
-				}
-			}
-			$where[] = $this->db->quoteName($key).' = '.$value;
-		}
-		$this->joins[] = 'LEFT JOIN '.$this->db->quoteName($table).' AS '.$alias
-				. ' ON '.implode(' AND ', $where);
+	public function customJoin($type, $table, $alias, $conditions) {
+		$this->joins[] = $type.' JOIN '.$this->db->quoteName($table).' AS '.$alias
+				. ' ON '.$conditions;
 		return $this;
 	}
 	

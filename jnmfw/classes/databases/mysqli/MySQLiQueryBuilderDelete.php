@@ -12,12 +12,12 @@ class MySQLiQueryBuilderDelete extends MySQLiQueryBuilder implements DBQueryBuil
 		$this->tableAlias = $alias;
 	}
 	
-	public function leftJoin($table, $alias, $col1, $col2) {
-		return parent::leftJoin($table, $alias, $col1, $col2);
+	public function innerJoin($table, $alias, $col1, $col2) {
+		return parent::innerJoin($table, $alias, $col1, $col2);
 	}
 	
-	public function leftJoinMulti($table, $alias, $assoc, $autoQuote = true) {
-		return parent::leftJoinMulti($table, $alias, $assoc, $autoQuote);
+	public function customJoin($type, $table, $alias, $conditions) {
+		return parent::customJoin($type, $table, $alias, $conditions);
 	}
 	
 	public function where($column, $value) {
