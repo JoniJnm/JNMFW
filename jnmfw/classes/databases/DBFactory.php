@@ -56,7 +56,7 @@ abstract class DBFactory {
 	/**
 	 * Recupera una instacia creada anteriormente con registerInstance()
 	 * @param string $name nombre de la instancia
-	 * @return DatabaseConnection La instancia del objeto de la base de datos
+	 * @return DBConnection La instancia del objeto de la base de datos
 	 */
 	static public function getInstance($name = 'default') {
 		if (self::instanceExists($name)) return self::$instances[$name];

@@ -3,11 +3,11 @@
 namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilder;
-use JNMFW\classes\databases\DatabaseConnection;
+use JNMFW\classes\databases\DBConnection;
 
 abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 	/**
-	 * @var DatabaseConnection
+	 * @var DBConnection
 	 */
 	protected $db;
 	protected $table;

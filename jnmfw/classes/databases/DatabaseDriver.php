@@ -3,7 +3,7 @@
 namespace JNMFW\classes\databases;
 
 use JNMFW\classes\databases\DBAdapter;
-use JNMFW\classes\databases\DatabaseConnection;
+use JNMFW\classes\databases\DBConnection;
 
 abstract class DatabaseDriver {
 	/**
@@ -18,7 +18,7 @@ abstract class DatabaseDriver {
 	
 	/**
 	 * @param DBAdapter $adapter
-	 * @return DatabaseConnection
+	 * @return DBConnection
 	 */
 	abstract public function getConnection(DBAdapter $adapter);
 }

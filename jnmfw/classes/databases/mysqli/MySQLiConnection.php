@@ -2,9 +2,9 @@
 
 namespace JNMFW\classes\databases\mysqli;
 
-use JNMFW\classes\databases\DatabaseConnection;
+use JNMFW\classes\databases\DBConnection;
 
-class MySQLiConnection extends DatabaseConnection {	
+class MySQLiConnection extends DBConnection {	
 	public function getQueryBuilderInsert($table) {
 		return new \JNMFW\classes\databases\mysqli\MySQLiQueryBuilderInsert($this, $table);
 	}

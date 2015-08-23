@@ -4,7 +4,7 @@ namespace JNMFW\classes\databases;
 
 use JNMFW\helpers\HLog;
 
-abstract class DatabaseConnection {
+abstract class DBConnection {
 	/**
 	 * @var DBAdapter
 	 */
