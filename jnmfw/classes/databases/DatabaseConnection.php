@@ -154,6 +154,18 @@ abstract class DatabaseConnection {
 		if ($timezone === null) $timezone = new \DateTimeZone("UTC");
 		return $timezone;
 	}
+	
+	public function getNullDate() {
+		return '0000-00-00';
+	}
+	
+	public function getNullDateTime() {
+		return '0000-00-00 00:00:00';
+	}
+	
+	public function isNullDate($date) {
+		return empty($date) || $date == $this->getNullDate() || $date == $this->getNullDateTime();
+	}
 
 	/**
 	 * Ejecuta una instrucción SQL (para insert, update o delete)
