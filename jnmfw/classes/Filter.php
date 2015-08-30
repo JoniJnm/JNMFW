@@ -21,7 +21,7 @@ class Filter {
 	}
 	
 	protected function setData($data) {
-		$this->data = &$data;
+		$this->data = $data;
 	}
 	
 	protected function isset_else($key, $def) {
