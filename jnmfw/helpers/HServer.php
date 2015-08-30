@@ -94,7 +94,7 @@ abstract class HServer {
 	static public function sendInvalidRequest($msg_key, $param, $log = true) {
 		self::transactionRollback();
 		$msg = HLang::get($msg_key);
-		HLog::logError($msg);
+		if ($log) HLog::logError($msg);
 		self::sendStatus(412);
 		$data = array('msg' => $msg, 'invalid_params' => $param);
 		self::sendJSON($data);
