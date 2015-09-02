@@ -14,6 +14,9 @@ abstract class DBFactory {
 	
 	private static $drivers = array();
 	
+	/**
+	 * @var DBConnection[]
+	 */
 	private static $instances = array();
 	
 	/**
@@ -51,6 +54,26 @@ abstract class DBFactory {
 		}
 		HServer::sendServerError("Imposible conectar a la DB"); //no continuar, no se puedo conectar a la db
 		return false;
+	}
+	
+	/**
+	 * Does a transaction rollback in all opened connections
+	 * This method is used when an error occurs
+	 */
+	static public function rollbackAllConnections() {
+		foreach (self::$instances as $instance) {
+			$instance->transactionRollback();
+		}
+	}
+	
+	/**
+	 * Does a transaction commit in all opened connections
+	 * This method is used when the connection ends successfully
+	 */
+	static public function commitAllConnections() {
+		foreach (self::$instances as $instance) {
+			$instance->transactionCommit();
+		}
 	}
 	
 	/**

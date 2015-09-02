@@ -5,7 +5,7 @@ namespace JNMFW\classes\databases;
 use JNMFW\classes\databases\DBAdapter;
 use JNMFW\classes\databases\DBConnection;
 
-abstract class DatabaseDriver {
+abstract class DBDriver {
 	/**
 	 * Conector
 	 * @param string $host El servidor de la base de datos (generalmente localhost)

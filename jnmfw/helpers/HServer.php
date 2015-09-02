@@ -146,11 +146,11 @@ abstract class HServer {
 	}
 	
 	static private function transactionCommit() {
-		DBFactory::getInstance()->transactionCommit();
+		DBFactory::commitAllConnections();
 	}
 	
 	static private function transactionRollback() {
-		DBFactory::getInstance()->transactionRollback();
+		DBFactory::rollbackAllConnections();
 	}
 	
 	static private function close() {
