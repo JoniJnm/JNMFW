@@ -2,25 +2,26 @@
 
 namespace JNMFW\classes\cache;
 
-class CacheRequest implements ICache {
-	private $data = array();
-	
+class CacheXCache implements ICache {
 	public static function isEnabled() {
-		return true;
+		return extension_loaded('XCache');
 	}
 	
 	public function set($key, $value, $ttl = DEFAULT_TTL) {
-		$this->data[$key] = $value;
-		return true;
+		return xcache_set($key, serialize($value), $ttl);
 	}
 	
 	public function add($key, $value, $ttl = DEFAULT_TTL) {
-		if (!$this->exists($key)) return $this->set($key, $value, $ttl);
+		if (!xcache_isset($key)) {
+			return $this->set($key, $value, $ttl);
+		}
 		return false;
 	}
 	
 	public function get($key) {
-		return isset($this->data[$key]) ? $this->data[$key] : false;
+		$data = xcache_get($key);
+		if ($data === null) return false;
+		return unserialize($data);
 	}
 	
 	public function setMulti($items, $ttl = DEFAULT_TTL) {
@@ -34,24 +35,17 @@ class CacheRequest implements ICache {
 	public function getMulti($keys) {
 		$out = array();
 		foreach ($keys as $key) {
-			$out[] = $this->get($key);
+			$out[] =  $this->get($key);
 		}
 		return $out;
 	}
 	
 	public function exists($key) {
-		return isset($this->data[$key]);
-			//&& $this->get($key) !== false; //el resto de ICache comprueba que no sea falso
+		return xcache_isset($key);
 	}
 	
 	public function delete($key) {
-		if ($this->exists($key)) {
-			unset($this->data[$key]);
-			return true;
-		}
-		else {
-			return false;
-		}
+		return xcache_unset($key);
 	}
 	
 	public function deleteMulti($keys) {
@@ -63,7 +57,6 @@ class CacheRequest implements ICache {
 	}
 	
 	public function clear() {
-		unset($this->data);
-		$this->data = array();
+		return xcache_clear_cache(XC_TYPE_VAR);
 	}
 }
