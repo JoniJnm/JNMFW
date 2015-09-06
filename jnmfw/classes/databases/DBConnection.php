@@ -31,6 +31,11 @@ abstract class DBConnection {
 	private $strict = true;
 	
 	/**
+	 * @var boolean
+	 */
+	private $intransaction = false;
+	
+	/**
 	 * Constructor
 	 * @param DBAdapter $conn La conexión devuelta por connect()
 	 */
@@ -288,6 +293,7 @@ abstract class DBConnection {
 	public function transactionBegin() {
 		HLog::logVerbose("dbTransaction: BEGIN");
 		$this->conn->transactionBegin();
+		$this->intransaction = true;
 	}
 	
 	/**
@@ -296,6 +302,7 @@ abstract class DBConnection {
 	public function transactionCommit() {
 		HLog::logVerbose("dbTransaction: COMMIT");
 		$this->conn->commit();
+		$this->intransaction = false;
 	}
 	
 	/**
@@ -304,6 +311,11 @@ abstract class DBConnection {
 	public function transactionRollback() {
 		HLog::logVerbose("dbTransaction: ROLLBACK");
 		$this->conn->rollback();
+		$this->intransaction = false;
+	}
+	
+	public function inTransaction() {
+		return $this->intransaction;
 	}
 	
 	public function getLastError() {
