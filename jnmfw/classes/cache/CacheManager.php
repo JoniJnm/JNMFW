@@ -8,6 +8,8 @@ use JNMFW\helpers\HTimer;
 class CacheManager {
 	private static $instance = null;
 	
+	private $prefix;
+	
 	private $deletedKeys = array(); //keys deleted during a transaction
 	private $numCacheAccesses = 0;
 	
