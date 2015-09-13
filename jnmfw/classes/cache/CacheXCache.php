@@ -7,11 +7,11 @@ class CacheXCache implements ICache {
 		return extension_loaded('XCache');
 	}
 	
-	public function set($key, $value, $ttl = DEFAULT_TTL) {
+	public function set($key, $value, $ttl = null) {
 		return xcache_set($key, serialize($value), $ttl);
 	}
 	
-	public function add($key, $value, $ttl = DEFAULT_TTL) {
+	public function add($key, $value, $ttl = null) {
 		if (!xcache_isset($key)) {
 			return $this->set($key, $value, $ttl);
 		}
@@ -24,7 +24,7 @@ class CacheXCache implements ICache {
 		return unserialize($data);
 	}
 	
-	public function setMulti($items, $ttl = DEFAULT_TTL) {
+	public function setMulti($items, $ttl = null) {
 		$ok = true;
 		foreach ($items as $key => $value) {
 			$ok &= $this->set($key, $value, $ttl);

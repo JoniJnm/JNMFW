@@ -38,11 +38,11 @@ class CacheRedis implements ICache {
 		return extension_loaded('redis');
 	}
 	
-	public function set($key, $value, $ttl = DEFAULT_TTL) {
+	public function set($key, $value, $ttl = null) {
 		return $this->obj->set($key, serialize($value), $ttl);
 	}
 	
-	public function add($key, $value, $ttl = DEFAULT_TTL) {
+	public function add($key, $value, $ttl = null) {
 		if ($this->obj->setnx($key, $value)) {
 			return $this->set($key, $value, $ttl); //setnx doesn't accept the param ttl
 		}
@@ -55,7 +55,7 @@ class CacheRedis implements ICache {
 		return unserialize($ret);
 	}
 	
-	public function setMulti($items, $ttl = DEFAULT_TTL) {
+	public function setMulti($items, $ttl = null) {
 		//serialize_each($items); 
 		//return $this->obj->mset($items) //mset doesn't accept the param ttl
 		$multi = $this->obj->multi();

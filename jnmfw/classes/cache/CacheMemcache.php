@@ -33,11 +33,11 @@ class CacheMemcache implements ICache {
 		return extension_loaded('Memcached');
 	}
 	
-	public function set($key, $value, $ttl = DEFAULT_TTL) {
+	public function set($key, $value, $ttl = null) {
 		return $this->obj->set($key, $value, $ttl);
 	}
 	
-	public function add($key, $value, $ttl = DEFAULT_TTL) {
+	public function add($key, $value, $ttl = null) {
 		return $this->obj->add($key, $value, $ttl);
 	}
 	
@@ -45,7 +45,7 @@ class CacheMemcache implements ICache {
 		return $this->obj->get($key);
 	}
 	
-	public function setMulti($items, $ttl = DEFAULT_TTL) {
+	public function setMulti($items, $ttl = null) {
 		return $this->obj->setMulti($items, $ttl);
 	}
 	

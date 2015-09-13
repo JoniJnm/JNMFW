@@ -14,7 +14,7 @@ class CacheManager {
 	private $numCacheAccesses = 0;
 	
 	private $default_ttl = 1800; //60*30 (30 mins)
-	const DEFAULT_TTL = -1;
+	const DEFAULT_TTL = null;
 	
 	private $scope_default = 0; //auxiliary, to calculate SCOPE_DEFAULT
 	private $scope_request_default = 0; //auxiliary, to calculate SCOPE_REQUEST_DEFAULT
@@ -123,7 +123,7 @@ class CacheManager {
 	}
 	
 	private function computeTTL($ttl) {
-		return $ttl < 0 ? $this->default_ttl : $ttl;
+		return $ttl === null || $ttl < 0 ? $this->default_ttl : $ttl;
 	}
 	
 	/* Check is Enabled */

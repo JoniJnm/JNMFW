@@ -9,12 +9,12 @@ class CacheRequest implements ICache {
 		return true;
 	}
 	
-	public function set($key, $value, $ttl = DEFAULT_TTL) {
+	public function set($key, $value, $ttl = null) {
 		$this->data[$key] = $value;
 		return true;
 	}
 	
-	public function add($key, $value, $ttl = DEFAULT_TTL) {
+	public function add($key, $value, $ttl = null) {
 		if (!$this->exists($key)) return $this->set($key, $value, $ttl);
 		return false;
 	}
@@ -23,7 +23,7 @@ class CacheRequest implements ICache {
 		return isset($this->data[$key]) ? $this->data[$key] : false;
 	}
 	
-	public function setMulti($items, $ttl = DEFAULT_TTL) {
+	public function setMulti($items, $ttl = null) {
 		$ok = true;
 		foreach ($items as $key => $value) {
 			$ok &= $this->set($key, $value, $ttl);
