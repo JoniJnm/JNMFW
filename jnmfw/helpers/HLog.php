@@ -45,7 +45,9 @@ abstract class HLog {
 	
 	static private function log($level, $label, $msg) {
 		if ($level < static::$level) return;
-		$log = date('d-m H:i:s').' - '.$label.' - '.$msg;
+		$microtime = explode(' ', microtime());
+		$msecs = str_pad(floor($microtime[0] * 1000), 3, '0', STR_PAD_LEFT);
+		$log = date('d-m H:i:s', $microtime[1]).'.'.$msecs.' - '.$label.' - '.$msg;
 		if (static::$file) file_put_contents(static::$file, $log."\n", FILE_APPEND);
 		else echo $log." <br />\n";
 	}
