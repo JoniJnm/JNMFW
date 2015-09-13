@@ -18,11 +18,11 @@ abstract class HLang {
 			return constant('\\'.static::$namespace.'\Lang'.static::$lang.'::'.$key);
 		}
 		elseif (defined('\\'.static::$namespace.'\Lang'.static::$default.'::'.$key)) {
-			HLog::logWarning("Clave de idioma '$key' no traducida para ".static::$lang);
+			HLog::warning("Clave de idioma '$key' no traducida para ".static::$lang);
 			return constant('\\'.static::$namespace.'\Lang'.static::$default.'::'.$key);
 		}
 		else {
-			HLog::logWarning("Clave de idioma '$key' no definida");
+			HLog::warning("Clave de idioma '$key' no definida");
 			return $key;
 		}
 	}

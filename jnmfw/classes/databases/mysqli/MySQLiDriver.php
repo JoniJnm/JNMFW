@@ -10,7 +10,7 @@ class MySQLiDriver extends DBDriver {
 	public function getAdapter($host, $user, $pass, $dbname='') {
 		$conn = new MySQLiAdapter($host, $user, $pass, $dbname);
 		if ($conn->getError()) {
-			\JNMFW\helpers\HLog::logError('Error de Conexión MySQLi '.$conn->getError());
+			\JNMFW\helpers\HLog::error('Error de Conexión MySQLi '.$conn->getError());
 			return null;
 		}
 		else {

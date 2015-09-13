@@ -292,7 +292,7 @@ abstract class DBConnection {
 	 * Inicio de una transacción
 	 */
 	public function transactionBegin() {
-		HLog::logVerbose("DB Transaction BEGIN");
+		HLog::verbose("DB Transaction BEGIN");
 		$this->conn->transactionBegin();
 		$this->intransaction = true;
 	}
@@ -301,7 +301,7 @@ abstract class DBConnection {
 	 * Commit de una transacción
 	 */
 	public function transactionCommit() {
-		HLog::logVerbose("DB Transaction COMMIT");
+		HLog::verbose("DB Transaction COMMIT");
 		$this->conn->commit();
 		$this->intransaction = false;
 	}
@@ -310,7 +310,7 @@ abstract class DBConnection {
 	 * Rollback de una transacción
 	 */
 	public function transactionRollback() {
-		HLog::logVerbose("DB Transaction ROLLBACK");
+		HLog::verbose("DB Transaction ROLLBACK");
 		$this->conn->rollback();
 		$this->intransaction = false;
 	}
@@ -343,7 +343,7 @@ abstract class DBConnection {
 			$this->num_rows = -1;
 			$msg = 'Error DB '.$this->conn->getError().' : '.$this->query;
 			if ($this->strict) \JNMFW\helpers\HServer::sendServerError($msg);
-			else HLog::logDebug($msg);
+			else HLog::debug($msg);
 		}
 		else {
 			$this->num_rows = $res->getNumRows();

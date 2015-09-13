@@ -81,20 +81,20 @@ abstract class HServer {
 	
 	static public function sendNotFound($msg_log) {
 		self::transactionRollback();
-		HLog::logError($msg_log);
+		HLog::error($msg_log);
 		self::sendStatus(404, true);
 	}
 	
 	static public function sendServerError($msg_log) {
 		self::transactionRollback();
-		HLog::logError($msg_log);
+		HLog::error($msg_log);
 		self::sendStatus(500, true);
 	}
 	
 	static public function sendInvalidRequest($msg_key, $param, $log = true) {
 		self::transactionRollback();
 		$msg = HLang::get($msg_key);
-		if ($log) HLog::logError($msg);
+		if ($log) HLog::error($msg);
 		self::sendStatus(412);
 		$data = array('msg' => $msg, 'invalid_params' => $param);
 		self::sendJSON($data);
@@ -103,7 +103,7 @@ abstract class HServer {
 	
 	static public function sendConflict($msg_user, $errno = null) {
 		self::transactionRollback();
-		HLog::logError($msg_user);
+		HLog::error($msg_user);
 		self::sendStatus(409);
 		$data = array('msg' => $msg_user);
 		if ($errno) $data['errno'] = $errno;

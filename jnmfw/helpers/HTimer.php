@@ -13,7 +13,7 @@ abstract class HTimer {
 		$time = round(self::get($name), 4);
 		$line = $name.' - '.$time.' msecs';
 		if ($msg) $line .= ' - '.$msg;
-		HLog::logVerbose($line);
+		HLog::verbose($line);
 	}
 	
 	static public function get($name) {

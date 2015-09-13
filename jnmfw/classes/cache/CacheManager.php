@@ -180,7 +180,7 @@ class CacheManager {
 		$ttl = $this->computeTTL($ttl);
 		
 		if ($value === false) {
-			HLog::logWarning("Storing in cache a FALSE value for " . $realkey);
+			HLog::warning("Storing in cache a FALSE value for " . $realkey);
 		}
 		
 		$this->numCacheAccesses++;
@@ -210,7 +210,7 @@ class CacheManager {
 		$ttl = $this->computeTTL($ttl);
 		
 		if ($value === false) {
-			HLog::logWarning("Storing in cache a FALSE value for " . $realkey);
+			HLog::warning("Storing in cache a FALSE value for " . $realkey);
 		}
 		
 		$this->numCacheAccesses++;
@@ -278,7 +278,7 @@ class CacheManager {
 			$realkey = $this->getRealKey($key);
 			$data[$realkey] = $value;
 			if ($value === false) {
-				HLog::logWarning("Storing in cache a FALSE value for " . $realkey);
+				HLog::warning("Storing in cache a FALSE value for " . $realkey);
 			}
 		}
 		
