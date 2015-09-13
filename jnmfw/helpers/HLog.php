@@ -3,20 +3,20 @@
 namespace JNMFW\helpers;
 
 abstract class HLog {
-	const LEVEL_NONE = 0;
-	const LEVEL_VERBOSE = 1;
-	const LEVEL_DEBUG = 2;
-	const LEVEL_WARNING = 3;
-	const LEVEL_ERROR = 4;
+	const LEVEL_VERBOSE = 0;
+	const LEVEL_DEBUG = 1;
+	const LEVEL_WARNING = 2;
+	const LEVEL_ERROR = 3;
+	const LEVEL_NONE = 4;
 	
 	static private $level = 2;
 	static private $file;
 	
-	static public function setLogFile($file) {
+	static public function setFile($file) {
 		static::$file = $file;
 	}
 	
-	static public function setLevelError($level) {
+	static public function setLevel($level) {
 		static::$level = $level;
 	}
 	

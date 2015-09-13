@@ -3,13 +3,13 @@
 namespace JNMFW\classes\cache;
 
 use JNMFW\helpers\HLog;
+use JNMFW\helpers\HTimer;
 
 class CacheManager {
 	private static $instance = null;
 	
 	private $deletedKeys = array(); //keys deleted during a transaction
 	private $numCacheAccesses = 0;
-	private $microtime = 0;
 	
 	private $default_ttl = 1800; //60*30 (30 mins)
 	const DEFAULT_TTL = -1;
@@ -495,12 +495,12 @@ class CacheManager {
 	/* PRIVATE */
 	
 	private function initLog() {
-		$this->microtime = microtime(true);
+		HTimer::init('Cache');
 	}
 	
 	private function log($action, $key, $result) {
-		$result = is_string($result) ? $result : var_export($result, true);
-		HLog::logVerbose('CACHE '.$action.' '.$key.' '.$result);
+		$val = is_string($result) ? $result : var_export($result, true);
+		HTimer::end('Cache', $action.' '.$key.' '.$val);
 	}
 	
 	private function getRealKey($key) {

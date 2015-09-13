@@ -3,6 +3,7 @@
 namespace JNMFW\classes\databases;
 
 use JNMFW\helpers\HLog;
+use JNMFW\helpers\HTimer;
 
 abstract class DBConnection {
 	/**
@@ -178,9 +179,9 @@ abstract class DBConnection {
 	 * @return int Devuelve el número de filas afectadas, -1 en caso de error
 	 */
 	public function execute($query) {
-		$this->iniciarAcceso();
+		$this->initAccess();
 		$res = $this->query($query);
-		$this->finalizarAcceso($res);
+		$this->endAccess($res);
 		return $this->getAffectedRows();
 	}
 
@@ -190,7 +191,7 @@ abstract class DBConnection {
 	 * @return Un objeto stdclass con los valores devueltos por MySQL
 	 */
 	public function loadObject($query){
-		$this->iniciarAcceso();
+		$this->initAccess();
 		$res = $this->query($query);
 		$obj = null;
 		if ($res) {
@@ -198,7 +199,7 @@ abstract class DBConnection {
 				$obj = $object;
 			}
 		}
-		$this->finalizarAcceso($res);
+		$this->endAccess($res);
 		return $obj;
 	}
 	
@@ -209,7 +210,7 @@ abstract class DBConnection {
 	 * @return array de objetos stdclass
 	 */
 	public function loadObjectList($query, $keycol = null) {
-		$this->iniciarAcceso();
+		$this->initAccess();
 		$res = $this->query($query);
 		$array = null;
 		if ($res) {
@@ -219,7 +220,7 @@ abstract class DBConnection {
 				else $array[] = $row;
 			}
 		}
-		$this->finalizarAcceso($res);
+		$this->endAccess($res);
 		return $array;
 	}
 
@@ -230,7 +231,7 @@ abstract class DBConnection {
 	 * @return El valor de la primera fila y columna
 	 */
 	public function loadResult($query, $col = 0) {
-		$this->iniciarAcceso();
+		$this->initAccess();
 		$res = $this->query($query);
 		$value = false;
 		if ($res) {
@@ -238,7 +239,7 @@ abstract class DBConnection {
 				$value = $row[$col];
 			}
 		}
-		$this->finalizarAcceso($res);
+		$this->endAccess($res);
 		return $value;
 	}
 	
@@ -250,7 +251,7 @@ abstract class DBConnection {
 	 * @return array de valores
 	 */
 	public function &loadResultArray($query, $col = 0) {
-		$this->iniciarAcceso();
+		$this->initAccess();
 		$res = $this->query($query);
 		$array = null;
 		if ($res) {
@@ -259,7 +260,7 @@ abstract class DBConnection {
 				$array[] = $row[$col];
 			}
 		}
-		$this->finalizarAcceso($res);
+		$this->endAccess($res);
 		return $array;
 	}
 	
@@ -291,7 +292,7 @@ abstract class DBConnection {
 	 * Inicio de una transacción
 	 */
 	public function transactionBegin() {
-		HLog::logVerbose("dbTransaction: BEGIN");
+		HLog::logVerbose("DB Transaction BEGIN");
 		$this->conn->transactionBegin();
 		$this->intransaction = true;
 	}
@@ -300,7 +301,7 @@ abstract class DBConnection {
 	 * Commit de una transacción
 	 */
 	public function transactionCommit() {
-		HLog::logVerbose("dbTransaction: COMMIT");
+		HLog::logVerbose("DB Transaction COMMIT");
 		$this->conn->commit();
 		$this->intransaction = false;
 	}
@@ -309,7 +310,7 @@ abstract class DBConnection {
 	 * Rollback de una transacción
 	 */
 	public function transactionRollback() {
-		HLog::logVerbose("dbTransaction: ROLLBACK");
+		HLog::logVerbose("DB Transaction ROLLBACK");
 		$this->conn->rollback();
 		$this->intransaction = false;
 	}
@@ -325,30 +326,28 @@ abstract class DBConnection {
 	/**
 	 * Inicia el acceso
 	 */
-	protected function iniciarAcceso() {
-		/*global $numQueries;
-		$numQueries++;
-		inicializarTimer('accesoDB');*/
+	protected function initAccess() {
+		HTimer::init('DB');
 	}
 	
 	/**
 	 * Finaliza el acceso
 	 * @param DBResourceAdapter $res Resultado
 	 */
-	protected function finalizarAcceso($res) {
+	protected function endAccess($res) {
 		if ($res === true) {
 			$this->num_rows = 0;
-			//finalizarTimer('accesoDB',  $this->getAffectedRows().' affected rows : '.$this->query);
+			HTimer::end('DB', $this->getAffectedRows().' affected rows : '.$this->query);
 		}
 		elseif (!$res) {
 			$this->num_rows = -1;
-			$msg = "Error BD al ejecutar ".$this->query.": ".$this->conn->getError();
+			$msg = 'Error DB '.$this->conn->getError().' : '.$this->query;
 			if ($this->strict) \JNMFW\helpers\HServer::sendServerError($msg);
 			else HLog::logDebug($msg);
 		}
 		else {
 			$this->num_rows = $res->getNumRows();
-			//finalizarTimer('accesoDB', $this->num_rows.' rows : '.$this->query . (!LOCALHOST ? '' : ' - ' . BlinkFW_LogFile::getBacktrace()));
+			HTimer::end('DB', $this->num_rows.' rows : '.$this->query);
 			$res->free();
 		}
 	}
