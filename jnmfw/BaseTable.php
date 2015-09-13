@@ -11,6 +11,10 @@ abstract class BaseTable {
 	private $primaryKey;
 	private $dirty = false;
 	
+	public function _getPrimaryKey() {
+		return $this->getPrimaryKey();
+	}
+	
 	static private $dummyItems = array();
 	
 	abstract protected function getTableName();
@@ -135,6 +139,7 @@ abstract class BaseTable {
 	
 	public static function getMulti($ids) {
 		$cache = self::getCache();
+		$pk = self::primaryKey();
 				
 		$keys = array();
 		foreach ($ids as $id) {
@@ -152,7 +157,7 @@ abstract class BaseTable {
 		if ($ids) {
 			$db = self::getDB();
 			$objs = $db->getQueryBuilderSelect(self::tableName())
-					->whereIn(self::primaryKey(), $ids)
+					->whereIn($pk, $ids)
 					->loadObjectList();
 			
 			$items = array();
