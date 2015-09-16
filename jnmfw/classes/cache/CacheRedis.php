@@ -51,7 +51,7 @@ class CacheRedis implements ICache {
 	
 	public function get($key) {
 		$ret = $this->obj->get($key);
-		if ($ret === null) return null;
+		if (!$ret) return null;
 		return unserialize($ret);
 	}
 	

@@ -20,7 +20,7 @@ class CacheXCache implements ICache {
 	
 	public function get($key) {
 		$data = xcache_get($key);
-		if ($data === null) return null;
+		if (!$data) return null;
 		return unserialize($data);
 	}
 	
