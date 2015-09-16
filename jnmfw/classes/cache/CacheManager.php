@@ -300,7 +300,7 @@ class CacheManager {
 			$ret &= $this->getExternal()->setMulti($data, $ttl);
 		}
 		
-		$key = count($items) ? 'multi '.implode(',', array_keys($items)) : '';
+		$key = implode(',', array_keys($items));
 		$this->log('setMulti', $key, $ret);
 		
 		return $ret;
@@ -357,7 +357,7 @@ class CacheManager {
 			$this->request->setMulti($save_request);
 		}
 		
-		$key = count($keys) ? 'multi '.implode(',', $keys) : '';
+		$key = implode(',', $keys);
 		$this->log('getMulti', $key, gettype($out));
 		
 		return $out;
@@ -449,7 +449,7 @@ class CacheManager {
 			$ret &= $this->getExternal()->deleteMulti($realkeys);
 		}
 	
-		$key = count($keys) ? 'multi '.implode(',', $keys) : '';
+		$key = implode(',', $keys);
 		$this->log('deleteMulti', $key, $ret);
 		
 		if ($this->inTransaction()) {
