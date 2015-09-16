@@ -51,7 +51,7 @@ class CacheRedis implements ICache {
 	
 	public function get($key) {
 		$ret = $this->obj->get($key);
-		if ($ret === false) return false;
+		if ($ret === null) return null;
 		return unserialize($ret);
 	}
 	
@@ -69,7 +69,7 @@ class CacheRedis implements ICache {
 		$out = $this->obj->getMultiple($keys);
 		$count = count($out);
 		for ($i=0; $i<$count; $i++) {
-			if ($out[$i] !== false) {
+			if ($out[$i] !== null) {
 				$out[$i] = unserialize($out[$i]);
 			}
 		}

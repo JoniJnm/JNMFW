@@ -20,7 +20,7 @@ class CacheRequest implements ICache {
 	}
 	
 	public function get($key) {
-		return isset($this->data[$key]) ? $this->data[$key] : false;
+		return isset($this->data[$key]) ? $this->data[$key] : null;
 	}
 	
 	public function setMulti($items, $ttl = null) {
@@ -41,7 +41,7 @@ class CacheRequest implements ICache {
 	
 	public function exists($key) {
 		return isset($this->data[$key]);
-			//&& $this->get($key) !== false; //el resto de ICache comprueba que no sea falso
+			//&& $this->get($key) !== null; //el resto de ICache comprueba que no sea falso
 	}
 	
 	public function delete($key) {

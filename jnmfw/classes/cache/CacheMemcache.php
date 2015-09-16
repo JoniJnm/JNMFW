@@ -54,7 +54,7 @@ class CacheMemcache implements ICache {
 	}
 	
 	public function exists($key) {
-		return $this->obj->get($key) !== false;
+		return $this->obj->get($key) !== null;
 	}
 	
 	public function delete($key) {
