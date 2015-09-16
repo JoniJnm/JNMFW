@@ -181,8 +181,8 @@ class CacheManager {
 		$scope = $this->computeScope($scope);
 		$ttl = $this->computeTTL($ttl);
 		
-		if ($value === false) {
-			HLog::warning("Storing in cache a FALSE value for " . $realkey);
+		if ($value === null) {
+			HLog::warning("Storing in cache a NULL value for " . $realkey);
 		}
 		
 		$this->numCacheAccesses++;
@@ -211,8 +211,8 @@ class CacheManager {
 		$scope = $this->computeScope($scope);
 		$ttl = $this->computeTTL($ttl);
 		
-		if ($value === false) {
-			HLog::warning("Storing in cache a FALSE value for " . $realkey);
+		if ($value === null) {
+			HLog::warning("Storing in cache a NULL value for " . $realkey);
 		}
 		
 		$this->numCacheAccesses++;
@@ -240,13 +240,13 @@ class CacheManager {
 		$realkey = $this->getRealKey($key);
 		$scope = $this->computeScope($scope);
 		
-		$value = false;
+		$value = null;
 
 		if ($this->useRequestScope($scope)) {
 			$value = $this->request->get($realkey);
 		}
 		
-		if ($value === false) {
+		if ($value === null) {
 			$this->initLog();
 			
 			$this->numCacheAccesses++; //sólo aumentar acceso a caché cuando no está en la requests
@@ -254,14 +254,14 @@ class CacheManager {
 			if ($this->useLocalScope($scope)) {
 				$value = $this->getLocal()->get($realkey);
 			}
-			if ($value === false && $this->useExternalScope($scope)) {
+			if ($value === null && $this->useExternalScope($scope)) {
 				$value = $this->getExternal()->get($realkey);
-				if ($value !== false && $this->useLocalScope($scope)) {
+				if ($value !== null && $this->useLocalScope($scope)) {
 					$this->getLocal()->set($realkey, $value);
 				}
 			}
 			
-			if ($value !== false && $this->useRequestScope($scope)) {
+			if ($value !== null && $this->useRequestScope($scope)) {
 				$this->request->set($realkey, $value);
 			}
 			
@@ -279,8 +279,8 @@ class CacheManager {
 		foreach ($items as $key => $value) {
 			$realkey = $this->getRealKey($key);
 			$data[$realkey] = $value;
-			if ($value === false) {
-				HLog::warning("Storing in cache a FALSE value for " . $realkey);
+			if ($value === null) {
+				HLog::warning("Storing in cache a NULL value for " . $realkey);
 			}
 		}
 		
@@ -306,21 +306,16 @@ class CacheManager {
 		return $ret;
 	}
 	
-	//se devuelve un array con los objetos encontrados
 	public function getMulti($keys, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$scope = $this->computeScope($scope);
-		$ckeys = count($keys);
-		$keys = array_unique($keys); //necesario para performance en esta función
-		if ($ckeys != count($keys)) {
-			FWUtils::log(BlinkFW_LogFile::LEVEL_ERROR, 'Warning: Pidiendo claves duplicadas en getMulti');
-		}
+		$keys = array_unique($keys);
 		$out = array();
 		$map = array(); //asociar key string con índice
 		$realKeys = array();
 		
 		foreach ($keys as $key) {
 			$realKeys[] = $this->getRealKey($key);
-			$out[] = false; //iniciarlizar salida a false
+			$out[] = null; //iniciarlizar salida a null
 		}
 		
 		for ($i=0; $i<count($realKeys); $i++) {
@@ -357,6 +352,10 @@ class CacheManager {
 			$this->request->setMulti($save_request);
 		}
 		
+		$out = array_filter($out, function($v) {
+			return $v !== null;
+		});
+		
 		$key = implode(',', $keys);
 		$this->log('getMulti', $key, gettype($out));
 		
@@ -371,8 +370,8 @@ class CacheManager {
 			//el índice puede ser la key (memcache) o numérico (redis)
 			if (isset($aux[$i])) $value = $aux[$i];
 			elseif (isset($aux[$key])) $value = $aux[$key];
-			else $value = false; //es por key (memcache) y no exite
-			if ($value === false) {
+			else $value = null; //es por key (memcache) y no exite
+			if ($value === null) {
 				$morekeys[] = $key;
 			}
 			else {
@@ -394,7 +393,7 @@ class CacheManager {
 		Si se hace un exists se necesitará acceder a la caché 2 veces (1 para exists, otra para get)
 		*/
 
-		return $this->get($key, $scope) !== false;
+		return $this->get($key, $scope) !== null;
 	}
 	
 	public function delete($key, $scope = self::SCOPE_REQUEST_DEFAULT) {
@@ -516,7 +515,7 @@ class CacheManager {
 	}
 	
 	private function addDeletedKey($key, $scope) {
-		//if (strpos($key, '_lock_') !== false) return;
+		//if (strpos($key, '_lock_') !== null) return;
 		if (!isset($this->deletedKeys[$scope])) {
 			$this->deletedKeys[$scope] = array();
 		}
