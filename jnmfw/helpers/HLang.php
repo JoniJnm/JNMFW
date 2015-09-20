@@ -38,8 +38,8 @@ abstract class HLang {
 			$keys = $refl->getConstants();
 		}
 		sort($keys);
-		$md5 = md5(constant('\\'.static::$namespace.'\Lang'.static::$lang.'::VERSION').'-'.
-				constant('\\'.static::$namespace.'\Lang'.static::$default.'::VERSION').'-'.
+		$md5 = md5(constant('\\'.static::$namespace.'\Lang'.static::$lang.'::_VERSION').'-'.
+				constant('\\'.static::$namespace.'\Lang'.static::$default.'::_VERSION').'-'.
 				print_r($keys, true));
 		$filename = strtolower(static::$lang).'-'.$md5.'.js';
 		$file = $folder.'/'.$filename;
