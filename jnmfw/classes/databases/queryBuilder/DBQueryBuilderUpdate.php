@@ -9,12 +9,12 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder {
 	public function set($data, $autoQuote = true);
 	
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return DBQueryBuilderUpdate
 	 */
 	public function innerJoin($table, $alias, $col1, $col2);
 	
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return DBQueryBuilderUpdate
 	 */
 	public function customJoin($type, $table, $alias, $conditions);
 	
@@ -24,12 +24,12 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder {
 	public function where($column, $value);
 	
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return DBQueryBuilderUpdate
 	 */
 	public function whereLike($column, $value);
 	
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return DBQueryBuilderUpdate
 	 */
 	public function whereIn($column, $values);
 	

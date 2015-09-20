@@ -4,12 +4,12 @@ namespace JNMFW\classes\databases\queryBuilder;
 
 interface DBQueryBuilderDelete extends DBQueryBuilder {
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return DBQueryBuilderDelete
 	 */
 	public function innerJoin($table, $alias, $col1, $col2);
 	
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return DBQueryBuilderDelete
 	 */
 	public function customJoin($type, $table, $alias, $conditions);
 	
@@ -19,12 +19,12 @@ interface DBQueryBuilderDelete extends DBQueryBuilder {
 	public function where($column, $value);
 	
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return DBQueryBuilderDelete
 	 */
 	public function whereLike($column, $value);
 	
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return DBQueryBuilderDelete
 	 */
 	public function whereIn($column, $values);
 	
