@@ -30,4 +30,17 @@ abstract class HUtils {
 	static public function formatDateTime($date) {
 		return self::getDB()->formatDateTime($date);
 	}
+	
+	static public function getClientIP() {
+		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		}
+		elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+		else {
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
+	}
 }
