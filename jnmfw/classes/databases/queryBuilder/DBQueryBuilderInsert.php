@@ -26,7 +26,7 @@ interface DBQueryBuilderInsert extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderInsert
 	 */
-	public function onDuplicateCustom($data);
+	public function onDuplicateRaw($data);
 	
 	/**
 	 * @return DBQueryBuilderInsert

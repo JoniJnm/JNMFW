@@ -16,7 +16,27 @@ interface DBQueryBuilderDelete extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderDelete
 	 */
-	public function where($column, $value);
+	public function setGlueAnd();
+	
+	/**
+	 * @return DBQueryBuilderDelete
+	 */
+	public function setGlueOr();
+	
+	/**
+	 * @return DBQueryBuilderDelete
+	 */
+	public function where($column, $value, $op = '=');
+	
+	/**
+	 * @return DBQueryBuilderDelete
+	 */
+	public function whereOr(DBCondition $condition);
+	
+	/**
+	 * @return DBQueryBuilderDelete
+	 */
+	public function whereAnd(DBCondition $condition);
 	
 	/**
 	 * @return DBQueryBuilderDelete
@@ -31,7 +51,7 @@ interface DBQueryBuilderDelete extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderDelete
 	 */
-	public function whereCustom($condition, $data=null);
+	public function whereRaw($condition, $data=null);
 	
 	public function execute();
 }

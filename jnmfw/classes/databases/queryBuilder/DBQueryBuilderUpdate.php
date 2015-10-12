@@ -21,7 +21,27 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderUpdate
 	 */
-	public function where($column, $value);
+	public function setGlueAnd();
+	
+	/**
+	 * @return DBQueryBuilderUpdate
+	 */
+	public function setGlueOr();
+	
+	/**
+	 * @return DBQueryBuilderUpdate
+	 */
+	public function where($column, $value, $op = '=');
+	
+	/**
+	 * @return DBQueryBuilderUpdate
+	 */
+	public function whereOr(DBCondition $condition);
+	
+	/**
+	 * @return DBQueryBuilderUpdate
+	 */
+	public function whereAnd(DBCondition $condition);
 	
 	/**
 	 * @return DBQueryBuilderUpdate
@@ -36,7 +56,7 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderUpdate
 	 */
-	public function whereCustom($condition, $data=null);
+	public function whereRaw($condition, $data=null);
 	
 	public function execute();
 }

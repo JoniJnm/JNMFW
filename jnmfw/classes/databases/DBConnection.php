@@ -45,21 +45,29 @@ abstract class DBConnection {
 	}
 	
 	/**
-	 * @return \JNMFW\classes\databases\queryBuilder\DBQueryBuilderInsert
+	 * @return queryBuilder\DBQueryBuilderInsert
 	 */
 	abstract public function getQueryBuilderInsert($table);
 	/**
-	 * @return \JNMFW\classes\databases\queryBuilder\DBQueryBuilderSelect
+	 * @return queryBuilder\DBQueryBuilderSelect
 	 */
 	abstract public function getQueryBuilderSelect($table, $alias='');
 	/**
-	 * @return \JNMFW\classes\databases\queryBuilder\DBQueryBuilderUpdate
+	 * @return queryBuilder\DBQueryBuilderUpdate
 	 */
 	abstract public function getQueryBuilderUpdate($table);
 	/**
-	 * @return \JNMFW\classes\databases\queryBuilder\DBQueryBuilderDelete
+	 * @return queryBuilder\DBQueryBuilderDelete
 	 */
 	abstract public function getQueryBuilderDelete($table);
+	/**
+	 * @return queryBuilder\DBCondition
+	 */
+	abstract public function createConditionAnds();
+	/**
+	 * @return queryBuilder\DBCondition
+	 */
+	abstract public function createConditionOrs();
 	
 	public function setPrefix($prefix) {
 		$this->prefix = $prefix;

@@ -6,18 +6,26 @@ use JNMFW\classes\databases\DBConnection;
 
 class MySQLiConnection extends DBConnection {	
 	public function getQueryBuilderInsert($table) {
-		return new \JNMFW\classes\databases\mysqli\MySQLiQueryBuilderInsert($this, $table);
+		return new MySQLiQueryBuilderInsert($this, $table);
 	}
 
 	public function getQueryBuilderSelect($table, $alias=null) {
-		return new \JNMFW\classes\databases\mysqli\MySQLiQueryBuilderSelect($this, $table, $alias);
+		return new MySQLiQueryBuilderSelect($this, $table, $alias);
 	}
 
 	public function getQueryBuilderUpdate($table) {
-		return new \JNMFW\classes\databases\mysqli\MySQLiQueryBuilderUpdate($this, $table);
+		return new MySQLiQueryBuilderUpdate($this, $table);
 	}
 	
 	public function getQueryBuilderDelete($table) {
-		return new \JNMFW\classes\databases\mysqli\MySQLiQueryBuilderDelete($this, $table);
+		return new MySQLiQueryBuilderDelete($this, $table);
+	}
+	
+	public function createConditionAnds() {
+		return new MySQLiCondition($this);
+	}
+	
+	public function createConditionOrs() {
+		return (new MySQLiCondition($this))->setGlueOr();
 	}
 }

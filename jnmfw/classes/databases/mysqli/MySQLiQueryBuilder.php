@@ -4,6 +4,7 @@ namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilder;
 use JNMFW\classes\databases\DBConnection;
+use JNMFW\classes\databases\queryBuilder\DBCondition;
 
 abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 	/**
@@ -13,11 +14,19 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 	protected $table;
 	protected $cols = array();
 	protected $joins = array();
-	private $wheres = array();
 	
-	public function __construct($db, $table) {
+	/**
+	 * @var DBCondition 
+	 */
+	protected $condition = null;
+	
+	/**
+	 * @param DBConnection $db
+	 */
+	public function __construct(DBConnection $db, $table) {
 		$this->db = $db;
 		$this->table = $table;
+		$this->condition = $db->createConditionAnds();
 	}
 	
 	protected function columns($columns) {
@@ -43,43 +52,50 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 		return $this;
 	}
 	
-	protected function where($column, $value) {
-		$this->wheres[] = $this->db->quoteName($column.' = '.$this->db->quote($value));
+	public function setGlueAnd() {
+		$this->condition->setGlueAnd();
 		return $this;
 	}
 	
-	protected function whereLike($column, $value) {
-		$this->wheres[] = $this->db->quoteName($column.' LIKE '.$this->db->quote($value));
+	public function setGlueOr() {
+		$this->condition->setGlueOr();
 		return $this;
 	}
-		
+	
+	public function where($column, $value, $op = '=') {
+		$this->condition->where($column, $value, $op);
+		return $this;
+	}
+	
+	public function whereOr(DBCondition $condition) {
+		$this->condition->whereOr($condition);
+		return $this;
+	}
+
+	public function whereAnd(DBCondition $condition) {
+		$this->condition->whereAnd($condition);
+		return $this;
+	}
+
+	public function whereLike($column, $value) {
+		$this->condition->whereLike($column, $value);
+		return $this;
+	}
+
 	public function whereIn($column, $values) {
-		$this->wheres[] = $this->db->quoteName($column.' IN '.$this->db->quoteArray($values));
+		$this->condition->whereIn($column, $values);
 		return $this;
 	}
-	
-	protected function whereCustom($condition, $data=null) {
-		if (stripos($condition, 'OR') !== false) {
-			$condition = '('.$condition.')';
-		}
-		if ($data) {
-			$from = array();
-			$to = array();
-			foreach ($data as $key => $value) {
-				$from[] = '{'.$key.'}';
-				$to[] = $this->db->quote($value);
-			}
-			$this->wheres[] = str_replace($from, $to, $condition);
-		}
-		else {
-			$this->wheres[] = $condition;
-		}
+
+	public function whereRaw($condition, $data=null) {
+		$this->condition->whereRaw($condition, $data);
 		return $this;
 	}
 	
 	protected function buildWhere() {
-		if ($this->wheres) return ' WHERE '.implode(' AND ', $this->wheres);
-		else return '';
+		$str = $this->condition->build();
+		if ($str) return ' WHERE '.$str;
+		return '';
 	}
 	
 	protected function execute() {

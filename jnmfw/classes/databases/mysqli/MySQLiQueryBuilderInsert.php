@@ -33,7 +33,7 @@ class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuil
 		return $this;
 	}
 
-	public function onDuplicateCustom($data) {
+	public function onDuplicateRaw($data) {
 		foreach ($data as $key => $value) {
 			$this->onDuplicate[] = $this->db->quoteName($key).'='.$value;
 		}

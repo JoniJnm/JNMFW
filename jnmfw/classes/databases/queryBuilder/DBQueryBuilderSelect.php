@@ -26,7 +26,27 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
-	public function where($column, $value);
+	public function setGlueAnd();
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function setGlueOr();
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function where($column, $value, $op = '=');
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function whereOr(DBCondition $condition);
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function whereAnd(DBCondition $condition);
 	
 	/**
 	 * @return DBQueryBuilderSelect
@@ -41,7 +61,7 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
-	public function whereCustom($condition, $data=null);
+	public function whereRaw($condition, $data=null);
 	
 	/**
 	 * @return DBQueryBuilderSelect
