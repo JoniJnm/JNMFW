@@ -30,6 +30,9 @@ class PDOAdapter implements \JNMFW\classes\databases\DBAdapter {
 	}
 	
 	public function quote($value) {
+		if (is_null($value)) return 'NULL';
+		elseif ($value === true) $value = 1;
+		elseif ($value === false) $value = 0;
 		return $this->conn->quote($value);
 	}
 	
