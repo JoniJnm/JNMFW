@@ -58,7 +58,7 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 		if (is_null($value)) return 'NULL';
 		elseif ($value === true) $value = 1;
 		elseif ($value === false) $value = 0;
-		return '"'.$this->conn->real_escape_string($value).'"';
+		return "'".$this->conn->real_escape_string($value)."'";
 	}
 	
 	public function query($query) {
