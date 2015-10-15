@@ -189,8 +189,9 @@ abstract class DBConnection {
 	 */
 	public function execute($query) {
 		$res = $this->initAccess($query);
-		$this->endAccess($res, $this->getAffectedRows());
-		return $this->getAffectedRows();
+		$nrows = $this->getAffectedRows();
+		$this->endAccess($res, $nrows);
+		return $nrows;
 	}
 
 	/**
