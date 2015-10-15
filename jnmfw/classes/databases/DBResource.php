@@ -8,7 +8,7 @@ namespace JNMFW\classes\databases;
  *
  */
 
-interface DBResourceAdapter {
+interface DBResource {
 	public function __construct($resource);
 	public function fetch_object();
 	public function fetch_row();

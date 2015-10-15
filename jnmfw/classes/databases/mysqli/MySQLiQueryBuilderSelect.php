@@ -115,12 +115,12 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		return $this->db->loadObjectList($this->build(), $keycol);
 	}
 
-	public function loadResult() {
+	public function loadValue() {
 		$this->setLimit1IfNeeded();
-		return $this->db->loadResult($this->build());
+		return $this->db->loadValue($this->build());
 	}
 
-	public function loadResultArray() {
-		return $this->db->loadResultArray($this->build());
+	public function loadValueArray() {
+		return $this->db->loadValueArray($this->build());
 	}
 }

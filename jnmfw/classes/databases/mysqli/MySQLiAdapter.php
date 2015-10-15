@@ -20,6 +20,13 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	 */
 	private $error = null;
 	
+	//Connection data, needed to clone connection to poll
+	private $host;
+	private $user;
+	private $pass;
+	private $dbname;
+	
+	
 	/**
 	 * Crea una instancia de esta clase para ser usada como objeto MySQLi
 	 * @param string $host
@@ -28,17 +35,30 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	 * @param string $dbname
 	 */
 	public function __construct($host, $user, $pass, $dbname='') {
-		$this->conn = new \mysqli($host, $user, $pass, $dbname);
-		if ($this->conn->connect_error) {
-			$this->error = $this->conn->connect_error.' ('.$this->conn->connect_errno.')';
-		}
-		else {
-			$this->conn->set_charset("utf8");
-		}
+		$this->host = $host;
+		$this->user = $user;
+		$this->pass = $pass;
+		$this->dbname = $dbname;
+		
+		$this->conn = $this->createNewNativeConnection();
 	}
 	
-	public function escape($str) {
-		return $this->conn->real_escape_string($str);
+	public function createNewNativeConnection() {
+		$conn = new \mysqli($this->host, $this->user, $this->pass, $this->dbname);
+		if ($conn->connect_error) {
+			$this->error = $conn->connect_error.' ('.$conn->connect_errno.')';
+		}
+		else {
+			$conn->set_charset("utf8");
+		}
+		return $conn;
+	}
+	
+	public function quote($value) {
+		if (is_null($value)) return 'NULL';
+		elseif ($value === true) $value = 1;
+		elseif ($value === false) $value = 0;
+		return '"'.$this->conn->real_escape_string($value).'"';
 	}
 	
 	public function query($query) {
@@ -46,7 +66,7 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 		$this->error = $this->conn->error;
 		if ($res === true) return true;
 		elseif (!$res) return false;
-		else return new MySQLiResourceAdapter($res);
+		else return new MySQLiResource($res);
 	}
 	
 	public function getAffectedRows() {
@@ -73,9 +93,5 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	public function rollback() {
 		$this->conn->rollback();
 		$this->conn->autocommit(true);
-	}
-	
-	public function set_charset($charset) {
-		$this->conn->set_charset($charset);
 	}
 }

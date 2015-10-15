@@ -5,19 +5,18 @@ namespace JNMFW\classes\databases\mysqli;
 /**
  * Clase para adaptar un recurso devuelto por mysql_connect para ser usado como un recurso de MySQLi
  * Más información: http://www.php.net/manual/es/class.mysqli-result.php
- *
  */
 
-class MySQLiResourceAdapter implements \JNMFW\classes\databases\DBResourceAdapter {
+class MySQLiResource implements \JNMFW\classes\databases\DBResource {
 	/**
 	 * El recurso mysql
-	 * @var resource
+	 * @var mysqli_result
 	 */
-	private $res;
+	protected $res;
 	
 	/**
 	 * Constructor para instanciar esta clase y usarla como si fuera de tipo mysqli_result
-	 * @param string $resource
+	 * @param mysqli_result $resource
 	 */
 	public function __construct($resource) {
 		$this->res = $resource;

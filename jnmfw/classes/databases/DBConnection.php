@@ -22,11 +22,6 @@ abstract class DBConnection {
 	protected $prefix = null;
 	
 	/**
-	 * @var int
-	 */
-	private $num_rows = 0;
-	
-	/**
 	 * @var boolean
 	 */
 	private $strict = true;
@@ -68,24 +63,30 @@ abstract class DBConnection {
 	 * @return queryBuilder\DBCondition
 	 */
 	abstract public function createConditionOrs();
+	/**
+	 * @return DBPoll
+	 */
+	abstract public function getAsyncPoll($queries);
 	
 	public function setPrefix($prefix) {
 		$this->prefix = $prefix;
 	}
 	
 	public function setStrict($strict) {
-		$this->strict = $strict;
+		$this->strict = boolval($strict);
+	}
+	
+	public function isStrict() {
+		return $this->strict;
 	}
 	
 	/**
 	 * Prepara una variable para ser insertada con seguridad.
-	 * @param string $val
+	 * @param mixed $value
 	 * @return string
 	 */
-	public function quote($val) {
-		if (is_null($val)) return 'NULL';
-		//elseif (\is_numeric($val)) return $val;
-		else return "'".$this->conn->escape($val)."'";
+	public function quote($value) {
+		return $this->conn->quote($value);
 	}
 	
 	/**
@@ -184,12 +185,11 @@ abstract class DBConnection {
 	/**
 	 * Ejecuta una instrucción SQL (para insert, update o delete)
 	 * @param string $query La instrucción SQL
-	 * @return int Devuelve el número de filas afectadas, -1 en caso de error
+	 * @return boolean Devuelve el número de filas afectadas, -1 en caso de error
 	 */
 	public function execute($query) {
-		$this->initAccess();
-		$res = $this->query($query);
-		$this->endAccess($res);
+		$res = $this->initAccess($query);
+		$this->endAccess($res, $this->getAffectedRows());
 		return $this->getAffectedRows();
 	}
 
@@ -199,16 +199,15 @@ abstract class DBConnection {
 	 * @return Un objeto stdclass con los valores devueltos por MySQL
 	 */
 	public function loadObject($query){
-		$this->initAccess();
-		$res = $this->query($query);
-		$obj = null;
-		if ($res) {
-			if ($object = $res->fetch_object()) {
-				$obj = $object;
-			}
-		}
-		$this->endAccess($res);
+		$res = $this->initAccess($query);
+		$obj = $this->parseObject($res);
+		$this->endAccess($res, $obj ? 1 : 0);
 		return $obj;
+	}
+	
+	protected function parseObject($res) {
+		if (!$res) return false;
+		return $res->fetch_object();
 	}
 	
 	/**
@@ -218,17 +217,19 @@ abstract class DBConnection {
 	 * @return array de objetos stdclass
 	 */
 	public function loadObjectList($query, $keycol = null) {
-		$this->initAccess();
-		$res = $this->query($query);
-		$array = null;
-		if ($res) {
-			$array = array();
-			while ($row = $res->fetch_object()) {
-				if ($keycol) $array[$row->$keycol] = $row;
-				else $array[] = $row;
-			}
+		$res = $this->initAccess($query);
+		$array = $this->parseObjectList($res, $keycol);
+		$this->endAccess($res, count($array));
+		return $array;
+	}
+	
+	protected function parseObjectList($res, $keycol) {
+		if (!$res) return false;
+		$array = array();
+		while ($row = $res->fetch_object()) {
+			if ($keycol) $array[$row->$keycol] = $row;
+			else $array[] = $row;
 		}
-		$this->endAccess($res);
 		return $array;
 	}
 
@@ -238,17 +239,18 @@ abstract class DBConnection {
 	 * @param int $col El número de columna a obtener (por defecto la primera, es decir número 0)
 	 * @return El valor de la primera fila y columna
 	 */
-	public function loadResult($query, $col = 0) {
-		$this->initAccess();
-		$res = $this->query($query);
-		$value = false;
-		if ($res) {
-			if ($row = $res->fetch_row()) {
-				$value = $row[$col];
-			}
-		}
-		$this->endAccess($res);
+	public function loadValue($query, $col = 0) {
+		$res = $this->initAccess($query);
+		$value = $this->parseValue($res, $col);
+		$this->endAccess($res, $value === false ? 0 : 1);
 		return $value;
+	}
+	
+	protected function parseValue($res, $col) {
+		if (!$res) return false;
+		$row = $res->fetch_row();
+		if (!$row) return false;
+		return $row[$col];
 	}
 	
 	/**
@@ -258,9 +260,14 @@ abstract class DBConnection {
 	 * @param int $col El número de columna a obtener (por defecto la primera, es decir número 0)
 	 * @return array de valores
 	 */
-	public function &loadResultArray($query, $col = 0) {
-		$this->initAccess();
-		$res = $this->query($query);
+	public function loadValueArray($query, $col = 0) {
+		$res = $this->initAccess($query);
+		$array = $this->parseValueArray($res, $col);
+		$this->endAccess($res, count($array));
+		return $array;
+	}
+	
+	protected function &parseValueArray($res, $col) {
 		$array = null;
 		if ($res) {
 			$array = array();
@@ -268,7 +275,6 @@ abstract class DBConnection {
 				$array[] = $row[$col];
 			}
 		}
-		$this->endAccess($res);
 		return $array;
 	}
 	
@@ -286,14 +292,6 @@ abstract class DBConnection {
 	 */
 	public function getLastInsertedId() {
 		return $this->conn->getInsertedID();
-	}
-	
-	/**
-	 * Obtiene el número de filas devueltas en la última operación MySQL
-	 * @return int La cantidad de filas devueltas
-	 */
-	public function getNumRows() {
-		return $this->num_rows;
 	}
 	
 	/**
@@ -334,28 +332,26 @@ abstract class DBConnection {
 	/**
 	 * Inicia el acceso
 	 */
-	protected function initAccess() {
+	protected function initAccess($query) {
 		HTimer::init('DB');
+		return $this->query($query);
 	}
 	
 	/**
 	 * Finaliza el acceso
-	 * @param DBResourceAdapter $res Resultado
+	 * @param DBResource $res Resultado
 	 */
-	protected function endAccess($res) {
+	protected function endAccess($res, $nrows) {
 		if ($res === true) {
-			$this->num_rows = 0;
-			HTimer::end('DB', $this->getAffectedRows().' affected rows : '.$this->query);
+			HTimer::end('DB', $nrows.' affected rows : '.$this->query);
 		}
 		elseif (!$res) {
-			$this->num_rows = -1;
 			$msg = 'Error DB '.$this->conn->getError().' : '.$this->query;
 			if ($this->strict) \JNMFW\helpers\HServer::sendServerError($msg);
 			else HLog::debug($msg);
 		}
 		else {
-			$this->num_rows = $res->getNumRows();
-			HTimer::end('DB', $this->num_rows.' rows : '.$this->query);
+			HTimer::end('DB', $nrows.' rows : '.$this->query);
 			$res->free();
 		}
 	}
@@ -363,7 +359,7 @@ abstract class DBConnection {
 	/**
 	 * Consulta
 	 * @param string|queryBuilder\DBQueryBuilder $query La consulta SQL
-	 * @return DBResourceAdapter resultado de la consulta
+	 * @return DBResource resultado de la consulta
 	 */
 	protected function query($query) {
 		if ($query instanceof queryBuilder\DBQueryBuilder) $this->query = $query->build();

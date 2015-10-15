@@ -85,7 +85,7 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	 */
 	public function loadObjectList($keycol = null);
 	
-	public function loadResult();
+	public function loadValue();
 	
-	public function loadResultArray();
+	public function loadValueArray();
 }

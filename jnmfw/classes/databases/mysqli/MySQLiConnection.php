@@ -26,6 +26,37 @@ class MySQLiConnection extends DBConnection {
 	}
 	
 	public function createConditionOrs() {
-		return (new MySQLiCondition($this))->setGlueOr();
+		$condition = new MySQLiCondition($this);
+		$condition->setGlueOr();
+		return $condition;
+	}
+
+	public function getAsyncPoll($queries) {
+		return new MySQLiPoll($this, $queries);
+	}
+
+	//needed for async poll
+	
+	/**
+	 * @return \mysqli
+	 */
+	public function createNewNativeConnection() {
+		return $this->conn->createNewNativeConnection();
+	}
+	
+	public function _parseObject($res) {
+		return parent::parseObject($res);
+	}
+	
+	public function _parseObjectList($res, $keycol) {
+		return parent::parseObjectList($res, $keycol);
+	}
+	
+	public function _parseValue($res, $col) {
+		return parent::parseValue($res, $col);
+	}
+	
+	public function _parseValueArray($res, $col) {
+		return parent::parseValueArray($res, $col);
 	}
 }
