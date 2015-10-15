@@ -27,11 +27,11 @@ class PDOResource implements \JNMFW\classes\databases\DBResource {
 	}
 	
 	public function fetch_row() {
-		return $this->res->fetch();
+		return $this->res->fetch(\PDO::FETCH_ASSOC);
 	}
 	
 	public function fetch_array() {
-		return $this->res->fetch(\PDO::FETCH_ASSOC);
+		return $this->res->fetch(\PDO::FETCH_NUM);
 	}
 	
 	public function getNumRows() {
