@@ -3,8 +3,9 @@
 namespace JNMFW\classes\databases\pdo;
 
 use JNMFW\classes\databases\DBDriver;
+use JNMFW\helpers\HLog;
 
-class PDODriver implements DBDriver {
+class PDODriver extends DBDriver {
 	private $dns;
 	private $user;
 	private $pass;
@@ -20,19 +21,20 @@ class PDODriver implements DBDriver {
 	public function createAdapter() {
 		$adapter = new PDOAdapter($this->dsn, $this->user, $this->pass, $this->options);
 		if ($adapter->getError()) {
-			\JNMFW\helpers\HLog::error('Error de Conexión PDO '.$adapter->getError());
+			HLog::error('Error de Conexión PDO '.$adapter->getError());
 			return null;
 		}
 		else {
+			HLog::verbose('Connected to PDO DB with user '.$this->user);
 			return $adapter;
 		}
 	}
 	
 	public function createConnection() {
 		$adapter = $this->createAdapter();
-		if ($adapter)
-			return new PDOConnection($adapter);
-		else
-			return null;
+		if (!$adapter) return null;
+		$db = new PDOConnection($adapter);
+		$this->onCreateConnection($db);
+		return $db;
 	}
 }

@@ -35,8 +35,10 @@ abstract class DBConnection {
 	 * Constructor
 	 * @param DBAdapter $conn La conexión devuelta por connect()
 	 */
-	public function __construct(DBAdapter $conn) {
+	public function __construct(DBAdapter $conn, $prefix = null, $strict = true) {
 		$this->conn = $conn;
+		$this->prefix = $prefix;
+		$this->strict = $strict;
 	}
 	
 	/**
@@ -357,7 +359,7 @@ abstract class DBConnection {
 		}
 		elseif (!$res) {
 			$msg = 'Error DB '.$this->conn->getError().' : '.$this->query;
-			if ($this->strict) \JNMFW\helpers\HServer::sendServerError($msg);
+			if ($this->isStrict()) \JNMFW\helpers\HServer::sendServerError($msg);
 			else HLog::error($msg);
 		}
 		else {

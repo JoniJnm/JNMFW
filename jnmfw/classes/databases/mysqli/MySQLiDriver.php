@@ -3,8 +3,9 @@
 namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\DBDriver;
+use JNMFW\helpers\HLog;
 
-class MySQLiDriver implements DBDriver {
+class MySQLiDriver extends DBDriver {
 	private $host;
 	private $user;
 	private $pass;
@@ -22,19 +23,20 @@ class MySQLiDriver implements DBDriver {
 	public function createAdapter() {
 		$adapter = new MySQLiAdapter($this->host, $this->user, $this->pass, $this->dbname);
 		if ($adapter->getError()) {
-			\JNMFW\helpers\HLog::error('Error de Conexión MySQLi '.$adapter->getError());
+			HLog::error('Error de Conexión MySQLi '.$adapter->getError());
 			return null;
 		}
 		else {
+			HLog::error('Connected to MySQL DB with user '.$this->user);
 			return $adapter;
 		}
 	}
 	
 	public function createConnection() {
 		$adapter = $this->createAdapter();
-		if ($adapter)
-			return new MySQLiConnection($adapter);
-		else
-			return null;
+		if (!$adapter) return null;
+		$db = new MySQLiConnection($adapter);
+		$this->onCreateConnection($db);
+		return $db;
 	}
 }
