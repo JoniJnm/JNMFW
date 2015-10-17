@@ -358,7 +358,7 @@ abstract class DBConnection {
 		elseif (!$res) {
 			$msg = 'Error DB '.$this->conn->getError().' : '.$this->query;
 			if ($this->strict) \JNMFW\helpers\HServer::sendServerError($msg);
-			else HLog::debug($msg);
+			else HLog::error($msg);
 		}
 		else {
 			HTimer::end('DB', $nrows.' rows : '.$this->query);

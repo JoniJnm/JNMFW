@@ -3,8 +3,8 @@
 namespace JNMFW\classes\databases;
 
 use JNMFW\helpers\HServer;
+use JNMFW\classes\databases\DBConnection;
 use JNMFW\classes\databases\DBDriver;
-use JNMFW\classes\databases\DBAdapter;
 
 // *************************************************************************
 // Clase Base de Datos - gestiona la información de la Base de Datos
@@ -14,23 +14,25 @@ abstract class DBFactory {
 	/**
 	 * @var DBConnection[]
 	 */
-	private static $instances = array();
+	private static $connections = array();
+	
+	/**
+	 * @var DBDriver[]
+	 */
+	private static $drivers = array();
 	
 	/**
 	 * Registra una instancia de base de datos para poder luego obtenerla con getInstance($name)
 	 * @param string $name nombre de la instancia
-	 * @return bool true si se pudo crear la instancia, false en caso contrario
 	 */
-	static public function registerIntance($name, DBDriver $driver, DBAdapter $adapter) {
+	static public function registerIntance($name, DBDriver $driver) {
 		if (!\preg_match('#^[\w]+$#', $name)) {
 			HServer::sendServerError("El nombre de la instancia (".$name.") es inválido");
 		}
-		if ($adapter) {
-			self::$instances[$name] = $driver->getConnection($adapter);
-			return true;
+		elseif (self::instanceExists($name)) {
+			HServer::sendServerError("La instancia (".$name.") ya existe");
 		}
-		HServer::sendServerError("Imposible conectar a la DB"); //no continuar, no se puedo conectar a la db
-		return false;
+		self::$drivers[$name] = $driver;
 	}
 	
 	/**
@@ -38,8 +40,8 @@ abstract class DBFactory {
 	 * This method is used when an error occurs
 	 */
 	static public function rollbackAllConnections() {
-		foreach (self::$instances as $instance) {
-			$instance->transactionRollback();
+		foreach (self::$connections as $connection) {
+			$connection->transactionRollback();
 		}
 	}
 	
@@ -48,8 +50,8 @@ abstract class DBFactory {
 	 * This method is used when the connection ends successfully
 	 */
 	static public function commitAllConnections() {
-		foreach (self::$instances as $instance) {
-			$instance->transactionCommit();
+		foreach (self::$connections as $connection) {
+			$connection->transactionCommit();
 		}
 	}
 	
@@ -59,16 +61,26 @@ abstract class DBFactory {
 	 * @return DBConnection La instancia del objeto de la base de datos
 	 */
 	static public function getInstance($name = 'default') {
-		if (self::instanceExists($name)) return self::$instances[$name];
-		HServer::sendServerError("No se ha registrado una instancia para '".$name."'");
+		if (!self::instanceExists($name)) {
+			HServer::sendServerError("La instancia '".$name."' no existe");
+		}
+		if (isset(self::$connections[$name])) {
+			return self::$connections[$name];
+		}
+		$driver = self::$drivers[$name];
+		$connection = $driver->createConnection();
+		if (!$connection) {
+			HServer::sendServerError("Imposible conectar a la DB");
+		}
+		self::$connections[$name] = $connection;
+		return $connection;
 	}
 	
 	/**
 	 * Registra la instancia por defecto que se obtendrá al llamar a getInstance() sin parámetros
-	 * @return bool true si se pudo crear la instancia, false en caso contrario
 	 */
-	static public function registerDefaultInstance(DBDriver $driver, DBAdapter $adapter) {
-		return self::registerIntance('default', $driver, $adapter);
+	static public function registerDefaultInstance(DBDriver $driver) {
+		return self::registerIntance('default', $driver);
 	}
 	
 	/**
@@ -76,6 +88,6 @@ abstract class DBFactory {
 	 * @return boolean true si existe, false en caso contrario
 	 */
 	static public function instanceExists($name) {
-		return isset(self::$instances[$name]);
+		return isset(self::$drivers[$name]);
 	}
 }

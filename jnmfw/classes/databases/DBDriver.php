@@ -5,15 +5,14 @@ namespace JNMFW\classes\databases;
 use JNMFW\classes\databases\DBAdapter;
 use JNMFW\classes\databases\DBConnection;
 
-abstract class DBDriver {
+interface DBDriver {
 	/**
-	 * @return DBAdapter Una instancia de conexión a la base de datos
+	 * @return DBAdapter
 	 */
-	//abstract public function getAdapter($params = array());
+	public function createAdapter();
 	
 	/**
-	 * @param DBAdapter $adapter
 	 * @return DBConnection
 	 */
-	abstract public function getConnection(DBAdapter $adapter);
+	public function createConnection();
 }

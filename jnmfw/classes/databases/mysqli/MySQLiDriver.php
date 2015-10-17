@@ -3,33 +3,38 @@
 namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\DBDriver;
-use JNMFW\classes\databases\DBAdapter;
 
-class MySQLiDriver extends DBDriver {
-	static private $instance = null;
+class MySQLiDriver implements DBDriver {
+	private $host;
+	private $user;
+	private $pass;
+	private $dbname;
+	private $port;
 	
-	/**
-	 * @return MySQLiDriver
-	 */
-	static public function getInstance() {
-		if (self::$instance === null) {
-			self::$instance = new static();
-		}
-		return self::$instance;
+	public function __construct($host, $user, $pass, $dbname='', $port=3306) {
+		$this->host = $host;
+		$this->user = $user;
+		$this->pass = $pass;
+		$this->dbname = $dbname;
+		$this->port = $port;
 	}
 	
-	public function getAdapter($host, $user, $pass, $dbname='') {
-		$conn = new MySQLiAdapter($host, $user, $pass, $dbname);
-		if ($conn->getError()) {
-			\JNMFW\helpers\HLog::error('Error de Conexión MySQLi '.$conn->getError());
+	public function createAdapter() {
+		$adapter = new MySQLiAdapter($this->host, $this->user, $this->pass, $this->dbname);
+		if ($adapter->getError()) {
+			\JNMFW\helpers\HLog::error('Error de Conexión MySQLi '.$adapter->getError());
 			return null;
 		}
 		else {
-			return $conn;
+			return $adapter;
 		}
 	}
 	
-	public function getConnection(DBAdapter $adapter) {
-		return new MySQLiConnection($adapter);
+	public function createConnection() {
+		$adapter = $this->createAdapter();
+		if ($adapter)
+			return new MySQLiConnection($adapter);
+		else
+			return null;
 	}
 }
