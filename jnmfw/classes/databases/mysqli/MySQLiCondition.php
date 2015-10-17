@@ -30,10 +30,12 @@ class MySQLiCondition implements DBCondition {
 	
 	public function setGlueAnd() {
 		$this->glue = 'AND';
+		return $this;
 	}
 	
 	public function setGlueOr() {
 		$this->glue = 'OR';
+		return $this;
 	}
 	
 	public function where($column, $value, $op = '=') {

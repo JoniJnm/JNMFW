@@ -27,8 +27,7 @@ class MySQLiConnection extends DBConnection {
 	
 	public function createConditionOrs() {
 		$condition = new MySQLiCondition($this);
-		$condition->setGlueOr();
-		return $condition;
+		return $condition->setGlueOr();
 	}
 
 	public function getAsyncPoll($queries) {
