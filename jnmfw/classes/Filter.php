@@ -80,10 +80,10 @@ class Filter {
 	 * @param string $key
 	 * @return string
 	 */
-	public function getToken($key) {
+	public function getSha1($key) {
 		$def = '';
 		$source = $this->isset_else($key, $def);
-		if (\preg_match('/^[a-f0-9]{40}$/i', $source)) return $source;
+		if (\preg_match('/^[a-f0-9]{40}$/', $source)) return $source;
 		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
 		else return $def;
 	}
