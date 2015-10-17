@@ -98,11 +98,6 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	
 	private function setLimit1IfNeeded() {
 		if ($this->limit) return;
-		//no se puede añadir limit 1 si alguna columna tiene alguna función
-		//como count(*)
-		foreach ($this->cols as $col) {
-			if (strpos($col, '(') !== false) return;
-		}
 		$this->limit(1);
 	}
 
