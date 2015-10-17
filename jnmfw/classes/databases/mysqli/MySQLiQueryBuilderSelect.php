@@ -118,4 +118,8 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	public function loadValueArray() {
 		return $this->db->loadValueArray($this->build());
 	}
+	
+	public function loadResource() {
+		return $this->db->loadResource($this->build());
+	}
 }

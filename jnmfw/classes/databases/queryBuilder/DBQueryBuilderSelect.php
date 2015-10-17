@@ -88,4 +88,10 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	public function loadValue();
 	
 	public function loadValueArray();
+	
+	/**
+	 * Returns DBResource to loop it manually
+	 * @return DBResource
+	 */
+	public function loadResource();
 }

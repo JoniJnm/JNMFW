@@ -280,6 +280,15 @@ abstract class DBConnection {
 	}
 	
 	/**
+	 * Returns DBResource to loop it manually
+	 * @param string query
+	 * @return DBResource
+	 */
+	public function loadResource($query) {
+		return $this->query($query);
+	}
+	
+	/**
 	 * Devuelve el número de filas afectadas en la última operación MySQL
 	 * @return int El número de filas afectadas
 	 */
