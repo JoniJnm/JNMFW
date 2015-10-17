@@ -19,11 +19,6 @@ abstract class DBDriver {
 	 */
 	abstract public function createConnection();
 	
-	protected function onCreateConnection(DBConnection $db) {
-		$db->setPrefix($this->getPrefix());
-		$db->setStrict($this->isStrict());
-	}
-	
 	public function setPrefix($prefix) {
 		$this->prefix = $prefix;
 	}

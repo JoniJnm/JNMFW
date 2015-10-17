@@ -35,8 +35,8 @@ abstract class DBConnection {
 	 * Constructor
 	 * @param DBAdapter $conn La conexión devuelta por connect()
 	 */
-	public function __construct(DBAdapter $conn, $prefix = null, $strict = true) {
-		$this->conn = $conn;
+	public function __construct(DBAdapter $adapter, $prefix = null, $strict = true) {
+		$this->conn = $adapter;
 		$this->prefix = $prefix;
 		$this->strict = $strict;
 	}
@@ -69,10 +69,6 @@ abstract class DBConnection {
 	 * @return DBPoll
 	 */
 	abstract public function getAsyncPoll($queries);
-	
-	public function setPrefix($prefix) {
-		$this->prefix = $prefix;
-	}
 	
 	public function setStrict($strict) {
 		$this->strict = boolval($strict);

@@ -27,7 +27,7 @@ class MySQLiDriver extends DBDriver {
 			return null;
 		}
 		else {
-			HLog::error('Connected to MySQL DB with user '.$this->user);
+			HLog::verbose('Connected to MySQL DB with user '.$this->user);
 			return $adapter;
 		}
 	}
@@ -35,8 +35,6 @@ class MySQLiDriver extends DBDriver {
 	public function createConnection() {
 		$adapter = $this->createAdapter();
 		if (!$adapter) return null;
-		$db = new MySQLiConnection($adapter);
-		$this->onCreateConnection($db);
-		return $db;
+		return new MySQLiConnection($adapter, $this->getPrefix(), $this->isStrict());
 	}
 }
