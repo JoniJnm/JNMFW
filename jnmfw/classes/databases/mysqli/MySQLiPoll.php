@@ -57,7 +57,6 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	}
 
 	public function free() {
-		HLog::verbose("free");
 		foreach ($this->links as $link) {
 			$link->close();
 		}
@@ -143,7 +142,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		elseif (!$res) {
 			$msg = 'Error DB '.$this->getErrorByKey($key).' : '.$query;
 			if ($this->db->isStrict()) \JNMFW\helpers\HServer::sendServerError($msg);
-			else HLog::debug($msg);
+			else HLog::error($msg);
 		}
 		else {
 			HTimer::end('DB Async', $nrows.' rows : '.$query);
