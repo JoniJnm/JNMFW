@@ -131,54 +131,6 @@ abstract class DBConnection {
 		if ($complete) return '('.\implode(',', $arr).')';
 		else return \implode(', ', $arr);
 	}
-	
-	/**
-	 * Prepara una fecha para ser insertada en la db
-	 * @param string $date En cualquier formato válido: http://www.php.net/manual/es/datetime.formats.php
-	 * return string devuelve la fecha y hora en formato YYYY-mm-dd
-	 */
-	public function formatDate($date) {
-		return $this->format_date($date, 'Y-m-d');
-	}
-	
-	/**
-	 * Prepara una fecha para ser insertada en la db
-	 * @param string $date En cualquier formato válido: http://www.php.net/manual/es/datetime.formats.php
-	 * return string devuelve la fecha y hora en formato yyyy-mm-dd hh:mm:ss
-	 */
-	public function formatDateTime($date) {
-		return $this->format_date($date, 'Y-m-d H:i:s');
-	}
-	
-	private function format_date($date, $formato) {
-		if (\is_numeric($date)) {
-			$fech = new \DateTime(null);
-			$fech->setTimestamp($date);
-		}
-		else {
-			$fech = new \DateTime($date);	
-		}
-		$fech->setTimezone(static::getDateTimeZoneUTC());
-		return $fech->format($formato);
-	}
-	
-	private static function getDateTimeZoneUTC() {
-		static $timezone = null;
-		if ($timezone === null) $timezone = new \DateTimeZone("UTC");
-		return $timezone;
-	}
-	
-	public function getNullDate() {
-		return '0000-00-00';
-	}
-	
-	public function getNullDateTime() {
-		return '0000-00-00 00:00:00';
-	}
-	
-	public function isNullDate($date) {
-		return empty($date) || $date == $this->getNullDate() || $date == $this->getNullDateTime();
-	}
 
 	/**
 	 * Ejecuta una instrucción SQL (para insert, update o delete)
