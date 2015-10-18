@@ -9,7 +9,7 @@ class Filter {
 	private $strict = false;
 	
 	public function  __construct($data) {
-		$this->setData($data);
+		$this->data = $data;
 	}
 	
 	public function setStrictMode($strict) {
@@ -18,10 +18,6 @@ class Filter {
 	
 	private function isStrict() {
 		return $this->strict;
-	}
-	
-	protected function setData($data) {
-		$this->data = $data;
 	}
 	
 	protected function isset_else($key, $def) {

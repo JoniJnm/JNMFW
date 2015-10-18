@@ -3,26 +3,13 @@
 namespace JNMFW\classes;
 
 /**
- * Clase para controlar de manera sencilla las variables $_GET, $_POST, $_COOKIE y $_SESSION
+ * Clase para controlar de manera sencilla las variables $_GET, $_POST y $_COOKIE
  * 
- * Si no se accede a una propiedad específica de la clase (get, post, cookie, server, all)
- * por defecto el filtro se realizará sobre $_GET y $_POST
- *
+ * Si no se accede a una propiedad específica de la clase (cookie, server)
+ * por defecto el filtro se realizará sobre merge($_GET, $_POST)
  */
 
 class Request extends Filter {
-	/**
-	 * Filtro sobre $_GET
-	 * @var Filter
-	 */
-	public $get;
-	
-	/**
-	 * Fitro sobre $_POST
-	 * @var Filter
-	 */
-	public $post;
-	
 	/**
 	 * Filtro sobre $_COOKIE
 	 * @var Filter
@@ -36,12 +23,6 @@ class Request extends Filter {
 	public $server;
 	
 	/**
-	 * Filtro sobre $_SESSION
-	 * @var Filter
-	 */
-	public $session;
-	
-	/**
 	 * @var Request
 	 */
 	private static $instance = null;
@@ -49,17 +30,15 @@ class Request extends Filter {
 	/**
 	 * Desde fuera llamar a getInstance()
 	 */
-	public function __construct($data = null) {
-		$this->setData(\array_merge($_POST, $_GET));
-		$this->get = new Filter($_GET);
-		$this->post = new Filter($_POST);
+	private function __construct($_ = null) {
+		parent::__construct(\array_merge($_GET, $_POST));
 		$this->cookie = new Filter($_COOKIE);
 		$this->server = new Filter($_SERVER);
-		//$this->session = new Filter($_SESSION);
 	}
 	
 	/**
 	 * Obtiene la instacia del Objeto singleton Request
+	 * El filtro principal es merge($_GET, $_POST)
 	 * @return Request
 	 */
 	public static function getInstance() {
