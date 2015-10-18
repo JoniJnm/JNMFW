@@ -30,7 +30,7 @@ class Request extends Filter {
 	/**
 	 * Desde fuera llamar a getInstance()
 	 */
-	private function __construct($_ = null) {
+	public function __construct($_ = null) {
 		parent::__construct(\array_merge($_GET, $_POST));
 		$this->cookie = new Filter($_COOKIE);
 		$this->server = new Filter($_SERVER);
