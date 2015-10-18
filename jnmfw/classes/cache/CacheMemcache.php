@@ -4,12 +4,12 @@ namespace JNMFW\classes\cache;
 
 class CacheMemcache implements ICache {
 	/**
-	 * @var Memcached
+	 * @var \Memcached
 	 */
 	private $obj;
 	
 	function __construct($hosts) {
-		$this->obj = new Memcached();
+		$this->obj = new \Memcached();
 		if (!is_array($hosts)) {
 			$hosts = array($hosts);
 		}
@@ -66,15 +66,6 @@ class CacheMemcache implements ICache {
 	}
 	
 	public function clear() {
-		$prefix = ENTORNO.'-';
-		$keys = $this->obj->getAllKeys();
-		$remove = array();
-		foreach ($keys as $key) {
-			if (strpos($key, $prefix) === 0) {
-				$remove[] = $key;
-			}
-		}
-		if (!count($remove)) return false;
-		return !!$this->obj->deleteMulti($remove);
+		return $this->obj->flush();
 	}
 }

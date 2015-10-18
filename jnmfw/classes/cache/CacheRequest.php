@@ -65,5 +65,6 @@ class CacheRequest implements ICache {
 	public function clear() {
 		unset($this->data);
 		$this->data = array();
+		return true;
 	}
 }
