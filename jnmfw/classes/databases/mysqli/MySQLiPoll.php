@@ -17,6 +17,9 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	 */
 	private $links;
 	
+	/**
+	 * @var string[] 
+	 */
 	private $queries;
 	
 	public function __construct(MySQLiConnection $db, $queries) {
@@ -50,9 +53,11 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		do {
 			$read = $error = $reject = $this->links;
 			mysqli_poll($read, $error, $reject, 1);
-			usleep(100);
+			$done = count($this->links) !== count($read) + count($error) + count($reject);
+			if ($done) break;
+			usleep(50);
 		}
-		while (count($this->links) !== count($read) + count($error) + count($reject));
+		while (true);
 		HTimer::end('DB Async wait');
 	}
 
