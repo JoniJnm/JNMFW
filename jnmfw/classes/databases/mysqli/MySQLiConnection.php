@@ -42,20 +42,4 @@ class MySQLiConnection extends DBConnection {
 	public function createNewNativeConnection() {
 		return $this->conn->createNewNativeConnection();
 	}
-	
-	public function _parseObject($res) {
-		return parent::parseObject($res);
-	}
-	
-	public function _parseObjectList($res, $keycol) {
-		return parent::parseObjectList($res, $keycol);
-	}
-	
-	public function _parseValue($res, $col) {
-		return parent::parseValue($res, $col);
-	}
-	
-	public function _parseValueArray($res, $col) {
-		return parent::parseValueArray($res, $col);
-	}
 }

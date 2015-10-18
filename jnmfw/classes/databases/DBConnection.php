@@ -156,7 +156,10 @@ abstract class DBConnection {
 		return $obj;
 	}
 	
-	protected function parseObject($res) {
+	/**
+	 * @param DBResource $res
+	 */
+	public function parseObject($res) {
 		if (!$res) return false;
 		return $res->fetch_object();
 	}
@@ -174,7 +177,10 @@ abstract class DBConnection {
 		return $array;
 	}
 	
-	protected function parseObjectList($res, $keycol) {
+	/**
+	 * @param DBResource $res
+	 */
+	public function parseObjectList($res, $keycol) {
 		if (!$res) return false;
 		$array = array();
 		while ($row = $res->fetch_object()) {
@@ -197,7 +203,10 @@ abstract class DBConnection {
 		return $value;
 	}
 	
-	protected function parseValue($res, $col) {
+	/**
+	 * @param DBResource $res
+	 */
+	public function parseValue($res, $col) {
 		if (!$res) return false;
 		$row = $res->fetch_row();
 		if (!$row) return false;
@@ -218,7 +227,10 @@ abstract class DBConnection {
 		return $array;
 	}
 	
-	protected function &parseValueArray($res, $col) {
+	/**
+	 * @param DBResource $res
+	 */
+	public function &parseValueArray($res, $col) {
 		$array = null;
 		if ($res) {
 			$array = array();

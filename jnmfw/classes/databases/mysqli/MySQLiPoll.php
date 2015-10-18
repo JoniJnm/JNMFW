@@ -76,28 +76,28 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 
 	public function loadObject($key){
 		$res = $this->initAccess($key);
-		$obj = $this->db->_parseObject($res);
+		$obj = $this->db->parseObject($res);
 		$this->endAccess($res, $obj ? 1 : 0, $key);
 		return $obj;
 	}
 
 	public function loadObjectList($key, $keycol = null) {
 		$res = $this->initAccess($key);
-		$array = $this->db->_parseObjectList($res, $keycol);
+		$array = $this->db->parseObjectList($res, $keycol);
 		$this->endAccess($res, count($array), $key);
 		return $array;
 	}
 
 	public function loadValue($key, $col = 0) {
 		$res = $this->initAccess($key);
-		$value = $this->db->_parseValue($res, $col);
+		$value = $this->db->parseValue($res, $col);
 		$this->endAccess($res, $value === false ? 0 : 1, $key);
 		return $value;
 	}
 
 	public function loadValueArray($key, $col = 0) {
 		$res = $this->reap($key);
-		$ret = $this->db->_parseValueArray($res, $col);
+		$ret = $this->db->parseValueArray($res, $col);
 		$res->free();
 		$this->freeLinkByQueryKey($key);
 		return $ret;
