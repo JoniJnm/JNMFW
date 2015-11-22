@@ -31,7 +31,7 @@ class MySQLiResource implements \JNMFW\classes\databases\DBResource {
 	}
 	
 	public function fetch_array() {
-		return $this->res->fetch_array();
+		return $this->res->fetch_array(\MYSQLI_ASSOC);
 	}
 	
 	public function getNumRows() {

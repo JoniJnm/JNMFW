@@ -6,11 +6,11 @@ use JNMFW\classes\databases\DBDriver;
 use JNMFW\helpers\HLog;
 
 class MySQLiDriver extends DBDriver {
-	private $host;
-	private $user;
-	private $pass;
-	private $dbname;
-	private $port;
+	protected $host;
+	protected $user;
+	protected $pass;
+	protected $dbname;
+	protected $port;
 	
 	public function __construct($host, $user, $pass, $dbname='', $port=3306) {
 		$this->host = $host;

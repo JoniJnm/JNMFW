@@ -91,7 +91,7 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	
 	/**
 	 * Returns DBResource to loop it manually
-	 * @return DBResource
+	 * @return \JNMFW\classes\databases\DBResource
 	 */
 	public function loadResource();
 }

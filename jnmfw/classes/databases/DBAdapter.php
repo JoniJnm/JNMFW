@@ -11,4 +11,5 @@ interface DBAdapter {
 	public function transactionBegin();
 	public function commit();
 	public function rollback();
+	public function close();
 }

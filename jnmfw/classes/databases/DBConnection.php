@@ -247,7 +247,13 @@ abstract class DBConnection {
 	 * @return DBResource
 	 */
 	public function loadResource($query) {
-		return $this->query($query);
+		$res = $this->query($query);
+		if (!$res) {
+			$msg = 'Error DB '.$this->conn->getError().' : '.$query;
+			if ($this->isStrict()) \JNMFW\helpers\HServer::sendServerError($msg);
+			else HLog::error($msg);
+		}
+		return $res;
 	}
 	
 	/**
@@ -299,6 +305,10 @@ abstract class DBConnection {
 	
 	public function getLastError() {
 		return $this->conn->getError();
+	}
+	
+	public function close() {
+		return $this->conn->close();
 	}
 	
 	/**

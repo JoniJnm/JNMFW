@@ -5,24 +5,23 @@ namespace JNMFW\classes\databases\mysqli;
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderInsert;
 
 class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuilderInsert {
-	private $vals = array();
+	private $rows = array();
 	private $onDuplicate = array();
 	
-	public function columns($columns) {
+	public function colums($columns) {
 		return parent::columns($columns);
 	}
-
-	public function values($values) {
-		if (is_array($values)) $this->vals = array_merge($this->vals, $values);
-		else $this->vals[] = $values;
-		return $this;
-	}
 	
-	public function data($data) {
-		foreach ($data as $key => $value) {
-			$this->cols[] = $key;
-			$this->vals[] = $value;
+	public function data($row) {
+		$isArray = is_array($row);
+		if (!$this->cols) {
+			$this->cols = $isArray ? array_keys($row) : array_keys(get_object_vars($row));
 		}
+		$arr = array();
+		foreach ($this->cols as $col) {
+			$arr[] = $isArray ? $row[$col] : $row->$col;
+		}
+		$this->rows[] = $arr;
 		return $this;
 	}
 	
@@ -55,7 +54,11 @@ class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuil
 	public function build() {
 		$sql = 'INSERT INTO '.$this->db->quoteName($this->table);
 		$sql .= ' '.$this->db->quoteNames($this->cols);
-		$sql .= ' VALUES '.$this->db->quoteArray($this->vals);
+		$values = array();
+		foreach ($this->rows as $row) {
+			$values[] = $this->db->quoteArray($row);
+		}
+		$sql .= ' VALUES '.implode(', ', $values);
 		if ($this->onDuplicate) {
 			$sql .= ' ON DUPLICATE KEY UPDATE '.implode(', ', $this->onDuplicate);
 		}

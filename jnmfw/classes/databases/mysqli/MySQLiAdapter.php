@@ -97,4 +97,8 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 		$this->conn->rollback();
 		$this->conn->autocommit(true);
 	}
+	
+	public function close() {
+		$this->conn->close();
+	}
 }

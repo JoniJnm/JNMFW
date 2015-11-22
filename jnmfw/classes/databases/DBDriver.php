@@ -6,8 +6,9 @@ use JNMFW\classes\databases\DBAdapter;
 use JNMFW\classes\databases\DBConnection;
 
 abstract class DBDriver {
-	private $prefix;
-	private $strict;
+	private $prefix = null;
+	private $strict = true;
+	
 	
 	/**
 	 * @return DBAdapter

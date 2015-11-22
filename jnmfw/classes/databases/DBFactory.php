@@ -58,22 +58,27 @@ abstract class DBFactory {
 	/**
 	 * Recupera una instacia creada anteriormente con registerInstance()
 	 * @param string $name nombre de la instancia
+	 * @param boolean $newConnection create new DB connection
 	 * @return DBConnection La instancia del objeto de la base de datos
 	 */
-	static public function getInstance($name = 'default') {
+	static public function getInstance($name = 'default', $newConnection = false) {
 		if (!self::instanceExists($name)) {
 			HServer::sendServerError("La instancia '".$name."' no existe");
 		}
-		if (isset(self::$connections[$name])) {
-			return self::$connections[$name];
+		if (!isset(self::$connections[$name]) || $newConnection) {
+			$driver = self::$drivers[$name];
+			$connection = $driver->createConnection();
+			if (!$connection) {
+				HServer::sendServerError("Imposible conectar a la DB");
+			}
+			if ($newConnection) {
+				return $connection;
+			}
+			elseif (!isset(self::$connections[$name])) {
+				self::$connections[$name] = $connection;
+			}
 		}
-		$driver = self::$drivers[$name];
-		$connection = $driver->createConnection();
-		if (!$connection) {
-			HServer::sendServerError("Imposible conectar a la DB");
-		}
-		self::$connections[$name] = $connection;
-		return $connection;
+		return self::$connections[$name];
 	}
 	
 	/**

@@ -3,20 +3,14 @@
 namespace JNMFW\classes\databases\queryBuilder;
 
 interface DBQueryBuilderInsert extends DBQueryBuilder {
-	/**
-	 * @return DBQueryBuilderInsert
-	 */
-	public function columns($columns);
+	public function colums($columns);
 	
 	/**
+	 * Add one row to insert
+	 * @param array|object $row the keys are the columns
 	 * @return DBQueryBuilderInsert
 	 */
-	public function values($columns);
-	
-	/**
-	 * @return DBQueryBuilderInsert
-	 */
-	public function data($data);
+	public function data($row);
 	
 	/**
 	 * @return DBQueryBuilderInsert
