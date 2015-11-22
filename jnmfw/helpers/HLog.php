@@ -11,13 +11,18 @@ abstract class HLog {
 	
 	static private $level = 2;
 	static private $file;
+	static private $displayErrors = false;
 	
 	static public function setFile($file) {
-		static::$file = $file;
+		self::$file = $file;
+	}
+	
+	static public function setDisplayErrors($display) {
+		self::$displayErrors = (bool)$display;
 	}
 	
 	static public function setLevel($level) {
-		static::$level = $level;
+		self::$level = $level;
 	}
 	
 	static public function error($msg) {
@@ -28,27 +33,36 @@ abstract class HLog {
 			else
 				$trace[] = $t['function'].'()';
 		}
-		static::log(static::LEVEL_ERROR, 'ERROR', $msg.' - '.implode(', ', $trace));
+		self::log(static::LEVEL_ERROR, 'ERROR', $msg.' - '.implode(', ', $trace));
 	}
 	
 	static public function warning($msg) {
-		static::log(static::LEVEL_WARNING, 'WARNING', $msg);
+		self::log(static::LEVEL_WARNING, 'WARNING', $msg);
 	}
 	
 	static public function debug($msg) {
-		static::log(static::LEVEL_DEBUG, 'DEBUG', $msg);
+		self::log(static::LEVEL_DEBUG, 'DEBUG', $msg);
 	}
 	
 	static public function verbose($msg) {
-		static::log(static::LEVEL_VERBOSE, 'VERBOSE', $msg);
+		self::log(static::LEVEL_VERBOSE, 'VERBOSE', $msg);
 	}
 	
 	static private function log($level, $label, $msg) {
-		if ($level < static::$level) return;
+		if ($level < self::$level) return;
 		$microtime = explode(' ', microtime());
 		$msecs = str_pad(floor($microtime[0] * 1000), 3, '0', STR_PAD_LEFT);
 		$log = date('d-m H:i:s', $microtime[1]).'.'.$msecs.' - '.$label.' - '.$msg;
-		if (static::$file) file_put_contents(static::$file, $log."\n", FILE_APPEND);
-		else echo $log." <br />\n";
+		if (self::$file) {
+			file_put_contents(self::$file, $log."\n", FILE_APPEND);
+		}
+		if (self::$displayErrors) {
+			if (php_sapi_name() == 'cli') {
+				echo $log."\n";
+			}
+			else {
+				echo $log." <br />\n";
+			}
+		}
 	}
 }

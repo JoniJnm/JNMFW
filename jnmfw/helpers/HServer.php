@@ -5,6 +5,9 @@ namespace JNMFW\helpers;
 use JNMFW\classes\databases\DBFactory;
 
 abstract class HServer {
+	//http://php.net/manual/function.exit.php
+	private static $PROCESS_STATUS_END_ERROR_NUMBER = 255;
+	
 	private static $status_codes = array (
             100 => 'Continue',
             101 => 'Switching Protocols',
@@ -62,10 +65,12 @@ abstract class HServer {
 	static private function sendStatus($statusCode, $close = false) {
 		if (isset(self::$status_codes[$statusCode])) {
 			$status_string = $statusCode . ' ' . self::$status_codes[$statusCode];
-			\header($_SERVER['SERVER_PROTOCOL'] . ' ' . $status_string, true, $statusCode);
+			if (php_sapi_name() != 'cli') {
+				\header($_SERVER['SERVER_PROTOCOL'] . ' ' . $status_string, true, $statusCode);
+			}
 			if ($close) {
-				if ($statusCode >= 300) echo $statusCode.' '.self::$status_codes[$statusCode];
-				self::close();
+				if ($statusCode >= 300) echo $statusCode.' '.self::$status_codes[$statusCode]."\n";
+				self::closeError();
 			}
 		}
 		else {
@@ -98,7 +103,7 @@ abstract class HServer {
 		self::sendStatus(412);
 		$data = array('msg' => $msg, 'invalid_params' => $param);
 		self::sendJSON($data);
-		self::close();
+		self::closeError();
 	}
 	
 	static public function sendConflict($msg_user, $errno = null) {
@@ -108,7 +113,7 @@ abstract class HServer {
 		$data = array('msg' => $msg_user);
 		if ($errno) $data['errno'] = $errno;
 		self::sendJSON($data);
-		self::close();
+		self::closeError();
 	}
 	
 	static public function sendSessionTimeout() {
@@ -127,7 +132,7 @@ abstract class HServer {
 			self::sendStatus(403);
 			$data = array('msg' => $msg_user);
 			self::sendJSON($data);
-			self::close();
+			self::closeError();
 		}
 		else {
 			self::sendStatus(403, true);
@@ -155,5 +160,9 @@ abstract class HServer {
 	
 	static private function close() {
 		exit;
+	}
+	
+	static private function closeError() {
+		exit(self::$PROCESS_STATUS_END_ERROR_NUMBER);
 	}
 }
