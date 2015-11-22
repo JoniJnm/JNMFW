@@ -11,7 +11,7 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
-	public function clearColums();
+	public function clearColumns();
 	
 	/**
 	 * @return DBQueryBuilderSelect

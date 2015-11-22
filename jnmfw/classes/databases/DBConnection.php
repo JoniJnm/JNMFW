@@ -113,7 +113,7 @@ abstract class DBConnection {
 			return $value;
 		}
 		if (strpos($value, '.') === false) return '`'.$value.'`'; //si no tiene partes...
-		/*$parts = explode('.', $value); //hacer quote a table.colum por separado
+		/*$parts = explode('.', $value); //hacer quote a table.column por separado
 		return '`'.implode('`.`', $parts).'`';*/
 		return $value;
 	}

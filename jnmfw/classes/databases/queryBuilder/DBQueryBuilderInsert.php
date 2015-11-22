@@ -3,7 +3,7 @@
 namespace JNMFW\classes\databases\queryBuilder;
 
 interface DBQueryBuilderInsert extends DBQueryBuilder {
-	public function colums($columns);
+	public function columns($columns);
 	
 	/**
 	 * Add one row to insert
@@ -25,7 +25,7 @@ interface DBQueryBuilderInsert extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderInsert
 	 */
-	public function onDuplicateUpdateColums($colums);
+	public function onDuplicateUpdateColumns($columns);
 	
 	public function execute();
 }

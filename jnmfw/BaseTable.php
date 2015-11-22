@@ -24,7 +24,7 @@ abstract class BaseTable {
 		$this->primaryKey = $this->getPrimaryKey();
 	}
 	
-	private function getColums() {
+	private function getColumns() {
 		if ($this->cols === null) {
 			$this->cols = array_keys(array_diff_key(get_object_vars($this), get_class_vars(__CLASS__)));
 		}
@@ -33,7 +33,7 @@ abstract class BaseTable {
 	
 	private function getValues($assoc) {
 		$tmp = array();
-		foreach ($this->getColums() as $col) {
+		foreach ($this->getColumns() as $col) {
 			if ($assoc) $tmp[$col] = $this->$col;
 			else $tmp[] = $this->$col;
 		}
@@ -43,7 +43,7 @@ abstract class BaseTable {
 	public function insert() {
 		$db = self::getDB();
 		$ok = 1 == $db->getQueryBuilderInsert($this->tableName)
-				->columns($this->getColums())
+				->columns($this->getColumns())
 				->values($this->getValues(false))
 				->execute();
 		if ($ok) {
@@ -57,7 +57,7 @@ abstract class BaseTable {
 	}
 	
 	public function fill($obj) {
-		foreach ($this->getColums() as $col) {
+		foreach ($this->getColumns() as $col) {
 			$this->$col = $obj->$col;
 		}
 	}
@@ -193,7 +193,7 @@ abstract class BaseTable {
 	}
 	
 	static protected function columns() {
-		return self::getDummyItem()->getColums();
+		return self::getDummyItem()->getColumns();
 	}
 	
 	/**

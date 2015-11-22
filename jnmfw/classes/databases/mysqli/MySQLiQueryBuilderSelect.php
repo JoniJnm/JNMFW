@@ -20,8 +20,8 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		return parent::columns($columns);
 	}
 	
-	public function clearColums() {
-		return parent::clearColums();
+	public function clearColumns() {
+		return parent::clearColumns();
 	}
 	
 	public function innerJoin($table, $alias, $col1, $col2) {
