@@ -11,14 +11,13 @@ abstract class BaseTable {
 	private $primaryKey;
 	private $dirty = false;
 	
-	public function _getPrimaryKey() {
-		return $this->getPrimaryKey();
-	}
-	
 	static private $dummyItems = array();
 	
 	abstract protected function getTableName();
 	abstract protected function getPrimaryKey();
+	public function _getPrimaryKey() {
+		return $this->getPrimaryKey();
+	}
 	
 	public function __construct() {
 		$this->tableName = $this->getTableName();
