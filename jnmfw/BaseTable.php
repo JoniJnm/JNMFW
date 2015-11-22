@@ -31,11 +31,10 @@ abstract class BaseTable {
 		return $this->cols;
 	}
 	
-	private function getValues($assoc) {
+	private function getValues() {
 		$tmp = array();
 		foreach ($this->getColumns() as $col) {
-			if ($assoc) $tmp[$col] = $this->$col;
-			else $tmp[] = $this->$col;
+			$tmp[$col] = $this->$col;
 		}
 		return $tmp;
 	}
@@ -44,7 +43,7 @@ abstract class BaseTable {
 		$db = self::getDB();
 		$ok = 1 == $db->getQueryBuilderInsert($this->tableName)
 				->columns($this->getColumns())
-				->values($this->getValues(false))
+				->data($this->getValues())
 				->execute();
 		if ($ok) {
 			$pk = $this->primaryKey;
@@ -76,7 +75,7 @@ abstract class BaseTable {
 		$db = self::getDB();
 		$pk = $this->primaryKey;
 		$ok = 1 == $db->getQueryBuilderUpdate($this->tableName)
-				->set($this->getValues(true))
+				->set($this->getValues())
 				->where($pk, $this->$pk)
 				->execute();
 		$this->cacheUpdate();
