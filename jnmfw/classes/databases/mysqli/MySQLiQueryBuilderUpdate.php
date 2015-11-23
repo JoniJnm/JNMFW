@@ -27,8 +27,16 @@ class MySQLiQueryBuilderUpdate extends MySQLiQueryBuilder implements DBQueryBuil
 		return parent::innerJoin($table, $alias, $col1, $col2);
 	}
 	
-	public function customJoin($type, $table, $alias, $conditions) {
-		return parent::customJoin($type, $table, $alias, $conditions);
+	public function leftJoin($table, $alias, $col1, $col2) {
+		return parent::leftJoin($table, $alias, $col1, $col2);
+	}
+	
+	public function rightJoin($table, $alias, $col1, $col2) {
+		return parent::rightJoin($table, $alias, $col1, $col2);
+	}
+	
+	public function customJoin($type, $table, $alias, DBCondition $condition) {
+		return parent::customJoin($type, $table, $alias, $condition);
 	}
 	
 	public function setGlueAnd() {
@@ -49,6 +57,14 @@ class MySQLiQueryBuilderUpdate extends MySQLiQueryBuilder implements DBQueryBuil
 
 	public function whereAnd(DBCondition $condition) {
 		return parent::whereAnd($condition);
+	}
+	
+	public function whereNull($column) {
+		return parent::whereNull($column);
+	}
+	
+	public function whereNotNull($column) {
+		return parent::whereNotNull($column);
 	}
 
 	public function whereLike($column, $value) {

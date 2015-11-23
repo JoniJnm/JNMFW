@@ -21,7 +21,17 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
-	public function customJoin($type, $table, $alias, $conditions);
+	public function leftJoin($table, $alias, $col1, $col2);
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function rightJoin($table, $alias, $col1, $col2);
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function customJoin($type, $table, $alias, DBCondition $condition);
 	
 	/**
 	 * @return DBQueryBuilderSelect
@@ -47,6 +57,16 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	 * @return DBQueryBuilderSelect
 	 */
 	public function whereAnd(DBCondition $condition);
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function whereNull($column);
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function whereNotNull($column);
 	
 	/**
 	 * @return DBQueryBuilderSelect

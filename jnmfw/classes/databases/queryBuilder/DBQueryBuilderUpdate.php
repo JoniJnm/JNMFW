@@ -16,7 +16,7 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderUpdate
 	 */
-	public function customJoin($type, $table, $alias, $conditions);
+	public function customJoin($type, $table, $alias, DBCondition $condition);
 	
 	/**
 	 * @return DBQueryBuilderUpdate
@@ -42,6 +42,16 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder {
 	 * @return DBQueryBuilderUpdate
 	 */
 	public function whereAnd(DBCondition $condition);
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function whereNull($column);
+	
+	/**
+	 * @return DBQueryBuilderUpdate
+	 */
+	public function whereNotNull($column);
 	
 	/**
 	 * @return DBQueryBuilderUpdate

@@ -11,7 +11,7 @@ interface DBQueryBuilderDelete extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderDelete
 	 */
-	public function customJoin($type, $table, $alias, $conditions);
+	public function customJoin($type, $table, $alias, DBCondition $condition);
 	
 	/**
 	 * @return DBQueryBuilderDelete
@@ -37,6 +37,16 @@ interface DBQueryBuilderDelete extends DBQueryBuilder {
 	 * @return DBQueryBuilderDelete
 	 */
 	public function whereAnd(DBCondition $condition);
+	
+	/**
+	 * @return DBQueryBuilderDelete
+	 */
+	public function whereNull($column);
+	
+	/**
+	 * @return DBQueryBuilderDelete
+	 */
+	public function whereNotNull($column);
 	
 	/**
 	 * @return DBQueryBuilderDelete

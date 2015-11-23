@@ -53,6 +53,19 @@ class MySQLiCondition implements DBCondition {
 		return $this;
 	}
 	
+	public function whereNull($column) {
+		return $this->where($column, null, 'IS');
+	}
+	
+	public function whereNotNull($column) {
+		return $this->where($column, null, 'IS NOT');
+	}
+	
+	public function whereColumns($col1, $col2, $op = '=') {
+		$this->wheres[] = $this->db->quoteName($col1).' '.$op.' '.$this->db->quoteName($col2);
+		return $this;
+	}
+	
 	public function whereLike($column, $value) {
 		$this->wheres[] = $this->db->quoteName($column).' LIKE '.$this->db->quote($value);
 		return $this;

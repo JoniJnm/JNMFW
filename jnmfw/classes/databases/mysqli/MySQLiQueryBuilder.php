@@ -40,54 +40,76 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 		return $this;
 	}
 	
-	public function innerJoin($table, $alias, $col1, $col2) {
-		$this->joins[] = 'INNER JOIN '.$this->db->quoteName($table).' AS '.$alias
-				. ' ON '.$this->db->quoteName($col1).' = '.$this->db->quoteName($col2);
-		return $this;
+	protected function join($type, $table, $alias, $col1, $col2) {
+		$condition = new MySQLiCondition();
+		$condition->whereColumns($col1, $col2);
+		return $this->customJoin($type, $table, $alias, $condition);
 	}
 	
-	public function customJoin($type, $table, $alias, $conditions) {
+	protected function innerJoin($table, $alias, $col1, $col2) {
+		return $this->join('INNER', $table, $alias, $col1, $col2);
+	}
+	
+	protected function leftJoin($table, $alias, $col1, $col2) {
+		return $this->join('LEFT', $table, $alias, $col1, $col2);
+	}
+	
+	protected function rightJoin($table, $alias, $col1, $col2) {
+		return $this->join('RIGHT', $table, $alias, $col1, $col2);
+	}
+	
+	protected function customJoin($type, $table, $alias, DBCondition $condition) {
 		$this->joins[] = $type.' JOIN '.$this->db->quoteName($table).' AS '.$alias
-				. ' ON '.$conditions;
+				. ' ON '.$condition->build();
 		return $this;
 	}
 	
-	public function setGlueAnd() {
+	protected function setGlueAnd() {
 		$this->condition->setGlueAnd();
 		return $this;
 	}
 	
-	public function setGlueOr() {
+	protected function setGlueOr() {
 		$this->condition->setGlueOr();
 		return $this;
 	}
 	
-	public function where($column, $value, $op = '=') {
+	protected function where($column, $value, $op = '=') {
 		$this->condition->where($column, $value, $op);
 		return $this;
 	}
 	
-	public function whereOr(DBCondition $condition) {
+	protected function whereOr(DBCondition $condition) {
 		$this->condition->whereOr($condition);
 		return $this;
 	}
 
-	public function whereAnd(DBCondition $condition) {
+	protected function whereAnd(DBCondition $condition) {
 		$this->condition->whereAnd($condition);
 		return $this;
 	}
+	
+	protected function whereNull($column) {
+		$this->condition->whereNull($column);
+		return $this;
+	}
+	
+	protected function whereNotNull($column) {
+		$this->condition->whereNotNull($column);
+		return $this;
+	}
 
-	public function whereLike($column, $value) {
+	protected function whereLike($column, $value) {
 		$this->condition->whereLike($column, $value);
 		return $this;
 	}
 
-	public function whereIn($column, $values) {
+	protected function whereIn($column, $values) {
 		$this->condition->whereIn($column, $values);
 		return $this;
 	}
 
-	public function whereRaw($condition, $data=null) {
+	protected function whereRaw($condition, $data=null) {
 		$this->condition->whereRaw($condition, $data);
 		return $this;
 	}

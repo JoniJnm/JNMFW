@@ -31,6 +31,21 @@ interface DBCondition {
 	/**
 	 * @return DBCondition
 	 */
+	public function whereNull($column);
+	
+	/**
+	 * @return DBCondition
+	 */
+	public function whereNotNull($column);
+	
+	/**
+	 * @return DBCondition
+	 */
+	public function whereColumns($col1, $col2);
+	
+	/**
+	 * @return DBCondition
+	 */
 	public function whereLike($column, $value);
 	
 	/**
