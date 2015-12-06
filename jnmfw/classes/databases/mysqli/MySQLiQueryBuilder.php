@@ -41,7 +41,7 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 	}
 	
 	protected function join($type, $table, $alias, $col1, $col2) {
-		$condition = new MySQLiCondition();
+		$condition = new MySQLiCondition($this->db);
 		$condition->whereColumns($col1, $col2);
 		return $this->customJoin($type, $table, $alias, $condition);
 	}
