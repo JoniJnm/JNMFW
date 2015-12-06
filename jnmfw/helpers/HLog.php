@@ -33,7 +33,7 @@ abstract class HLog {
 			else
 				$trace[] = $t['function'].'()';
 		}
-		self::log(static::LEVEL_ERROR, 'ERROR', $msg.' - '.implode(', ', $trace));
+		self::log(static::LEVEL_ERROR, 'ERROR', $msg."\n".implode("\n", $trace));
 	}
 	
 	static public function warning($msg) {
@@ -52,16 +52,16 @@ abstract class HLog {
 		if ($level < self::$level) return;
 		$microtime = explode(' ', microtime());
 		$msecs = str_pad(floor($microtime[0] * 1000), 3, '0', STR_PAD_LEFT);
-		$log = date('d-m H:i:s', $microtime[1]).'.'.$msecs.' - '.$label.' - '.$msg;
+		$log = date('d-m H:i:s', $microtime[1]).'.'.$msecs.' - '.$label.' - '.$msg."\n";
 		if (self::$file) {
-			file_put_contents(self::$file, $log."\n", FILE_APPEND);
+			file_put_contents(self::$file, $log, FILE_APPEND);
 		}
 		if (self::$displayErrors) {
 			if (php_sapi_name() == 'cli') {
-				echo $log."\n";
+				echo $log;
 			}
 			else {
-				echo $log." <br />\n";
+				echo str_replace("\n", '<br />', $log);
 			}
 		}
 	}
