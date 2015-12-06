@@ -23,7 +23,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	
 	public function __construct(MySQLiConnection $db, $queries) {
 		if (!self::isAvaiable()) {
-			throw new RuntimeException("Can't make async query, mysqlnd extension is not installed");
+			throw new \RuntimeException("Can't make async query, mysqlnd extension is not installed");
 		}
 		
 		$this->db = $db;
@@ -31,11 +31,11 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		foreach ($queries as $key => $query) {
 			$link = $this->db->createNewNativeConnection();
 			if ($link->connect_error) {
-				throw new Exception('MySQLi Connect error '.$link->connect_error.' ('.$link->connect_errno.')');
+				throw new \Exception('MySQLi Connect error '.$link->connect_error.' ('.$link->connect_errno.')');
 			}
 			if (!$link->query($query, MYSQLI_ASYNC)) {
 				$msg = $link->error.' ('.$link->errno.')';
-				throw new Exception($msg);
+				throw new \Exception($msg);
 			}
 			$this->links[$key] = $link;
 		}
@@ -110,7 +110,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	private function freeQueryByKey($key) {
 		$link = $this->getLinkByKey($key);
 		if (!$link) {
-			throw new InvalidArgumentException("Invalid key ".$key);
+			throw new \InvalidArgumentException("Invalid key ".$key);
 		}
 		$link->close();
 		unset($this->links[$key]);
@@ -137,7 +137,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		HTimer::init('DB Async');
 		$link = $this->getLinkByKey($key);
 		if (!$link) {
-			throw new InvalidArgumentException("Invalid key ".$key);
+			throw new \InvalidArgumentException("Invalid key ".$key);
 		}
 		return $link->reap_async_query();
 	}
@@ -149,7 +149,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		}
 		elseif (!$res) {
 			$msg = 'Error DB '.$this->getErrorByKey($key).' : '.$query;
-			throw new Exception($msg);
+			throw new \Exception($msg);
 		}
 		else {
 			HTimer::end('DB Async', $nrows.' rows : '.$query);

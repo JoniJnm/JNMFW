@@ -2,6 +2,8 @@
 
 namespace JNMFW\classes;
 
+use JNMFW\classes\databases\DBFactory;
+
 class Server extends Singleton {
 	//http://php.net/manual/function.exit.php
 	private $PROCESS_STATUS_END_ERROR_NUMBER = 255;

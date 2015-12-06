@@ -236,7 +236,7 @@ abstract class DBConnection {
 		$res = $this->query($query);
 		if (!$res) {
 			$msg = 'Error DB '.$this->conn->getError().' : '.$query;
-			throw new Exception($msg);
+			throw new \Exception($msg);
 		}
 		return $res;
 	}
@@ -314,7 +314,7 @@ abstract class DBConnection {
 		}
 		elseif (!$res) {
 			$msg = 'Error DB '.$this->conn->getError().' : '.$this->query;
-			throw new Exception($msg);
+			throw new \Exception($msg);
 		}
 		else {
 			HTimer::end('DB', $nrows.' rows : '.$this->query);

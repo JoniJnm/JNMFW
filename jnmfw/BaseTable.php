@@ -97,7 +97,7 @@ abstract class BaseTable {
 	
 	private function cacheUpdate() {
 		if ($this->dirty) {
-			throw new Exception("Trying to store a dirty object");
+			throw new \Exception("Trying to store a dirty object");
 		}
 		$cache = self::getCache();
 		$key = $this->getKeyCache();

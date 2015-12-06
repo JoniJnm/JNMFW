@@ -24,7 +24,7 @@ class CacheMemcache implements ICache {
 				$port = 6379;
 			}
 			if ($this->obj->addServer($ip, $port)) {
-				throw new Exception("Can't add memcache server");
+				throw new \Exception("Can't add memcache server");
 			}
 		}
 	}
