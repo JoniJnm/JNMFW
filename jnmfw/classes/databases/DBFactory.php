@@ -2,7 +2,6 @@
 
 namespace JNMFW\classes\databases;
 
-use JNMFW\helpers\HServer;
 use JNMFW\classes\databases\DBConnection;
 use JNMFW\classes\databases\DBDriver;
 
@@ -27,10 +26,10 @@ abstract class DBFactory {
 	 */
 	static public function registerIntance($name, DBDriver $driver) {
 		if (!\preg_match('#^[\w]+$#', $name)) {
-			HServer::sendServerError("El nombre de la instancia (".$name.") es inválido");
+			throw new InvalidArgumentException("El nombre de la instancia (".$name.") es inválido");
 		}
 		elseif (self::instanceExists($name)) {
-			HServer::sendServerError("La instancia (".$name.") ya existe");
+			throw new LogicException("La instancia (".$name.") ya existe");
 		}
 		self::$drivers[$name] = $driver;
 	}
@@ -63,13 +62,13 @@ abstract class DBFactory {
 	 */
 	static public function getInstance($name = 'default', $newConnection = false) {
 		if (!self::instanceExists($name)) {
-			HServer::sendServerError("La instancia '".$name."' no existe");
+			throw new InvalidArgumentException("La instancia '".$name."' no existe");
 		}
 		if (!isset(self::$connections[$name]) || $newConnection) {
 			$driver = self::$drivers[$name];
 			$connection = $driver->createConnection();
 			if (!$connection) {
-				HServer::sendServerError("Imposible conectar a la DB");
+				throw new Exception("Imposible conectar a la DB");
 			}
 			if ($newConnection) {
 				return $connection;

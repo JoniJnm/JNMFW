@@ -3,7 +3,6 @@
 namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\helpers\HTimer;
-use JNMFW\helpers\HServer;
 use JNMFW\helpers\HLog;
 
 class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
@@ -24,7 +23,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	
 	public function __construct(MySQLiConnection $db, $queries) {
 		if (!self::isAvaiable()) {
-			HServer::sendServerError("Can't make async query, mysqlnd extension is not installed");
+			throw new RuntimeException("Can't make async query, mysqlnd extension is not installed");
 		}
 		
 		$this->db = $db;
@@ -32,11 +31,11 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		foreach ($queries as $key => $query) {
 			$link = $this->db->createNewNativeConnection();
 			if ($link->connect_error) {
-				HServer::sendServerError('MySQLi Connect error '.$link->connect_error.' ('.$link->connect_errno.')');
+				throw new Exception('MySQLi Connect error '.$link->connect_error.' ('.$link->connect_errno.')');
 			}
 			if (!$link->query($query, MYSQLI_ASYNC)) {
 				$msg = $link->error.' ('.$link->errno.')';
-				HServer::sendServerError($msg);
+				throw new Exception($msg);
 			}
 			$this->links[$key] = $link;
 		}
@@ -110,7 +109,9 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	
 	private function freeQueryByKey($key) {
 		$link = $this->getLinkByKey($key);
-		if (!$link) HServer::sendServerError("Invalid key ".$key);
+		if (!$link) {
+			throw new InvalidArgumentException("Invalid key ".$key);
+		}
 		$link->close();
 		unset($this->links[$key]);
 		unset($this->queries[$key]);
@@ -135,7 +136,9 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	private function initAccess($key) {
 		HTimer::init('DB Async');
 		$link = $this->getLinkByKey($key);
-		if (!$link) HServer::sendServerError("Invalid key ".$key);
+		if (!$link) {
+			throw new InvalidArgumentException("Invalid key ".$key);
+		}
 		return $link->reap_async_query();
 	}
 	
@@ -146,8 +149,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		}
 		elseif (!$res) {
 			$msg = 'Error DB '.$this->getErrorByKey($key).' : '.$query;
-			if ($this->db->isStrict()) \JNMFW\helpers\HServer::sendServerError($msg);
-			else HLog::error($msg);
+			throw new Exception($msg);
 		}
 		else {
 			HTimer::end('DB Async', $nrows.' rows : '.$query);

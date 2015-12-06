@@ -24,21 +24,15 @@ abstract class DBConnection {
 	/**
 	 * @var boolean
 	 */
-	private $strict = true;
-	
-	/**
-	 * @var boolean
-	 */
 	private $intransaction = false;
 	
 	/**
 	 * Constructor
 	 * @param DBAdapter $conn La conexión devuelta por connect()
 	 */
-	public function __construct(DBAdapter $adapter, $prefix = null, $strict = true) {
+	public function __construct(DBAdapter $adapter, $prefix = null) {
 		$this->conn = $adapter;
 		$this->prefix = $prefix;
-		$this->strict = $strict;
 	}
 	
 	/**
@@ -69,14 +63,6 @@ abstract class DBConnection {
 	 * @return DBPoll
 	 */
 	abstract public function getAsyncPoll($queries);
-	
-	public function setStrict($strict) {
-		$this->strict = boolval($strict);
-	}
-	
-	public function isStrict() {
-		return $this->strict;
-	}
 	
 	/**
 	 * Prepara una variable para ser insertada con seguridad.
@@ -250,8 +236,7 @@ abstract class DBConnection {
 		$res = $this->query($query);
 		if (!$res) {
 			$msg = 'Error DB '.$this->conn->getError().' : '.$query;
-			if ($this->isStrict()) \JNMFW\helpers\HServer::sendServerError($msg);
-			else HLog::error($msg);
+			throw new Exception($msg);
 		}
 		return $res;
 	}
@@ -329,8 +314,7 @@ abstract class DBConnection {
 		}
 		elseif (!$res) {
 			$msg = 'Error DB '.$this->conn->getError().' : '.$this->query;
-			if ($this->isStrict()) \JNMFW\helpers\HServer::sendServerError($msg);
-			else HLog::error($msg);
+			throw new Exception($msg);
 		}
 		else {
 			HTimer::end('DB', $nrows.' rows : '.$this->query);

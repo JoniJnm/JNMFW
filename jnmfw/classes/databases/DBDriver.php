@@ -7,7 +7,6 @@ use JNMFW\classes\databases\DBConnection;
 
 abstract class DBDriver {
 	private $prefix = null;
-	private $strict = true;
 	
 	
 	/**
@@ -26,13 +25,5 @@ abstract class DBDriver {
 	
 	public function getPrefix() {
 		return $this->prefix;
-	}
-	
-	public function setStrict($strict) {
-		$this->strict = boolval($strict);
-	}
-	
-	public function isStrict() {
-		return $this->strict;
 	}
 }

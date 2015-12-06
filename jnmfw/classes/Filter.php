@@ -67,7 +67,7 @@ class Filter {
 		$source = $this->isset_else($key, $def);
 		$out = \trim(\strip_tags($source));
 		if ($out) return $out;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -80,7 +80,7 @@ class Filter {
 		$def = '';
 		$source = $this->isset_else($key, $def);
 		if (\preg_match('/^[a-f0-9]{40}$/', $source)) return $source;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -94,7 +94,7 @@ class Filter {
 		$source = $this->isset_else($key, $def);
 		//TODO: check HTML
 		if ($source) return $source;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -110,7 +110,7 @@ class Filter {
 		if ($max_range !== null) $options['max_range'] = $max_range;
 		$result = \filter_var($source, \FILTER_VALIDATE_INT, array('options' => $options));
 		if ($result !== false) return $result;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -122,7 +122,7 @@ class Filter {
 	public function getUInt($key, $def=0, $max_range=null) {
 		$out = $this->getInt($key, $def, 0, $max_range);
 		if ($out !== false) return $out;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -140,7 +140,7 @@ class Filter {
 		if ($max_range !== null && $result > $max_range) return $def;
 		
 		if ($result !== false) return $result;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -154,7 +154,7 @@ class Filter {
 		$source = $this->isset_else($key, null);
 		$result = \filter_var($source, \FILTER_VALIDATE_BOOLEAN, array('flags' => \FILTER_NULL_ON_FAILURE));
 		if ($result !== null) return $result;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -167,7 +167,7 @@ class Filter {
 	public function getWord($key, $def='') {
 		$source = $this->isset_else($key, $def);
 		if (\preg_match('/^[A-Z]+$/i', $source)) return $source;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -180,7 +180,7 @@ class Filter {
 	public function getCmd($key, $def='') {
 		$source = $this->isset_else($key, $def);
 		if (\preg_match('/^[A-Z0-9_\.-]+$/i', $source)) return $source;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -197,7 +197,7 @@ class Filter {
 		if ($only_IPV4) $options['flags'] = \FILTER_FLAG_IPV4;
 		$result = \filter_var($source, \FILTER_VALIDATE_IP, $options);
 		if ($result) return $result;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -211,7 +211,7 @@ class Filter {
 		$source = $this->isset_else($key, $def);
 		$result = \filter_var($source, \FILTER_VALIDATE_EMAIL);
 		if ($result) return $result;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -225,7 +225,7 @@ class Filter {
 		$source = $this->isset_else($key, $def);
 		$result = \filter_var($source, \FILTER_VALIDATE_URL);
 		if ($result) return $result;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 	
@@ -238,7 +238,7 @@ class Filter {
 		$source = $this->isset_else($key, null);
 		$result = @json_decode($source, true);
 		if ($result) return $result;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return null;
 	}
 	
@@ -251,7 +251,7 @@ class Filter {
 	public function get($key, $def='') {
 		$source = $this->isset_else($key, null);
 		if ($source) return $source;
-		elseif ($this->isStrict()) HServer::sendInvalidRequest('INVALID_'.strtoupper($key), $key);
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
 		else return $def;
 	}
 }

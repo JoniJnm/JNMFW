@@ -35,6 +35,6 @@ class MySQLiDriver extends DBDriver {
 	public function createConnection() {
 		$adapter = $this->createAdapter();
 		if (!$adapter) return null;
-		return new MySQLiConnection($adapter, $this->getPrefix(), $this->isStrict());
+		return new MySQLiConnection($adapter, $this->getPrefix());
 	}
 }

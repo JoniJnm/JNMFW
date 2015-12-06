@@ -33,6 +33,6 @@ class PDODriver extends DBDriver {
 	public function createConnection() {
 		$adapter = $this->createAdapter();
 		if (!$adapter) return null;
-		return new PDOConnection($adapter, $this->getPrefix(), $this->isStrict());
+		return new PDOConnection($adapter, $this->getPrefix());
 	}
 }
