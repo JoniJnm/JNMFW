@@ -2,21 +2,8 @@
 
 namespace JNMFW;
 
-use JNMFW\classes\databases\DBConnection;
-
-abstract class BaseModel {
-	/**
-	 * @var DBConnection
-	 */
-	protected $db;
-	protected static $instances = array();
-	protected static $tableName;
-	
+abstract class BaseModel extends SimpleModel {
 	private $objs = array();
-	
-	protected function __construct() {
-		$this->db = \JNMFW\classes\databases\DBFactory::getInstance();
-	}
 	
 	protected function getByPrimaryKey($id, $tableName, $objName) {
 		if (!isset($this->objs[$objName])) {
@@ -60,12 +47,5 @@ abstract class BaseModel {
 		}
 		
 		return $out;
-	}
-	
-	public static function getInstance() {
-		$caller = get_called_class();
-		if (!isset(static::$instances[$caller])) 
-			static::$instances[$caller] = new static;
-		return static::$instances[$caller];
 	}
 }
