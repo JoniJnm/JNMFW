@@ -67,9 +67,6 @@ abstract class DBFactory {
 		if (!isset(self::$connections[$name]) || $newConnection) {
 			$driver = self::$drivers[$name];
 			$connection = $driver->createConnection();
-			if (!$connection) {
-				throw new \Exception("Imposible conectar a la DB");
-			}
 			if ($newConnection) {
 				return $connection;
 			}

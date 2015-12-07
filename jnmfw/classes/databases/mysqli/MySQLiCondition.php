@@ -4,6 +4,7 @@ namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\DBConnection;
 use JNMFW\classes\databases\queryBuilder\DBCondition;
+use JNMFW\exceptions\JNMDBException;
 
 class MySQLiCondition implements DBCondition {
 	/**
@@ -129,7 +130,7 @@ class MySQLiCondition implements DBCondition {
 				array_unshift($ors, $str);
 			}
 			else {
-				throw new \RuntimeException("Invalid glue: ".$this->glue);
+				throw new JNMDBException("Invalid glue: ".$this->glue);
 			}
 		}
 		$and = implode(' AND ', $ands);

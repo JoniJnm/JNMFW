@@ -8,7 +8,6 @@ use JNMFW\classes\databases\DBConnection;
 abstract class DBDriver {
 	private $prefix = null;
 	
-	
 	/**
 	 * @return DBAdapter
 	 */
@@ -18,6 +17,11 @@ abstract class DBDriver {
 	 * @return DBConnection
 	 */
 	abstract public function createConnection();
+	
+	/**
+	 * @throws JNMDBException
+	 */
+	abstract public function createNativeConnection();
 	
 	public function setPrefix($prefix) {
 		$this->prefix = $prefix;

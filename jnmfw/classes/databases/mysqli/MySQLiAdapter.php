@@ -2,6 +2,8 @@
 
 namespace JNMFW\classes\databases\mysqli;
 
+use JNMFW\exceptions\JNMDBException;
+
 /**
  * Clase para adaptar el uso de MySQL como si fuera una instancia de MySQLi
  * Más información: http://www.php.net/manual/es/class.mysqli.php	
@@ -14,47 +16,19 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	 */
 	private $conn;
 	
-	/**
-	 * Error producido
-	 * @var string
-	 */
-	private $error = null;
-	
-	//Connection data, needed to clone connection for async queries
-	private $host;
-	private $user;
-	private $pass;
-	private $dbname;
-	private $port;
-	
-	
-	/**
-	 * Crea una instancia de esta clase para ser usada como objeto MySQLi
-	 * @param string $host
-	 * @param string $user
-	 * @param string $pass
-	 * @param string $dbname
-	 * @param int port
-	 */
-	public function __construct($host, $user, $pass, $dbname='', $port=3306) {
-		$this->host = $host;
-		$this->user = $user;
-		$this->pass = $pass;
-		$this->dbname = $dbname;
-		$this->port = $port;
-		
-		$this->conn = $this->createNewNativeConnection();
+	public function __construct(\mysqli $nativeConnection) {
+		$this->conn = $nativeConnection;
 	}
 	
-	public function createNewNativeConnection() {
-		$conn = new \mysqli($this->host, $this->user, $this->pass, $this->dbname, $this->port);
-		if ($conn->connect_error) {
-			$this->error = $conn->connect_error.' ('.$conn->connect_errno.')';
-		}
-		else {
-			$conn->set_charset("utf8");
-		}
-		return $conn;
+	public function __destruct() {
+		$this->close();
+	}
+	
+	/**
+	 * @return \mysqli
+	 */
+	public function getNativeConnection() {
+		return $this->conn;
 	}
 	
 	public function quote($value) {
@@ -66,9 +40,8 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	
 	public function query($query) {
 		$res = $this->conn->query($query);
-		$this->error = $this->conn->error;
 		if ($res === true) return true;
-		elseif (!$res) return false;
+		elseif (!$res) throw new JNMDBException($this->conn->error.":\n".$query);
 		else return new MySQLiResource($res);
 	}
 	
@@ -78,10 +51,6 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	
 	public function getInsertedID() {
 		return $this->conn->insert_id;
-	}
-	
-	public function getError() {
-		return $this->error;
 	}
 	
 	public function transactionBegin() {

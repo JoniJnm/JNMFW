@@ -4,6 +4,7 @@ namespace JNMFW;
 
 use JNMFW\classes\databases\DBConnection;
 use JNMFW\classes\cache\CacheManager;
+use JNMFW\exceptions\JNMException;
 
 abstract class BaseTable {
 	private $tableName;
@@ -97,7 +98,7 @@ abstract class BaseTable {
 	
 	private function cacheUpdate() {
 		if ($this->dirty) {
-			throw new \Exception("Trying to store a dirty object");
+			throw new JNMException("Trying to store a dirty object");
 		}
 		$cache = self::getCache();
 		$key = $this->getKeyCache();

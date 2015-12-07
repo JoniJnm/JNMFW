@@ -2,6 +2,8 @@
 
 namespace JNMFW\classes\databases\pdo;
 
+use JNMFW\exceptions\JNMDBException;
+
 /**
  * Clase para adaptar el uso de PDO como si fuera una instancia de MySQLi
  * Más información: http://www.php.net/manual/es/class.mysqli.php	
@@ -15,18 +17,23 @@ class PDOAdapter implements \JNMFW\classes\databases\DBAdapter {
 	private $conn;
 	
 	/**
-	 * Error producido
-	 * @var string
-	 */
-	private $error = null;
-	
-	/**
 	 * @var PDOStatement 
 	 */
 	private $lastRes;
 	
 	public function __construct($dsn, $user, $pass, $options = array()) {
 		$this->conn = new \PDO($dsn, $user, $pass, $options);
+	}
+	
+	public function __destruct() {
+		$this->close();
+	}
+	
+	/**
+	 * @return \PDO
+	 */
+	public function getNativeConnection() {
+		return $this->conn;
 	}
 	
 	public function quote($value) {
@@ -38,12 +45,9 @@ class PDOAdapter implements \JNMFW\classes\databases\DBAdapter {
 	
 	public function query($query) {
 		$res = $this->conn->query($query);
-		$errno = $this->conn->errorCode();
-		if ($errno) {
-			$this->error = $this->conn->errorInfo().' ('.$errno.')';
-			return false;
+		if (!$res) {
+			throw new JNMDBException($this->conn->errorInfo().":\n".$query);
 		}
-		$this->error = null;
 		$this->lastRes = $res;
 		return new PDOResource($res);
 	}
@@ -56,10 +60,6 @@ class PDOAdapter implements \JNMFW\classes\databases\DBAdapter {
 		return $this->conn->lastInsertId();
 	}
 	
-	public function getError() {
-		return $this->error;
-	}
-	
 	public function transactionBegin() {
 		$this->conn->beginTransaction();
 	}
@@ -70,5 +70,9 @@ class PDOAdapter implements \JNMFW\classes\databases\DBAdapter {
 	
 	public function rollback() {
 		$this->conn->rollBack();
+	}
+	
+	public function close() {
+		$this->conn = null;
 	}
 }

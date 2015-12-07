@@ -4,6 +4,7 @@ namespace JNMFW\classes\databases;
 
 use JNMFW\helpers\HLog;
 use JNMFW\helpers\HTimer;
+use JNMFW\exceptions\JNMDBException;
 
 abstract class DBConnection {
 	/**
@@ -27,12 +28,18 @@ abstract class DBConnection {
 	private $intransaction = false;
 	
 	/**
+	 * @var DBDriver 
+	 */
+	protected $driver = null;
+	
+	/**
 	 * Constructor
 	 * @param DBAdapter $conn La conexión devuelta por connect()
 	 */
-	public function __construct(DBAdapter $adapter, $prefix = null) {
+	public function __construct(DBAdapter $adapter, $prefix = null, $driver = null) {
 		$this->conn = $adapter;
 		$this->prefix = $prefix;
+		$this->driver = $driver;
 	}
 	
 	/**
@@ -208,9 +215,9 @@ abstract class DBConnection {
 	 */
 	public function loadValueArray($query, $col = 0) {
 		$res = $this->initAccess($query);
-		$array = $this->parseValueArray($res, $col);
-		$this->endAccess($res, count($array));
-		return $array;
+		$values = $this->parseValueArray($res, $col);
+		$this->endAccess($res, count($values));
+		return $values;
 	}
 	
 	/**
@@ -233,12 +240,7 @@ abstract class DBConnection {
 	 * @return DBResource
 	 */
 	public function loadResource($query) {
-		$res = $this->query($query);
-		if (!$res) {
-			$msg = 'Error DB '.$this->conn->getError().' : '.$query;
-			throw new \Exception($msg);
-		}
-		return $res;
+		return $this->query($query);
 	}
 	
 	/**
@@ -288,12 +290,15 @@ abstract class DBConnection {
 		return $this->intransaction;
 	}
 	
-	public function getLastError() {
-		return $this->conn->getError();
-	}
-	
 	public function close() {
 		return $this->conn->close();
+	}
+	
+	public function getDriver() {
+		if ($this->driver === null) {
+			throw new JNMDBException('Connection created without driver');
+		}
+		return $this->driver;
 	}
 	
 	/**
@@ -313,8 +318,8 @@ abstract class DBConnection {
 			HTimer::end('DB', $nrows.' affected rows : '.$this->query);
 		}
 		elseif (!$res) {
-			$msg = 'Error DB '.$this->conn->getError().' : '.$this->query;
-			throw new \Exception($msg);
+			$msg = "Unkown DB Error in query:\n".$this->query;
+			throw new JNMDBException($msg);
 		}
 		else {
 			HTimer::end('DB', $nrows.' rows : '.$this->query);

@@ -3,7 +3,7 @@
 namespace JNMFW\classes\databases\pdo;
 
 use JNMFW\classes\databases\DBDriver;
-use JNMFW\helpers\HLog;
+use JNMFW\exceptions\JNMDBConnectionException;
 
 class PDODriver extends DBDriver {
 	private $dns;
@@ -18,21 +18,21 @@ class PDODriver extends DBDriver {
 		$this->options = $options;
 	}
 	
+	public function createNativeConnection() {
+		$conn = new \PDO($this->dsn, $this->user, $this->pass, $this->options);
+		if ($conn->errorCode()) {
+			throw new JNMDBConnectionException($conn->errorInfo());
+		}
+		return $conn;
+	}
+	
 	public function createAdapter() {
-		$adapter = new PDOAdapter($this->dsn, $this->user, $this->pass, $this->options);
-		if ($adapter->getError()) {
-			HLog::error('Error de Conexión PDO '.$adapter->getError());
-			return null;
-		}
-		else {
-			HLog::verbose('Connected to PDO DB with user '.$this->user);
-			return $adapter;
-		}
+		$nativeConnection = $this->createNativeConnection();
+		return new PDOAdapter($nativeConnection);
 	}
 	
 	public function createConnection() {
 		$adapter = $this->createAdapter();
-		if (!$adapter) return null;
-		return new PDOConnection($adapter, $this->getPrefix());
+		return new PDOConnection($adapter, $this->getPrefix(), $this);
 	}
 }

@@ -3,7 +3,8 @@
 namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\DBDriver;
-use JNMFW\helpers\HLog;
+use JNMFW\exceptions\JNMDBConnectionException;
+use JNMFW\exceptions\JNMDBException;
 
 class MySQLiDriver extends DBDriver {
 	protected $host;
@@ -20,21 +21,26 @@ class MySQLiDriver extends DBDriver {
 		$this->port = $port;
 	}
 	
-	public function createAdapter() {
-		$adapter = new MySQLiAdapter($this->host, $this->user, $this->pass, $this->dbname);
-		if ($adapter->getError()) {
-			HLog::error('Error de Conexión MySQLi '.$adapter->getError());
-			return null;
+	public function createNativeConnection() {
+		$conn = new \mysqli($this->host, $this->user, $this->pass, $this->dbname, $this->port);
+		if ($conn->connect_errno) {
+			throw new JNMDBConnectionException($conn->connect_error.' ('.$conn->connect_errno.')');
 		}
 		else {
-			HLog::verbose('Connected to MySQL DB with user '.$this->user);
-			return $adapter;
+			$conn->set_charset("utf8");
+			if ($conn->errno) {
+				throw new JNMDBException($conn->error." (".$conn->connect_errno.")");
+			}
 		}
+	}
+	
+	public function createAdapter() {
+		$nativeConnection = $this->createNativeConnection();
+		return new MySQLiAdapter($nativeConnection);
 	}
 	
 	public function createConnection() {
 		$adapter = $this->createAdapter();
-		if (!$adapter) return null;
-		return new MySQLiConnection($adapter, $this->getPrefix());
+		return new MySQLiConnection($adapter, $this->getPrefix(), $this);
 	}
 }

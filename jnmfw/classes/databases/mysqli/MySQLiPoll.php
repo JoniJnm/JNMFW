@@ -3,7 +3,8 @@
 namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\helpers\HTimer;
-use JNMFW\helpers\HLog;
+use JNMFW\exceptions\JNMDBException;
+use JNMFW\exceptions\JNMDBConnectionException;
 
 class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	/**
@@ -29,21 +30,17 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		$this->db = $db;
 		$this->queries = $queries;
 		foreach ($queries as $key => $query) {
-			$link = $this->db->createNewNativeConnection();
-			if ($link->connect_error) {
-				throw new \Exception('MySQLi Connect error '.$link->connect_error.' ('.$link->connect_errno.')');
-			}
+			$link = $this->db->getDriver()->createNativeConnection();
 			if (!$link->query($query, MYSQLI_ASYNC)) {
 				$msg = $link->error.' ('.$link->errno.')';
-				throw new \Exception($msg);
+				throw new JNMDBException($msg);
 			}
 			$this->links[$key] = $link;
 		}
 	}
 	
 	static public function isAvaiable() {
-		//check if mysqlnd is installed
-		return defined("MYSQLI_ASYNC");
+		return defined('MYSQLI_ASYNC') && extension_loaded('mysqlnd');
 	}
 	
 	public function wait() {
@@ -100,11 +97,10 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	}
 
 	public function loadValueArray($key, $col = 0) {
-		$res = $this->reap($key);
-		$ret = $this->db->parseValueArray($res, $col);
-		$res->free();
-		$this->freeLinkByQueryKey($key);
-		return $ret;
+		$res = $this->initAccess($key);
+		$values = $this->db->parseValueArray($res, $col);
+		$this->endAccess($res, count($values));
+		return $values;
 	}
 	
 	private function freeQueryByKey($key) {
@@ -128,18 +124,18 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		return isset($this->queries[$key]) ? $this->queries[$key] : null;
 	}
 	
-	private function getErrorByKey($key) {
-		$link = $this->getLinkByKey($key);
-		return $link->error;
-	}
-	
 	private function initAccess($key) {
 		HTimer::init('DB Async');
 		$link = $this->getLinkByKey($key);
 		if (!$link) {
 			throw new \InvalidArgumentException("Invalid key ".$key);
 		}
-		return $link->reap_async_query();
+		$res = $link->reap_async_query();
+		if (!$res) {
+			$query = $this->getQueryByKey($key);
+			throw new JNMDBException($link->error.":\n".$query);
+		}
+		return $res;
 	}
 	
 	protected function endAccess($res, $nrows, $key) {
@@ -148,8 +144,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 			HTimer::end('DB Async', $nrows.' affected rows : '.$query);
 		}
 		elseif (!$res) {
-			$msg = 'Error DB '.$this->getErrorByKey($key).' : '.$query;
-			throw new \Exception($msg);
+			throw new JNMDBException("Unkown DB Error:\n".$query);
 		}
 		else {
 			HTimer::end('DB Async', $nrows.' rows : '.$query);

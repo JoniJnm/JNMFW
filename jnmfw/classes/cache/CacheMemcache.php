@@ -2,6 +2,8 @@
 
 namespace JNMFW\classes\cache;
 
+use JNMFW\exceptions\JNMException;
+
 class CacheMemcache implements ICache {
 	/**
 	 * @var \Memcached
@@ -24,7 +26,7 @@ class CacheMemcache implements ICache {
 				$port = 6379;
 			}
 			if ($this->obj->addServer($ip, $port)) {
-				throw new \Exception("Can't add memcache server");
+				throw new JNMException("Can't add memcache server");
 			}
 		}
 	}

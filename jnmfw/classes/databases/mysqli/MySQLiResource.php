@@ -22,6 +22,10 @@ class MySQLiResource implements \JNMFW\classes\databases\DBResource {
 		$this->res = $resource;
 	}
 	
+	public function __destruct() {
+		$this->free();
+	}
+	
 	public function fetch_object() {
 		return $this->res->fetch_object();
 	}

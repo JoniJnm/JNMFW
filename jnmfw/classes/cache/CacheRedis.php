@@ -30,7 +30,7 @@ class CacheRedis implements ICache {
 			}
 		}
 		if (!$connected) {
-			throw new \Exception("Can't connect to redis server");
+			throw new JNMException("Can't connect to redis server");
 		}
 	}
 	
