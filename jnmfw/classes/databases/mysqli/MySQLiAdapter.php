@@ -16,8 +16,13 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	 */
 	private $conn;
 	
-	public function __construct(\mysqli $nativeConnection) {
-		$this->conn = $nativeConnection;
+	public function __construct($nativeConnection) {
+		if ($nativeConnection instanceof \mysqli) {
+			$this->conn = $nativeConnection;
+		}
+		else {
+			throw new \InvalidArgumentException('The connection should be a mysqli object');
+		}
 	}
 	
 	public function __destruct() {

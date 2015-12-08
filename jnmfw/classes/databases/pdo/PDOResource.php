@@ -14,6 +14,8 @@ class PDOResource implements \JNMFW\classes\databases\DBResource {
 	 */
 	protected $res;
 	
+	private $freed = false;
+	
 	/**
 	 * Constructor para instanciar esta clase y usarla como si fuera de tipo mysqli_result
 	 * @param \PDOStatement $resource
@@ -43,6 +45,9 @@ class PDOResource implements \JNMFW\classes\databases\DBResource {
 	}
 	
 	public function free() {
-		$this->res->closeCursor();
+		if (!$this->freed) {
+			$this->freed = true;
+			$this->res->closeCursor();
+		}
 	}
 }

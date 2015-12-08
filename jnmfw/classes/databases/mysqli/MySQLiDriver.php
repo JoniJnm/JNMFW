@@ -32,6 +32,7 @@ class MySQLiDriver extends DBDriver {
 				throw new JNMDBException($conn->error." (".$conn->connect_errno.")");
 			}
 		}
+		return $conn;
 	}
 	
 	public function createAdapter() {
