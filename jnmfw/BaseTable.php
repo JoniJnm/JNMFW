@@ -7,27 +7,28 @@ use JNMFW\classes\cache\CacheManager;
 use JNMFW\exceptions\JNMException;
 
 abstract class BaseTable {
-	private $tableName;
 	private $cols = null;
-	private $primaryKey;
 	private $dirty = false;
 	
 	static private $dummyItems = array();
 	
-	abstract protected function getTableName();
-	abstract protected function getPrimaryKey();
-	public function _getPrimaryKey() {
-		return $this->getPrimaryKey();
+	abstract public function getTableName();
+	abstract public function getPrimaryKey();
+	public function useCache() {
+		return true;
 	}
 	
 	public function __construct() {
-		$this->tableName = $this->getTableName();
-		$this->primaryKey = $this->getPrimaryKey();
+		
+	}
+	
+	public function __sleep() {
+		return $this->getColumns();
 	}
 	
 	private function getColumns() {
 		if ($this->cols === null) {
-			$this->cols = array_keys(array_diff_key(get_object_vars($this), get_class_vars(__CLASS__)));
+			$this->cols = array_keys(get_class_vars(get_class($this)));
 		}
 		return $this->cols;
 	}
@@ -41,13 +42,13 @@ abstract class BaseTable {
 	}
 	
 	public function insert() {
-		$db = self::getDB();
-		$ok = 1 == $db->getQueryBuilderInsert($this->tableName)
+		$db = static::getDB();
+		$ok = 1 == $db->getQueryBuilderInsert($this->getTableName())
 				->columns($this->getColumns())
 				->data($this->getValues())
 				->execute();
 		if ($ok) {
-			$pk = $this->primaryKey;
+			$pk = $this->getPrimaryKey();
 			if ($this->$pk === null) {
 				$this->$pk = $db->getLastInsertedId();
 			}
@@ -63,9 +64,9 @@ abstract class BaseTable {
 	}
 	
 	public function delete() {
-		$db = self::getDB();
-		$pk = $this->primaryKey;
-		$ok = 1 == $db->getQueryBuilderDelete($this->tableName)
+		$db = static::getDB();
+		$pk = $this->getPrimaryKey();
+		$ok = 1 == $db->getQueryBuilderDelete($this->getTableName())
 				->where($pk, $this->$pk)
 				->execute();
 		$this->cacheDelete();
@@ -73,9 +74,9 @@ abstract class BaseTable {
 	}
 	
 	public function update() {
-		$db = self::getDB();
-		$pk = $this->primaryKey;
-		$ok = 1 == $db->getQueryBuilderUpdate($this->tableName)
+		$db = static::getDB();
+		$pk = $this->getPrimaryKey();
+		$ok = 1 == $db->getQueryBuilderUpdate($this->getTableName())
 				->set($this->getValues())
 				->where($pk, $this->$pk)
 				->execute();
@@ -91,18 +92,22 @@ abstract class BaseTable {
 	
 	private function cacheDelete() {
 		$this->dirty = true;
-		$cache = self::getCache();
-		$key = $this->getKeyCache();
-		$cache->delete($key);
+		if ($this->useCache()) {
+			$cache = self::getCache();
+			$key = $this->getKeyCache();
+			$cache->delete($key);
+		}
 	}
 	
 	private function cacheUpdate() {
 		if ($this->dirty) {
 			throw new JNMException("Trying to store a dirty object");
 		}
-		$cache = self::getCache();
-		$key = $this->getKeyCache();
-		$cache->set($key, $this);
+		if ($this->useCache()) {
+			$cache = self::getCache();
+			$key = $this->getKeyCache();
+			$cache->set($key, $this);
+		}
 	}
 	
 	private function getKeyCache() {
@@ -121,41 +126,51 @@ abstract class BaseTable {
 	// STATIC
 	
 	public static function get($id) {
-		$cache = self::getCache();
-		$key = self::getKeyCacheByID($id);
-		$item = $cache->get($key);
-		if ($item) return $item;
-		$db = self::getDB();
-		$obj = $db->getQueryBuilderSelect(self::tableName())
-				->where(self::primaryKey(), $id)
+		if (self::_useCache()) {
+			$cache = self::getCache();
+			$key = self::getKeyCacheByID($id);
+			$item = $cache->get($key);
+			if ($item) return $item;
+		}
+		
+		$db = static::getDB();
+		$obj = $db->getQueryBuilderSelect(self::_getTableName())
+				->where(self::_getPrimaryKey(), $id)
 				->loadObject();
 		if (!$obj) return null;
+		
 		$item = new static;
 		$item->fill($obj);
-		$cache->set($key, $item);
+		if (self::_useCache()) {
+			$cache->set($key, $item);
+		}
+		
 		return $item;
 	}
 	
 	public static function getMulti($ids) {
-		$cache = self::getCache();
-		$pk = self::primaryKey();
-				
-		$keys = array();
-		foreach ($ids as $id) {
-			$keys[] = self::getKeyCacheByID($id);
-		}
-		$out = $cache->getMulti($keys);
+		$pk = self::_getPrimaryKey();
 		
-		$ids_in_cache = array();
-		foreach ($out as $item) {
-			$ids_in_cache[] = $item->$pk;
+		if (self::_useCache()) {
+			$cache = self::getCache();
+
+			$keys = array();
+			foreach ($ids as $id) {
+				$keys[] = self::getKeyCacheByID($id);
+			}
+			$out = $cache->getMulti($keys);
+
+			$ids_in_cache = array();
+			foreach ($out as $item) {
+				$ids_in_cache[] = $item->$pk;
+			}
+
+			$ids = array_diff($ids, $ids_in_cache);
 		}
-		
-		$ids = array_diff($ids, $ids_in_cache);
 		
 		if ($ids) {
-			$db = self::getDB();
-			$objs = $db->getQueryBuilderSelect(self::tableName())
+			$db = static::getDB();
+			$objs = $db->getQueryBuilderSelect(self::_getTableName())
 					->whereIn($pk, $ids)
 					->loadObjectList();
 			
@@ -163,11 +178,17 @@ abstract class BaseTable {
 			foreach ($objs as $obj) {
 				$item = new static;
 				$item->fill($obj);
-				$key = $item->getKeyCache();
-				$items[$key] = $item;
 				$out[] = $item;
+				
+				if (self::_useCache()) {
+					$key = $item->getKeyCache();
+					$items[$key] = $item;
+				}
 			}
-			$cache->setMulti($items);
+			
+			if (self::_useCache()) {
+				$cache->setMulti($items);
+			}
 		}
 		
 		return $out;
@@ -184,22 +205,22 @@ abstract class BaseTable {
 		return self::$dummyItems[$className];
 	}
 	
-	static protected function tableName() {
+	static protected function _getTableName() {
 		return self::getDummyItem()->getTableName();
 	}
 	
-	static protected function primaryKey() {
+	static protected function _getPrimaryKey() {
 		return self::getDummyItem()->getPrimaryKey();
 	}
 	
-	static protected function columns() {
-		return self::getDummyItem()->getColumns();
+	static protected function _useCache() {
+		return self::getDummyItem()->useCache();
 	}
 	
 	/**
 	 * @return DBConnection
 	 */
-	private static function getDB() {
+	protected static function getDB() {
 		return \JNMFW\classes\databases\DBFactory::getInstance();
 	}
 	

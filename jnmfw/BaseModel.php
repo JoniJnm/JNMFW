@@ -40,7 +40,7 @@ abstract class BaseModel extends SimpleModel {
 				if (!$item) continue;
 				$obj = new $objName($item);
 				$out[] = $obj;
-				$pk = $item->_getPrimaryKey();
+				$pk = $item->getPrimaryKey();
 				$id = $item->$pk;
 				$this->objs[$objName][$id] = $obj;
 			}
