@@ -52,6 +52,7 @@ class CacheMemcache implements ICache {
 	}
 	
 	public function getMulti($keys) {
+		//las keys del array devuelto se corresponde con la key a obtener
 		return $this->obj->getMulti($keys);
 	}
 	

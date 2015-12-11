@@ -34,7 +34,7 @@ class CacheRequest implements ICache {
 	public function getMulti($keys) {
 		$out = array();
 		foreach ($keys as $key) {
-			$out[] = $this->get($key);
+			$out[$key] = $this->get($key);
 		}
 		return $out;
 	}

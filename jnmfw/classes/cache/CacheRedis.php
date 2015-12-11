@@ -66,11 +66,17 @@ class CacheRedis implements ICache {
 	}
 	
 	public function getMulti($keys) {
-		$out = $this->obj->getMultiple($keys);
-		$count = count($out);
+		$items = $this->obj->getMultiple($keys);
+		$count = count($items);
+		$out = array();
 		for ($i=0; $i<$count; $i++) {
-			if ($out[$i] !== null) {
-				$out[$i] = unserialize($out[$i]);
+			$item = $items[$i];
+			$key = $keys[$i];
+			if ($item === null) {
+				$out[$key] = $item;
+			}
+			else {
+				$out[$key] = unserialize($item);
 			}
 		}
 		return $out;

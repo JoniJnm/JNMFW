@@ -2,6 +2,9 @@
 
 namespace JNMFW;
 
+use JNMFW\ObjBase;
+use JNMFW\TableCached;
+
 abstract class ModelBase extends ModelSimple {
 	private $objs = array();
 	
@@ -9,13 +12,29 @@ abstract class ModelBase extends ModelSimple {
 		if (!isset($this->objs[$objName])) {
 			$this->objs[$objName] = array();
 		}
-		$dirty = !isset($this->objs[$objName][$id]) || $this->objs[$objName][$id]->getItem()->isDirty();
+		$dirty = $this->isDirty($objName, $id);
 		if ($dirty) {
 			$item = $tableName::get($id);
 			if (!$item) return null;
 			$this->objs[$objName][$id] = new $objName($item);
 		}
 		return $this->objs[$objName][$id];
+	}
+	
+	/**
+	 * @param ObjBase $obj
+	 * @return boolean
+	 */
+	private function isDirty($objName, $id) {
+		if (!isset($this->objs[$objName][$id])) {
+			return true;
+		}
+		$obj = $this->objs[$objName][$id];
+		$item = $obj->getItem();
+		if ($item instanceof TableCached) {
+			return $item->isDirty();
+		}
+		return false;
 	}
 	
 	protected function getMultiByPrimaryKey($ids, $tableName, $objName) {
@@ -25,7 +44,7 @@ abstract class ModelBase extends ModelSimple {
 		$out = array();
 		$dirtys = array();
 		foreach ($ids as $id) {
-			$dirty = !isset($this->objs[$objName][$id]) || $this->objs[$objName][$id]->getItem()->isDirty();
+			$dirty = $this->isDirty($objName, $id);
 			if ($dirty) {
 				$dirtys[] = $id;
 			}

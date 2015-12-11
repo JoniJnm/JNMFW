@@ -4,6 +4,7 @@ namespace JNMFW\classes\cache;
 
 use JNMFW\helpers\HLog;
 use JNMFW\helpers\HTimer;
+use JNMFW\exceptions\JNMException;
 
 class CacheManager {
 	private static $instance = null;
@@ -367,10 +368,10 @@ class CacheManager {
 		$morekeys = array();
 		for ($i=0; $i<count($aux); $i++) {
 			$key = $needKeys[$i];
-			//el índice puede ser la key (memcache) o numérico (redis)
-			if (isset($aux[$i])) $value = $aux[$i];
-			elseif (isset($aux[$key])) $value = $aux[$key];
-			else $value = null; //es por key (memcache) y no exite
+			if (!isset($aux[$key])) {
+				throw new JNMException("Error retreiving cache data. Key '$key' not found");
+			}
+			$value = $aux[$key];
 			if ($value === null) {
 				$morekeys[] = $key;
 			}
