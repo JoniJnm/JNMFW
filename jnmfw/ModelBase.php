@@ -2,7 +2,7 @@
 
 namespace JNMFW;
 
-abstract class BaseModel extends SimpleModel {
+abstract class ModelBase extends ModelSimple {
 	private $objs = array();
 	
 	protected function getByPrimaryKey($id, $tableName, $objName) {

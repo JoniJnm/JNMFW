@@ -4,7 +4,7 @@ namespace JNMFW;
 
 use JNMFW\classes\databases\DBConnection;
 
-abstract class BaseObj {
+abstract class ObjBase {
 	/**
 	 * @var DBConnection
 	 */

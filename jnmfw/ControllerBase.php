@@ -5,7 +5,7 @@ namespace JNMFW;
 use JNMFW\classes\Request;
 use JNMFW\classes\Server;
 
-class BaseController {
+class ControllerBase {
 	/**
 	 * @var Request
 	 */
