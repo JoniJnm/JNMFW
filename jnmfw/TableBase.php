@@ -18,7 +18,7 @@ abstract class TableBase {
 	
 	private function getColumns() {
 		if ($this->cols === null) {
-			$this->cols = array_keys(get_class_vars(get_class($this)));
+			$this->cols = array_keys(array_diff_key(get_object_vars($this), get_class_vars(__CLASS__)));
 		}
 		return $this->cols;
 	}

@@ -368,10 +368,7 @@ class CacheManager {
 		$morekeys = array();
 		for ($i=0; $i<count($aux); $i++) {
 			$key = $needKeys[$i];
-			if (!isset($aux[$key])) {
-				throw new JNMException("Error retreiving cache data. Key '$key' not found");
-			}
-			$value = $aux[$key];
+			$value = isset($aux[$key]) ? $aux[$key] : null;
 			if ($value === null) {
 				$morekeys[] = $key;
 			}
