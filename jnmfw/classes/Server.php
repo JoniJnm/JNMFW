@@ -3,6 +3,7 @@
 namespace JNMFW\classes;
 
 use JNMFW\classes\databases\DBFactory;
+use JNMFW\helpers\HLog;
 
 class Server extends Singleton {
 	//http://php.net/manual/function.exit.php
