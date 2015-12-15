@@ -2,10 +2,11 @@
 
 namespace JNMFW\classes\databases\mysqli;
 
+use JNMFW\classes\databases\queryBuilder\DBBlockInserter;
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderInsert;
 
 class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuilderInsert {
-	private $rows = array();
+	private $values = array();
 	private $onDuplicate = array();
 	
 	public function columns($columns) {
@@ -17,12 +18,21 @@ class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuil
 		if (!$this->cols) {
 			$this->cols = $isArray ? array_keys($row) : array_keys(get_object_vars($row));
 		}
-		$arr = array();
+		$values = array();
 		foreach ($this->cols as $col) {
-			$arr[] = $isArray ? $row[$col] : $row->$col;
+			$value = $isArray ? $row[$col] : $row->$col;
+			$values[] = $this->db->quote($value);
 		}
-		$this->rows[] = $arr;
+		$this->values[] = '('.implode(',', $values).')';
 		return $this;
+	}
+	
+	public function clearData() {
+		$this->values = array();
+	}
+	
+	public function getBlockInserter($blockSize) {
+		return new DBBlockInserter($this, $blockSize);
 	}
 	
 	public function onDuplicate($data) {
@@ -54,11 +64,7 @@ class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuil
 	public function build() {
 		$sql = 'INSERT INTO '.$this->db->quoteName($this->table);
 		$sql .= ' '.$this->db->quoteNames($this->cols);
-		$values = array();
-		foreach ($this->rows as $row) {
-			$values[] = $this->db->quoteArray($row);
-		}
-		$sql .= ' VALUES '.implode(', ', $values);
+		$sql .= ' VALUES '.implode(', ', $this->values);
 		if ($this->onDuplicate) {
 			$sql .= ' ON DUPLICATE KEY UPDATE '.implode(', ', $this->onDuplicate);
 		}

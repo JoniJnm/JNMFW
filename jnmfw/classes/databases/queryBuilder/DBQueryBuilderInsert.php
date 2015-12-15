@@ -12,6 +12,13 @@ interface DBQueryBuilderInsert extends DBQueryBuilder {
 	 */
 	public function data($row);
 	
+	public function clearData();
+	
+	/**
+	 * @return DBBlockInserter
+	 */
+	public function getBlockInserter($blockSize);
+	
 	/**
 	 * @return DBQueryBuilderInsert
 	 */
@@ -27,5 +34,8 @@ interface DBQueryBuilderInsert extends DBQueryBuilder {
 	 */
 	public function onDuplicateUpdateColumns($columns);
 	
+	/**
+	 * Devuelve el número de filas afectadas, -1 en caso de error
+	 */
 	public function execute();
 }
