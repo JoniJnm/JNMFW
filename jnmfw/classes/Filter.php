@@ -72,19 +72,6 @@ class Filter {
 	}
 	
 	/**
-	 * Get sha1 token
-	 * @param string $key
-	 * @return string
-	 */
-	public function getSha1($key) {
-		$def = '';
-		$source = $this->isset_else($key, $def);
-		if (\preg_match('/^[a-f0-9]{40}$/', $source)) return $source;
-		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
-		else return $def;
-	}
-	
-	/**
 	 * Get value with HTML safe filter
 	 * @param string $key
 	 * @param string $def
@@ -158,6 +145,14 @@ class Filter {
 		else return $def;
 	}
 	
+	public function getRegex($regex, $key, $def='', $caseSensitive = false) {
+		$source = $this->isset_else($key, $def);
+		$modif = $caseSensitive ? '' : 'i';
+		if (\preg_match("/^{$regex}$/{$modif}", $source)) return $source;
+		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
+		else return $def;
+	}
+	
 	/**
 	 * Only allow characters a-z
 	 * @param string $key
@@ -165,10 +160,7 @@ class Filter {
 	 * @return string
 	 */
 	public function getWord($key, $def='') {
-		$source = $this->isset_else($key, $def);
-		if (\preg_match('/^[A-Z]+$/i', $source)) return $source;
-		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
-		else return $def;
+		return $this->getRegex('[A-Z]+', $key, $def);
 	}
 	
 	/**
@@ -178,10 +170,16 @@ class Filter {
 	 * @return string
 	 */
 	public function getCmd($key, $def='') {
-		$source = $this->isset_else($key, $def);
-		if (\preg_match('/^[A-Z0-9_\.-]+$/i', $source)) return $source;
-		elseif ($this->isStrict()) HServer::sendInvalidParam($key);
-		else return $def;
+		return $this->getRegex('[A-Z0-9_\.-]+', $key, $def);
+	}
+	
+	/**
+	 * Get sha1 token
+	 * @param string $key
+	 * @return string
+	 */
+	public function getSha1($key) {
+		return $this->getRegex('[a-f0-9]{40}', $key, $def, false);
 	}
 	
 	/**
