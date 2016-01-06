@@ -98,6 +98,11 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	 */
 	public function limit($limit, $offset=0);
 	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function addOption($option);
+	
 	public function loadObject();
 	
 	/**

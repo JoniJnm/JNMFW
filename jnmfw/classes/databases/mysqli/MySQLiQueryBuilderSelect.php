@@ -10,6 +10,7 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	private $orders = array();
 	private $limit = '';
 	private $tableAlias;
+	private $options = array();
 	
 	public function __construct($db, $table, $alias=null) {
 		parent::__construct($db, $table);
@@ -97,9 +98,14 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		$this->limit = ' LIMIT '.intval($offset).','.intval($limit);
 		return $this;
 	}
+	
+	public function addOption($option) {
+		$this->options[] = $option;
+	}
 
 	public function build() {
 		$sql = 'SELECT ';
+		if ($this->options) $sql .= implode(' ', $this->options).' ';
 		if ($this->cols) $sql .= $this->db->quoteNames($this->cols, false);
 		else $sql .= '*';
 		$sql .= ' FROM '.$this->db->quoteName($this->table);

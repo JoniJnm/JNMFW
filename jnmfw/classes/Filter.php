@@ -178,7 +178,7 @@ class Filter {
 	 * @param string $key
 	 * @return string
 	 */
-	public function getSha1($key) {
+	public function getSha1($key, $def='') {
 		return $this->getRegex('[a-f0-9]{40}', $key, $def, false);
 	}
 	
