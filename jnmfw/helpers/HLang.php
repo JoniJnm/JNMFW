@@ -13,17 +13,23 @@ abstract class HLang {
 		static::$namespace = $namespace;
 	}
 	
-	public static function get($key) {
+	public static function get($key, $encodeHTML = true) {
 		if (defined('\\'.static::$namespace.'\Lang'.static::$lang.'::'.$key)) {
-			return constant('\\'.static::$namespace.'\Lang'.static::$lang.'::'.$key);
+			$out = constant('\\'.static::$namespace.'\Lang'.static::$lang.'::'.$key);
 		}
 		elseif (defined('\\'.static::$namespace.'\Lang'.static::$default.'::'.$key)) {
 			HLog::warning("Clave de idioma '$key' no traducida para ".static::$lang);
-			return constant('\\'.static::$namespace.'\Lang'.static::$default.'::'.$key);
+			$out = constant('\\'.static::$namespace.'\Lang'.static::$default.'::'.$key);
 		}
 		else {
 			HLog::warning("Clave de idioma '$key' no definida");
-			return $key;
+			$out = $key;
+		}
+		if ($encodeHTML) {
+			return htmlspecialchars($out, ENT_QUOTES | ENT_HTML5);
+		}
+		else {
+			return $out;
 		}
 	}
 	
