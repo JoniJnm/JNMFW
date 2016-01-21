@@ -104,6 +104,10 @@ class MySQLiCondition implements DBCondition {
 		return $this->glue == 'OR';
 	}
 	
+	public function isEmpty() {
+		return !$this->wheres;
+	}
+	
 	public function build() {
 		if (!$this->wheres && !$this->conditionsAnd && $this->conditionsOr) return '';
 		$ands = array();

@@ -58,5 +58,7 @@ interface DBCondition {
 	 */
 	public function whereRaw($condition, $data=null);
 	
+	public function isEmpty();
+	
 	public function build();
 }
