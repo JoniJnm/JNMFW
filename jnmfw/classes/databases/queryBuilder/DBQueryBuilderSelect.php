@@ -103,16 +103,16 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	 */
 	public function addOption($option);
 	
-	public function loadObject();
+	public function loadObject($class_name = "stdClass");
 	
 	/**
 	 * @param string $keycol Columna para crear los índices del array
 	 */
-	public function loadObjectList($keycol = null);
+	public function loadObjectList($class_name = "stdClass", $keycol = null);
 	
-	public function loadValue();
+	public function loadValue($column_number = 0);
 	
-	public function loadValueArray();
+	public function loadValueArray($column_number = 0);
 	
 	/**
 	 * Returns DBResource to loop it manually

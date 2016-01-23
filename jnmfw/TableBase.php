@@ -31,6 +31,10 @@ abstract class TableBase {
 		return $tmp;
 	}
 	
+	private function getClassName() {
+		return get_class($this);
+	}
+	
 	public function insert() {
 		$db = static::getDB();
 		$ok = 1 == $db->getQueryBuilderInsert($this->getTableName())
@@ -75,14 +79,9 @@ abstract class TableBase {
 	
 	public static function get($id) {
 		$db = static::getDB();
-		$obj = $db->getQueryBuilderSelect(self::_getTableName())
+		return $db->getQueryBuilderSelect(self::_getTableName())
 				->where(self::_getPrimaryKey(), $id)
-				->loadObject();
-		if (!$obj) return null;
-		
-		$item = new static;
-		$item->fill($obj);
-		return $item;
+				->loadObject(self::_getClassName());
 	}
 	
 	public static function getMulti($ids) {
@@ -91,35 +90,15 @@ abstract class TableBase {
 		$pk = self::_getPrimaryKey();
 		
 		$db = static::getDB();
-		$resource = $db->getQueryBuilderSelect(self::_getTableName())
+		return $db->getQueryBuilderSelect(self::_getTableName())
 				->whereIn($pk, $ids)
-				->loadResource();
-
-		while ($obj = $resource->fetch_object()) {
-			$item = new static;
-			$item->fill($obj);
-			$out[] = $item;
-		}
-		
-		$resource->free();
-		
-		return $out;
+				->loadObjectList(self::_getClassName());
 	}
 	
 	public static function getAll() {
 		$db = static::getDB();
-		$resource = $db->getQueryBuilderSelect(self::_getTableName())
-				->loadResource();
-
-		while ($obj = $resource->fetch_object()) {
-			$item = new static;
-			$item->fill($obj);
-			$out[] = $item;
-		}
-		
-		$resource->free();
-		
-		return $out;
+		return $db->getQueryBuilderSelect(self::_getTableName())
+				->loadObjectList($this->getClassName());
 	}
 	
 	/**
@@ -139,6 +118,10 @@ abstract class TableBase {
 	
 	static protected function _getPrimaryKey() {
 		return self::getDummyItem()->getPrimaryKey();
+	}
+	
+	static protected function _getClassName() {
+		return self::getDummyItem()->getClassName();
 	}
 	
 	/**

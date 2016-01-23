@@ -28,8 +28,8 @@ class PDOResource implements \JNMFW\classes\databases\DBResource {
 		$this->free();
 	}
 	
-	public function fetch_object() {
-		return $this->res->fetchObject();
+	public function fetch_object($class_name = "stdClass") {
+		return $this->res->fetchObject($class_name);
 	}
 	
 	public function fetch_row() {

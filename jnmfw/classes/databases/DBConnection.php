@@ -142,9 +142,9 @@ abstract class DBConnection {
 	 * @param string $query La consulta SQL
 	 * @return Un objeto stdclass con los valores devueltos por MySQL
 	 */
-	public function loadObject($query){
+	public function loadObject($query, $class_name = "stdClass"){
 		$res = $this->initAccess($query);
-		$obj = $this->parseObject($res);
+		$obj = $this->parseObject($res, $class_name);
 		$this->endAccess($res, $obj ? 1 : 0);
 		return $obj;
 	}
@@ -152,9 +152,9 @@ abstract class DBConnection {
 	/**
 	 * @param DBResource $res
 	 */
-	public function parseObject($res) {
+	public function parseObject($res, $class_name = "stdClass") {
 		if (!$res) return false;
-		return $res->fetch_object();
+		return $res->fetch_object($class_name);
 	}
 	
 	/**
@@ -163,9 +163,9 @@ abstract class DBConnection {
 	 * @param string $keycol Columna para crear los índices del array
 	 * @return array de objetos stdclass
 	 */
-	public function loadObjectList($query, $keycol = null) {
+	public function loadObjectList($query, $class_name = "stdClass", $keycol = null) {
 		$res = $this->initAccess($query);
-		$array = $this->parseObjectList($res, $keycol);
+		$array = $this->parseObjectList($res, $class_name, $keycol);
 		$this->endAccess($res, count($array));
 		return $array;
 	}
@@ -173,10 +173,10 @@ abstract class DBConnection {
 	/**
 	 * @param DBResource $res
 	 */
-	public function parseObjectList($res, $keycol) {
+	public function parseObjectList($res, $class_name = "stdClass", $keycol = null) {
 		if (!$res) return false;
 		$array = array();
-		while ($row = $res->fetch_object()) {
+		while ($row = $res->fetch_object($class_name)) {
 			if ($keycol) $array[$row->$keycol] = $row;
 			else $array[] = $row;
 		}
@@ -221,12 +221,12 @@ abstract class DBConnection {
 	/**
 	 * @param DBResource $res
 	 */
-	public function &parseValueArray($res, $col) {
+	public function parseValueArray($res, $col) {
 		$array = null;
 		if ($res) {
 			$array = array();
-			while ($row = $res->fetch_row()) {
-				$array[] = $row[$col];
+			while ($value = $res->fetch_value($col)) {
+				$array[] = $value;
 			}
 		}
 		return $array;

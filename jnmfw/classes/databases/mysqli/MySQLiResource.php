@@ -28,8 +28,8 @@ class MySQLiResource implements \JNMFW\classes\databases\DBResource {
 		$this->free();
 	}
 	
-	public function fetch_object() {
-		return $this->res->fetch_object();
+	public function fetch_object($class_name = "stdClass") {
+		return $this->res->fetch_object($class_name);
 	}
 	
 	public function fetch_row() {

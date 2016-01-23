@@ -123,22 +123,22 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		$this->limit(1);
 	}
 
-	public function loadObject() {
+	public function loadObject($class_name = "stdClass") {
 		$this->setLimit1IfNeeded();
-		return $this->db->loadObject($this->build());
+		return $this->db->loadObject($this->build(), $class_name);
 	}
 
-	public function loadObjectList($keycol = null) {
-		return $this->db->loadObjectList($this->build(), $keycol);
+	public function loadObjectList($class_name = "stdClass", $keycol = null) {
+		return $this->db->loadObjectList($this->build(), $class_name, $keycol);
 	}
 
-	public function loadValue() {
+	public function loadValue($column_number = 0) {
 		$this->setLimit1IfNeeded();
-		return $this->db->loadValue($this->build());
+		return $this->db->loadValue($this->build(), $column_number);
 	}
 
-	public function loadValueArray() {
-		return $this->db->loadValueArray($this->build());
+	public function loadValueArray($column_number = 0) {
+		return $this->db->loadValueArray($this->build(), $column_number);
 	}
 	
 	public function loadResource() {

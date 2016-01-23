@@ -75,16 +75,16 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		return $this->getAffectedRows();
 	}
 
-	public function loadObject($key){
+	public function loadObject($key, $class_name = "stdClass"){
 		$res = $this->initAccess($key);
-		$obj = $this->db->parseObject($res);
+		$obj = $this->db->parseObject($res, $class_name);
 		$this->endAccess($res, $obj ? 1 : 0, $key);
 		return $obj;
 	}
 
-	public function loadObjectList($key, $keycol = null) {
+	public function loadObjectList($key, $class_name = "stdClass", $keycol = null) {
 		$res = $this->initAccess($key);
-		$array = $this->db->parseObjectList($res, $keycol);
+		$array = $this->db->parseObjectList($res, $class_name, $keycol);
 		$this->endAccess($res, count($array), $key);
 		return $array;
 	}
