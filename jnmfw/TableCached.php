@@ -72,6 +72,8 @@ abstract class TableCached extends TableBase {
 	}
 	
 	public static function getMulti($ids) {
+		if (!$ids) return array();
+		
 		$pk = self::_getPrimaryKey();
 		
 		$cache = self::getCache();
@@ -102,6 +104,24 @@ abstract class TableCached extends TableBase {
 		}
 		
 		return $out;
+	}
+	
+	public static function getAll() {
+		$pk = self::_getPrimaryKey();
+		
+		$db = static::getDB();
+		$resource = $db->getQueryBuilderSelect(self::_getTableName())
+				->columns($pk)
+				->loadResource();
+
+		$ids = array();
+		while ($id = $resource->fetch_value()) {
+			$ids[] = $id;
+		}
+		
+		$resource->free();
+		
+		return $this->getMulti($ids);
 	}
 	
 	/**

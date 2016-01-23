@@ -106,6 +106,22 @@ abstract class TableBase {
 		return $out;
 	}
 	
+	public static function getAll() {
+		$db = static::getDB();
+		$resource = $db->getQueryBuilderSelect(self::_getTableName())
+				->loadResource();
+
+		while ($obj = $resource->fetch_object()) {
+			$item = new static;
+			$item->fill($obj);
+			$out[] = $item;
+		}
+		
+		$resource->free();
+		
+		return $out;
+	}
+	
 	/**
 	 * @return BaseTable
 	 */
