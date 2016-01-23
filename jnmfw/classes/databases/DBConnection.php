@@ -201,9 +201,7 @@ abstract class DBConnection {
 	 */
 	public function parseValue($res, $col) {
 		if (!$res) return false;
-		$row = $res->fetch_row();
-		if (!$row) return false;
-		return $row[$col];
+		return $res->fetch_value($col);
 	}
 	
 	/**

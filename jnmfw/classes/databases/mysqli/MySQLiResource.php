@@ -40,6 +40,11 @@ class MySQLiResource implements \JNMFW\classes\databases\DBResource {
 		return $this->res->fetch_array(\MYSQLI_ASSOC);
 	}
 	
+	public function fetch_value($column_number = 0) {
+		$row = $this->fetch_row();
+		return $row[$column_number];
+	}
+	
 	public function getNumRows() {
 		return $this->res->num_rows;
 	}

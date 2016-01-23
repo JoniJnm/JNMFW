@@ -13,6 +13,7 @@ interface DBResource {
 	public function fetch_object();
 	public function fetch_row();
 	public function fetch_array();
+	public function fetch_value($column_number = 0);
 	public function getNumRows();
 	public function free();
 }

@@ -40,6 +40,10 @@ class PDOResource implements \JNMFW\classes\databases\DBResource {
 		return $this->res->fetch(\PDO::FETCH_NUM);
 	}
 	
+	public function fetch_value($column_number = 0) {
+		return $this->res->fetchColumn($column_number);
+	}
+	
 	public function getNumRows() {
 		return $this->res->rowCount();
 	}
