@@ -77,6 +77,9 @@ abstract class TableBase {
 	
 	// STATIC
 	
+	/**
+	 * @return TableBase
+	 */
 	public static function get($id) {
 		$db = static::getDB();
 		return $db->getQueryBuilderSelect(self::_getTableName())
@@ -84,6 +87,9 @@ abstract class TableBase {
 				->loadObject(self::_getClassName());
 	}
 	
+	/**
+	 * @return TableBase[]
+	 */
 	public static function getMulti($ids) {
 		if (!$ids) return array();
 		
@@ -95,10 +101,21 @@ abstract class TableBase {
 				->loadObjectList(self::_getClassName());
 	}
 	
+	/**
+	 * @return TableBase[]
+	 */
 	public static function getAll() {
 		$db = static::getDB();
 		return $db->getQueryBuilderSelect(self::_getTableName())
-				->loadObjectList($this->getClassName());
+				->loadObjectList(self::_getClassName());
+	}
+	
+	public static function getAllIDs() {
+		$pk = self::_getPrimaryKey();
+		$db = static::getDB();
+		return $db->getQueryBuilderSelect(self::_getTableName())
+				->columns($pk)
+				->loadValueArray();
 	}
 	
 	/**

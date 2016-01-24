@@ -107,20 +107,7 @@ abstract class TableCached extends TableBase {
 	}
 	
 	public static function getAll() {
-		$pk = self::_getPrimaryKey();
-		
-		$db = static::getDB();
-		$resource = $db->getQueryBuilderSelect(self::_getTableName())
-				->columns($pk)
-				->loadResource();
-
-		$ids = array();
-		while ($id = $resource->fetch_value()) {
-			$ids[] = $id;
-		}
-		
-		$resource->free();
-		
+		$ids = $this->getAllIDs();
 		return $this->getMulti($ids);
 	}
 	

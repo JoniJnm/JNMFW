@@ -67,4 +67,9 @@ abstract class ModelBase extends ModelSimple {
 		
 		return $out;
 	}
+	
+	protected function getMulti($tableName, $objName) {
+		$ids = $tableName::getAllIDs();
+		return $this->getMultiByPrimaryKey($ids, $tableName, $objName);
+	}
 }
