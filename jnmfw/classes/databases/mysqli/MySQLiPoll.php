@@ -133,7 +133,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 		$res = $link->reap_async_query();
 		if (!$res) {
 			$query = $this->getQueryByKey($key);
-			throw new JNMDBException($link->error.":\n".$query);
+			throw new JNMDBException($link->error.":\n".$query, $link->errno);
 		}
 		return $res;
 	}

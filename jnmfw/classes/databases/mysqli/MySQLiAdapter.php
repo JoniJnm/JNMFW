@@ -46,7 +46,7 @@ class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	public function query($query) {
 		$res = $this->conn->query($query);
 		if ($res === true) return true;
-		elseif (!$res) throw new JNMDBException($this->conn->error.":\n".$query);
+		elseif (!$res) throw new JNMDBException($this->conn->error.":\n".$query, $this->conn->errno);
 		else return new MySQLiResource($res);
 	}
 	

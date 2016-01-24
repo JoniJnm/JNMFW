@@ -24,12 +24,12 @@ class MySQLiDriver extends DBDriver {
 	public function createNativeConnection() {
 		$conn = new \mysqli($this->host, $this->user, $this->pass, $this->dbname, $this->port);
 		if ($conn->connect_errno) {
-			throw new JNMDBConnectionException($conn->connect_error.' ('.$conn->connect_errno.')');
+			throw new JNMDBConnectionException($conn->connect_error, $conn->connect_errno);
 		}
 		else {
 			$conn->set_charset("utf8");
 			if ($conn->errno) {
-				throw new JNMDBException($conn->error." (".$conn->connect_errno.")");
+				throw new JNMDBException($conn->error, $conn->connect_errno);
 			}
 		}
 		return $conn;

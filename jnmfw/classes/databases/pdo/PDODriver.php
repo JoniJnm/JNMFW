@@ -21,7 +21,7 @@ class PDODriver extends DBDriver {
 	public function createNativeConnection() {
 		$conn = new \PDO($this->dsn, $this->user, $this->pass, $this->options);
 		if ($conn->errorCode()) {
-			throw new JNMDBConnectionException($conn->errorInfo());
+			throw new JNMDBConnectionException($conn->errorInfo(), $conn->errorCode());
 		}
 		return $conn;
 	}

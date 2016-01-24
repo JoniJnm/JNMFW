@@ -109,7 +109,9 @@ class MySQLiCondition implements DBCondition {
 	}
 	
 	public function build() {
-		if (!$this->wheres && !$this->conditionsAnd && $this->conditionsOr) return '';
+		if (!$this->wheres && !$this->conditionsAnd && !$this->conditionsOr) {
+			return '';
+		}
 		$ands = array();
 		$ors = array();
 		foreach ($this->conditionsAnd as $condition) {

@@ -46,7 +46,7 @@ class PDOAdapter implements \JNMFW\classes\databases\DBAdapter {
 	public function query($query) {
 		$res = $this->conn->query($query);
 		if (!$res) {
-			throw new JNMDBException($this->conn->errorInfo().":\n".$query);
+			throw new JNMDBException($this->conn->errorInfo().":\n".$query, $this->conn->errorCode());
 		}
 		$this->lastRes = $res;
 		return new PDOResource($res);
