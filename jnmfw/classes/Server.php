@@ -92,9 +92,11 @@ class Server extends Singleton {
 		$this->close();
 	}
 	
-	public function sendNotFound($msg_log) {
+	public function sendNotFound($msg_log = null) {
 		$this->transactionRollback();
-		HLog::error($msg_log);
+		if ($msg_log) {
+			HLog::error($msg_log);
+		}
 		$this->sendStatus(404, true);
 	}
 	
