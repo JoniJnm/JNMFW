@@ -21,12 +21,7 @@ interface DBCondition {
 	/**
 	 * @return DBCondition
 	 */
-	public function whereOr(DBCondition $condition);
-	
-	/**
-	 * @return DBCondition
-	 */
-	public function whereAnd(DBCondition $condition);
+	public function whereCondition(DBCondition $condition);
 	
 	/**
 	 * @return DBCondition
@@ -51,7 +46,17 @@ interface DBCondition {
 	/**
 	 * @return DBCondition
 	 */
+	public function whereNotLike($column, $value);
+	
+	/**
+	 * @return DBCondition
+	 */
 	public function whereIn($column, $values);
+	
+	/**
+	 * @return DBCondition
+	 */
+	public function whereNotIn($column, $values);
 	
 	/**
 	 * @return DBCondition

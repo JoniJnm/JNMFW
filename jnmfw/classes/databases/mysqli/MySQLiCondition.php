@@ -4,19 +4,8 @@ namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\DBConnection;
 use JNMFW\classes\databases\queryBuilder\DBCondition;
-use JNMFW\exceptions\JNMDBException;
 
-class MySQLiCondition implements DBCondition {
-	/**
-	 * @var DBCondition[] 
-	 */
-	private $conditionsAnd = array();
-	
-	/**
-	 * @var DBCondition[] 
-	 */
-	private $conditionsOr = array();
-	
+class MySQLiCondition implements DBCondition {	
 	/**
 	 * @var DBConnection
 	 */
@@ -44,13 +33,10 @@ class MySQLiCondition implements DBCondition {
 		return $this;
 	}
 	
-	public function whereOr(DBCondition $condition) {
-		$this->conditionsOr[] = $condition;
-		return $this;
-	}
-	
-	public function whereAnd(DBCondition $condition) {
-		$this->conditionsAnd[] = $condition;
+	public function whereCondition(DBCondition $condition) {
+		if (!$condition->isEmpty()) {
+			$this->wheres[] = '('.$condition->build().')';
+		}
 		return $this;
 	}
 	
@@ -68,8 +54,11 @@ class MySQLiCondition implements DBCondition {
 	}
 	
 	public function whereLike($column, $value) {
-		$this->wheres[] = $this->db->quoteName($column).' LIKE '.$this->db->quote($value);
-		return $this;
+		return $this->where($column, $value, 'LIKE');
+	}
+	
+	public function whereNotLike($column, $value) {
+		return $this->where($column, $value, 'NOT LIKE');
 	}
 		
 	public function whereIn($column, $values) {
@@ -77,8 +66,13 @@ class MySQLiCondition implements DBCondition {
 		return $this;
 	}
 	
+	public function whereNotIn($column, $values) {
+		$this->wheres[] = $this->db->quoteName($column).' NOT IN '.$this->db->quoteArray($values);
+		return $this;
+	}
+	
 	public function whereRaw($condition, $data=null) {
-		if (stripos($condition, 'OR') !== false) {
+		if (!preg_match('/\s*\(/', $condition)) {
 			$condition = '('.$condition.')';
 		}
 		if ($data) {
@@ -96,52 +90,14 @@ class MySQLiCondition implements DBCondition {
 		return $this;
 	}
 	
-	private function isGlueAnd() {
-		return $this->glue == 'AND';
-	}
-	
-	private function isGlueOr() {
-		return $this->glue == 'OR';
-	}
-	
 	public function isEmpty() {
 		return !$this->wheres;
 	}
 	
 	public function build() {
-		if (!$this->wheres && !$this->conditionsAnd && !$this->conditionsOr) {
+		if ($this->isEmpty()) {
 			return '';
 		}
-		$ands = array();
-		$ors = array();
-		foreach ($this->conditionsAnd as $condition) {
-			$str = $condition->build();
-			if (!$str) continue;
-			$ands[] = '('.$str.')';
-		}
-		foreach ($this->conditionsOr as $condition) {
-			$str = $condition->build();
-			if (!$str) continue;
-			$ors[] = '('.$str.')';
-		}
-		if ($this->wheres) {
-			if ($this->isGlueAnd()) {
-				$str = implode(' AND ', $this->wheres);
-				if ($ors) $str = '('.$str.')';
-				array_unshift($ands, $str);
-			}
-			elseif ($this->isGlueOr()) {
-				$str = implode(' OR ', $this->wheres);
-				if ($ands) $str = '('.$str.')';
-				array_unshift($ors, $str);
-			}
-			else {
-				throw new JNMDBException("Invalid glue: ".$this->glue);
-			}
-		}
-		$and = implode(' AND ', $ands);
-		$or = implode(' OR ', $ors);
-		if ($and && $or) return $and .' OR '.$or;
-		else return $and.$or;
+		return implode(' '.$this->glue.' ', $this->wheres);
 	}
 }

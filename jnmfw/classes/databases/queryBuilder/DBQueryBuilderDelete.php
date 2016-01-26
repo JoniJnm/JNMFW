@@ -31,12 +31,7 @@ interface DBQueryBuilderDelete extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderDelete
 	 */
-	public function whereOr(DBCondition $condition);
-	
-	/**
-	 * @return DBQueryBuilderDelete
-	 */
-	public function whereAnd(DBCondition $condition);
+	public function whereCondition(DBCondition $condition);
 	
 	/**
 	 * @return DBQueryBuilderDelete
@@ -56,7 +51,17 @@ interface DBQueryBuilderDelete extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderDelete
 	 */
+	public function whereNotLike($column, $value);
+	
+	/**
+	 * @return DBQueryBuilderDelete
+	 */
 	public function whereIn($column, $values);
+	
+	/**
+	 * @return DBQueryBuilderDelete
+	 */
+	public function whereNotIn($column, $values);
 	
 	/**
 	 * @return DBQueryBuilderDelete

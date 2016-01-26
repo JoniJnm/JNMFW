@@ -79,13 +79,8 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 		return $this;
 	}
 	
-	protected function whereOr(DBCondition $condition) {
-		$this->condition->whereOr($condition);
-		return $this;
-	}
-
-	protected function whereAnd(DBCondition $condition) {
-		$this->condition->whereAnd($condition);
+	protected function whereCondition(DBCondition $condition) {
+		$this->condition->whereCondition($condition);
 		return $this;
 	}
 	
@@ -103,9 +98,19 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder {
 		$this->condition->whereLike($column, $value);
 		return $this;
 	}
+	
+	protected function whereNotLike($column, $value) {
+		$this->condition->whereNotLike($column, $value);
+		return $this;
+	}
 
 	protected function whereIn($column, $values) {
 		$this->condition->whereIn($column, $values);
+		return $this;
+	}
+	
+	protected function whereNotIn($column, $values) {
+		$this->condition->whereNotIn($column, $values);
 		return $this;
 	}
 

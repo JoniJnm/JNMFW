@@ -36,12 +36,7 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderUpdate
 	 */
-	public function whereOr(DBCondition $condition);
-	
-	/**
-	 * @return DBQueryBuilderUpdate
-	 */
-	public function whereAnd(DBCondition $condition);
+	public function whereCondition(DBCondition $condition);
 	
 	/**
 	 * @return DBQueryBuilderSelect
@@ -61,7 +56,17 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderUpdate
 	 */
+	public function whereNotLike($column, $value);
+	
+	/**
+	 * @return DBQueryBuilderUpdate
+	 */
 	public function whereIn($column, $values);
+	
+	/**
+	 * @return DBQueryBuilderUpdate
+	 */
+	public function whereNotIn($column, $values);
 	
 	/**
 	 * @return DBQueryBuilderUpdate

@@ -51,12 +51,7 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
-	public function whereOr(DBCondition $condition);
-	
-	/**
-	 * @return DBQueryBuilderSelect
-	 */
-	public function whereAnd(DBCondition $condition);
+	public function whereCondition(DBCondition $condition);
 	
 	/**
 	 * @return DBQueryBuilderSelect
@@ -76,7 +71,17 @@ interface DBQueryBuilderSelect extends DBQueryBuilder {
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
+	public function whereNotLike($column, $value);
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
 	public function whereIn($column, $values);
+	
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
+	public function whereNotIn($column, $values);
 	
 	/**
 	 * @return DBQueryBuilderSelect

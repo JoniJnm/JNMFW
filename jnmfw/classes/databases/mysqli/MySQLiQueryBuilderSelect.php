@@ -53,12 +53,8 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		return parent::where($column, $value, $op);
 	}
 	
-	public function whereOr(DBCondition $condition) {
-		return parent::whereOr($condition);
-	}
-
-	public function whereAnd(DBCondition $condition) {
-		return parent::whereAnd($condition);
+	public function whereCondition(DBCondition $condition) {
+		return parent::whereCondition($condition);
 	}
 	
 	public function whereNull($column) {
@@ -72,9 +68,17 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	public function whereLike($column, $value) {
 		return parent::whereLike($column, $value);
 	}
+	
+	public function whereNotLike($column, $value) {
+		return parent::whereNotLike($column, $value);
+	}
 
 	public function whereIn($column, $values) {
 		return parent::whereIn($column, $values);
+	}
+	
+	public function whereNotIn($column, $values) {
+		return parent::whereNotIn($column, $values);
 	}
 
 	public function whereRaw($condition, $data=null) {
