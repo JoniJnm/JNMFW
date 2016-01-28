@@ -67,7 +67,7 @@ class Server extends Singleton {
 		if (isset($this->status_codes[$statusCode])) {
 			$status_string = $statusCode . ' ' . $this->status_codes[$statusCode];
 			if (php_sapi_name() != 'cli') {
-				\header($_SERVER['SERVER_PROTOCOL'] . ' ' . $status_string, true, $statusCode);
+				\header(filter_input(INPUT_SERVER, 'SERVER_PROTOCOL') . ' ' . $status_string, true, $statusCode);
 			}
 			if ($close) {
 				if ($statusCode >= 300) echo $statusCode.' '.$this->status_codes[$statusCode]."\n";
@@ -130,9 +130,9 @@ class Server extends Singleton {
 		$this->sendStatus(419, true);
 	}
 	
-	public function sendUserNotVerified() {
+	public function sendUnauthorized() {
 		$this->transactionRollback();
-		$this->sendStatus(403, true);
+		$this->sendStatus(401, true);
 	}
 	
 	public function sendForbidden($msg_user = null) {
