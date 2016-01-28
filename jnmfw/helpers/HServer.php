@@ -12,7 +12,7 @@ abstract class HServer {
 		$server->sendInvalidRequest($msg_user, $key, $log);
 	}
 	
-	static public function sendNotFound($msg_log) {
+	static public function sendNotFound($msg_log = null) {
 		Server::getInstance()->sendNotFound($msg_log);
 	}
 }

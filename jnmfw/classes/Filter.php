@@ -20,6 +20,10 @@ class Filter {
 		return $this->strict;
 	}
 	
+	public function addData($key, $value) {
+		$this->data[$key] = $value;
+	}
+	
 	protected function isset_else($key, $def) {
 		return isset($this->data[$key]) ? $this->data[$key] : $def;
 	}

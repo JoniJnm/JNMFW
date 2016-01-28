@@ -31,7 +31,22 @@ class Request extends Filter {
 	 * Desde fuera llamar a getInstance()
 	 */
 	public function __construct($_ = null) {
-		parent::__construct(\array_merge($_GET, $_POST));
+		$method = strtolower(filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
+		if ($method == 'put') {
+			$data = null;
+			parse_str(file_get_contents("php://input"), $data);
+			if (!$data) $data = array();
+		}
+		elseif ($method == 'get') {
+			$data = $_GET;
+		}
+		elseif ($method == 'post') {
+			$data = \array_merge($_GET, $_POST);
+		}
+		else {
+			$data = array();
+		}
+		parent::__construct($data);
 		$this->cookie = new Filter($_COOKIE);
 		$this->server = new Filter($_SERVER);
 	}
