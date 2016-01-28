@@ -48,7 +48,10 @@ class Route {
 		}
 		
 		if ($this->func) {
-			$controller->{$this->func}();
+			$call = array($controller, $this->func);
+			if (is_callable($call)) {
+				call_user_func($call);
+			}
 		}
 	}
 	
