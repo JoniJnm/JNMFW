@@ -39,12 +39,17 @@ class Route {
 		return $this->addTask('put', $path, $func);
 	}
 	
+	public function delete($path, $func = null) {
+		return $this->addTask('delete', $path, $func);
+	}
+	
 	public function run($controller) {
 		if (!$this->func) {
 			//defaults methods
-			$this->get('/', 'get');
+			$this->get('/', 'fetch');
 			$this->post('/', 'create');
 			$this->put('/', 'update');
+			$this->delete('/', 'destroy');
 		}
 		
 		if ($this->func) {
