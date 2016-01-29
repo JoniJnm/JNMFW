@@ -156,7 +156,7 @@ class Server extends Singleton {
 	
 	private function sendJSON($data) {
 		\header('Content-type: application/json');
-		echo \json_encode($data, \JSON_NUMERIC_CHECK);
+		echo \json_encode($data);
 	}
 	
 	private function transactionCommit() {
