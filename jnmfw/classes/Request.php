@@ -2,13 +2,6 @@
 
 namespace JNMFW\classes;
 
-/**
- * Clase para controlar de manera sencilla las variables $_GET, $_POST y $_COOKIE
- * 
- * Si no se accede a una propiedad específica de la clase (cookie, server)
- * por defecto el filtro se realizará sobre merge($_GET, $_POST)
- */
-
 class Request extends Filter {
 	/**
 	 * Filtro sobre $_COOKIE
