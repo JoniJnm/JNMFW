@@ -58,7 +58,7 @@ class App {
 			HServer::sendNotFound();
 		}
 		
-		$className = $p['namespace']."\\".$controllerName.'Controller';
+		$className = $p['namespace']."\\".ucfirst($controllerName).'Controller';
 		if (!class_exists($className)) {
 			HServer::sendNotFound();
 		}
