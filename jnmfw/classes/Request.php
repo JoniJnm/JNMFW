@@ -55,4 +55,10 @@ class Request extends Filter {
 		}
 		return static::$instance;
 	}
+	
+	public function setStrictMode($strict) {
+		parent::setStrictMode($strict);
+		$this->cookie->setStrictMode($strict);
+		$this->server->setStrictMode($strict);
+	}
 }
