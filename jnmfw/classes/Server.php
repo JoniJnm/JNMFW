@@ -174,6 +174,7 @@ class Server extends Singleton {
 	}
 	
 	private function closeError() {
+		HLog::verbose('Close error', true);
 		$this->transactionRollback();
 		exit($this->PROCESS_STATUS_END_ERROR_NUMBER);
 	}
