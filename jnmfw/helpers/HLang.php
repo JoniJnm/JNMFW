@@ -36,25 +36,4 @@ abstract class HLang {
 	public static function getUserLang() {
 		return static::$lang;
 	}
-	
-	public static function toJS($folder, $keys = null) {
-		if (!is_array($keys)) {
-			$class = '\\'.static::$namespace.'\Lang';
-			$refl = new \ReflectionClass($class);
-			$keys = $refl->getConstants();
-		}
-		sort($keys);
-		$md5 = md5(constant('\\'.static::$namespace.'\Lang'.static::$lang.'::_VERSION').'-'.
-				constant('\\'.static::$namespace.'\Lang'.static::$default.'::_VERSION').'-'.
-				print_r($keys, true));
-		$filename = strtolower(static::$lang).'-'.$md5.'.js';
-		$file = $folder.'/'.$filename;
-		if (file_exists($file)) return $filename;
-		$data = array();
-		foreach ($keys as $key) {
-			$data[$key] = static::get($key);
-		}
-		file_put_contents($file, 'lang = '.json_encode($data).';');
-		return $filename;
-	}
 }
