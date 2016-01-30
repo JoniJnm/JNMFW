@@ -20,7 +20,7 @@ class Filter {
 		return $this->strict;
 	}
 	
-	public function addData($key, $value) {
+	public function putData($key, $value) {
 		$this->data[$key] = $value;
 	}
 	

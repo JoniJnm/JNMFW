@@ -20,11 +20,18 @@ class Request extends Filter {
 	 */
 	private static $instance = null;
 	
+	private $method;
+	
 	/**
 	 * Desde fuera llamar a getInstance()
 	 */
 	public function __construct($_ = null) {
-		$method = strtolower(filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
+		$method = filter_input(INPUT_POST, '_method');
+		if (!$method) {
+			$method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
+		}
+		$method = strtolower($method);
+		$this->method = $method;
 		if ($method == 'put') {
 			$data = null;
 			parse_str(file_get_contents("php://input"), $data);
@@ -42,6 +49,10 @@ class Request extends Filter {
 		parent::__construct($data);
 		$this->cookie = new Filter($_COOKIE);
 		$this->server = new Filter($_SERVER);
+	}
+	
+	public function getMethod() {
+		return $this->method;
 	}
 	
 	/**

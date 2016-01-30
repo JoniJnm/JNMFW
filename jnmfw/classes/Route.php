@@ -17,7 +17,7 @@ class Route {
 	public function __construct($path) {
 		$this->request = Request::getInstance();
 		$this->path = $path;
-		$this->method = strtolower(filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
+		$this->method = $this->request->getMethod();
 	}
 	
 	public function getParts() {
@@ -93,7 +93,7 @@ class Route {
 			
 			if (preg_match($pattern, $this->path, $match)) {
 				foreach ($match as $key => $value) {
-					$this->request->addData($key, $value);
+					$this->request->putData($key, $value);
 				}
 				if (!$func) {
 					$parts = $this->getPathParts($path);
