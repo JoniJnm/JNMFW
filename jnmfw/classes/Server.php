@@ -70,8 +70,18 @@ class Server extends Singleton {
 				\header(filter_input(INPUT_SERVER, 'SERVER_PROTOCOL') . ' ' . $status_string, true, $statusCode);
 			}
 			if ($close) {
-				if ($statusCode >= 300) echo $statusCode.' '.$this->status_codes[$statusCode]."\n";
-				$this->closeError();
+				if ($statusCode >= 100 && $statusCode <= 299) {
+					$this->closeSuccess();
+				}
+				else {
+					$this->sendJSON(array(
+						'http_status' => array(
+							'code' => $statusCode,
+							'message' => $this->status_codes[$statusCode]
+						)
+					));
+					$this->closeError();
+				}
 			}
 		}
 		else {
@@ -87,13 +97,11 @@ class Server extends Singleton {
 	}
 	
 	public function sendOK() {
-		$this->transactionCommit();
 		$this->sendJSON(null);
-		$this->close();
+		$this->closeSuccess();
 	}
 	
 	public function sendNotFound($msg_log = null) {
-		$this->transactionRollback();
 		if ($msg_log) {
 			HLog::error($msg_log);
 		}
@@ -101,13 +109,11 @@ class Server extends Singleton {
 	}
 	
 	public function sendServerError($msg_log) {
-		$this->transactionRollback();
 		HLog::error($msg_log);
 		$this->sendStatus(500, true);
 	}
 	
 	public function sendInvalidRequest($msg_user, $param, $log = true) {
-		$this->transactionRollback();
 		if ($log) HLog::error($msg_user);
 		$this->sendStatus(412);
 		$data = array('msg' => $msg_user, 'invalid_param' => $param);
@@ -116,7 +122,6 @@ class Server extends Singleton {
 	}
 	
 	public function sendConflict($msg_user, $errno = null) {
-		$this->transactionRollback();
 		HLog::error($msg_user);
 		$this->sendStatus(409);
 		$data = array('msg' => $msg_user);
@@ -126,17 +131,14 @@ class Server extends Singleton {
 	}
 	
 	public function sendSessionTimeout() {
-		$this->transactionRollback();
 		$this->sendStatus(419, true);
 	}
 	
 	public function sendUnauthorized() {
-		$this->transactionRollback();
 		$this->sendStatus(401, true);
 	}
 	
 	public function sendForbidden($msg_user = null) {
-		$this->transactionRollback();
 		if ($msg_user) {
 			$this->sendStatus(403);
 			$data = array('msg' => $msg_user);
@@ -149,9 +151,8 @@ class Server extends Singleton {
 	}
 	
 	public function sendData($data) {
-		$this->transactionCommit();
 		$this->sendJSON($data);
-		$this->close();
+		$this->closeSuccess();
 	}
 	
 	private function sendJSON($data) {
@@ -167,11 +168,13 @@ class Server extends Singleton {
 		DBFactory::rollbackAllConnections();
 	}
 	
-	private function close() {
+	private function closeSuccess() {
+		$this->transactionCommit();
 		exit;
 	}
 	
 	private function closeError() {
+		$this->transactionRollback();
 		exit($this->PROCESS_STATUS_END_ERROR_NUMBER);
 	}
 }
