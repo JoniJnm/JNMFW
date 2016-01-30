@@ -12,7 +12,7 @@ class Route {
 	
 	private $path;
 	private $method;
-	private $func = null;
+	private $funcs = array();
 	
 	public function __construct($path) {
 		$this->request = Request::getInstance();
@@ -55,26 +55,36 @@ class Route {
 	/**
 	 * @return Route
 	 */
+	public function allways($path, $func = null) {
+		return $this->addTask('allways', $path, $func);
+	}
+	
+	/**
+	 * @return Route
+	 */
 	public function addDefaults() {
 		return $this
+			->get('/', 'fetchAll')
 			->get('/:id', 'fetch')
-			->get('/', 'fetch')
 			->post('/', 'create')
 			->put('/:id', 'update')
+			->put('/', 'update')
 			->delete('/:id', 'destroy');
 	}
 	
 	public function run($controller) {
-		if ($this->func) {
-			$call = array($controller, $this->func);
-			if (is_callable($call)) {
-				call_user_func($call);
+		if ($this->funcs) {
+			foreach ($this->funcs as $func) {
+				$call = array($controller, $func);
+				if (is_callable($call)) {
+					call_user_func($call);
+				}
 			}
 		}
 	}
 	
 	private function addTask($method, $path, $func) {
-		if (!$this->func && $this->method === $method) {
+		if ($this->method === $method || $this->method === 'allways') {
 			$match = null;
 			$path = $this->fixPath($path);
 			$pattern = '/'.str_replace(array("-"), array("\\-"), $path);
@@ -91,7 +101,9 @@ class Route {
 						$func = $parts[0];
 					}
 				}
-				$this->func = $func;
+				if ($func) {
+					$this->funcs[] = $func;
+				}
 			}
 		}
 		return $this;
