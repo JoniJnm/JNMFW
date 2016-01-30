@@ -3,6 +3,7 @@
 namespace JNMFW\classes;
 
 use JNMFW\helpers\HServer;
+use JNMFW\exceptions\JNMException;
 
 class App {
 	private $paths = array();
@@ -59,7 +60,13 @@ class App {
 		}
 		
 		$className = $p['namespace']."\\".ucfirst($controllerName).'Controller';
-		if (!class_exists($className)) {
+		$exists = false;
+		try {
+			$exists = class_exists($className);
+		}
+		catch (JNMException $ex) {}
+		
+		if (!$exists) {
 			HServer::sendNotFound();
 		}
 		

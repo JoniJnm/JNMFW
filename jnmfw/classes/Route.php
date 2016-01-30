@@ -31,27 +31,40 @@ class Route {
 		return $this->addTask('get', $path, $func);
 	}
 	
+	/**
+	 * @return Route
+	 */
 	public function post($path, $func = null) {
 		return $this->addTask('post', $path, $func);
 	}
 	
+	/**
+	 * @return Route
+	 */
 	public function put($path, $func = null) {
 		return $this->addTask('put', $path, $func);
 	}
 	
+	/**
+	 * @return Route
+	 */
 	public function delete($path, $func = null) {
 		return $this->addTask('delete', $path, $func);
 	}
 	
+	/**
+	 * @return Route
+	 */
+	public function addDefaults() {
+		return $this
+			->get('/:id', 'fetch')
+			->get('/', 'fetch')
+			->post('/', 'create')
+			->put('/:id', 'update')
+			->delete('/:id', 'destroy');
+	}
+	
 	public function run($controller) {
-		if (!$this->func) {
-			//defaults methods
-			$this->get('/', 'fetch');
-			$this->post('/', 'create');
-			$this->put('/', 'update');
-			$this->delete('/', 'destroy');
-		}
-		
 		if ($this->func) {
 			$call = array($controller, $this->func);
 			if (is_callable($call)) {
@@ -74,7 +87,7 @@ class Route {
 				}
 				if (!$func) {
 					$parts = $this->getPathParts($path);
-					if ($parts) {
+					if ($parts && preg_match('/[A-Z0-9_]+/i', $parts[0])) {
 						$func = $parts[0];
 					}
 				}
