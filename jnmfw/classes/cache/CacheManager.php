@@ -462,12 +462,14 @@ class CacheManager {
 		if ($this->useLocalScope($scope)) {
 			$cache = $this->getLocal();
 			$class = new \ReflectionClass($this->getLocal());
-			$out[$class->getShortName()] = $this->getLocal()->clear();
+			$name = preg_replace('/^Cache/', '', $class->getShortName());
+			$out[$name] = $this->getLocal()->clear();
 		}
 		if ($this->useExternalScope($scope)) {
 			$cache = $this->getExternal();
 			$class = new \ReflectionClass($cache);
-			$out[$class->getShortName()] = $this->getLocal()->clear();
+			$name = preg_replace('/^Cache/', '', $class->getShortName());
+			$out[$name] = $this->getLocal()->clear();
 		}
 		return $out;
 	}
