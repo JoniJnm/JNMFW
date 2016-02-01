@@ -71,7 +71,7 @@ abstract class HLog {
 		$msecs = str_pad(floor($microtime[0] * 1000), 3, '0', STR_PAD_LEFT);
 		$log = date('d-m H:i:s', $microtime[1]).'.'.$msecs.' - '.$label.' - '.$msg."\n";
 		if ($trace) {
-			$log .= "\n".self::traceToString($trace);
+			$log .= self::traceToString($trace)."\n\n";
 		}
 		if (self::$file) {
 			file_put_contents(self::$file, $log, FILE_APPEND);
@@ -81,7 +81,7 @@ abstract class HLog {
 				echo $log;
 			}
 			else {
-				echo str_replace("\n", '<br />', $log);
+				echo nl2br($log);
 			}
 		}
 	}
