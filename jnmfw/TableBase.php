@@ -3,7 +3,6 @@
 namespace JNMFW;
 
 use JNMFW\classes\databases\DBConnection;
-use JNMFW\exceptions\JNMException;
 
 abstract class TableBase {
 	private $cols = null;
@@ -12,7 +11,6 @@ abstract class TableBase {
 	
 	abstract public function getTableName();
 	abstract public function getPrimaryKey();
-	abstract public function getColumnTypes();
 	
 	public function __sleep() {
 		return $this->getColumns();
@@ -56,26 +54,6 @@ abstract class TableBase {
 		foreach ($this->getColumns() as $col) {
 			$this->$col = $obj->$col;
 		}
-		$this->fixTypes();
-	}
-	
-	public function fixTypes() {
-		$types = $this->getColumnTypes();
-		foreach ($types as $column => $type) {
-			if ($this->$column === null) continue;
-			if ($type === TableTypes::INTEGER) {
-				$this->$column = intval($this->$column);
-			}
-			elseif ($type === TableTypes::FLOAT) {
-				$this->$column = floatval($this->$column);
-			}
-			elseif ($type === TableTypes::BOOLEAN) {
-				$this->$column = boolval($this->$column);
-			}
-			else {
-				throw new JNMException("Invalid column type ($column - $type)");
-			}
-		}
 	}
 	
 	public function delete() {
@@ -104,13 +82,9 @@ abstract class TableBase {
 	 */
 	public static function get($id) {
 		$db = static::getDB();
-		$item = $db->getQueryBuilderSelect(self::_getTableName())
+		return $db->getQueryBuilderSelect(self::_getTableName())
 				->where(self::_getPrimaryKey(), $id)
 				->loadObject(self::_getClassName());
-		if ($item) {
-			$item->fixTypes();
-		}
-		return $item;
 	}
 	
 	/**
@@ -122,13 +96,9 @@ abstract class TableBase {
 		$pk = self::_getPrimaryKey();
 		
 		$db = static::getDB();
-		$items = $db->getQueryBuilderSelect(self::_getTableName())
+		return $db->getQueryBuilderSelect(self::_getTableName())
 				->whereIn($pk, $ids)
 				->loadObjectList(self::_getClassName());
-		foreach ($items as $item) {
-			$item->fixTypes();
-		}
-		return $items;
 	}
 	
 	/**
@@ -136,12 +106,8 @@ abstract class TableBase {
 	 */
 	public static function getAll() {
 		$db = static::getDB();
-		$items = $db->getQueryBuilderSelect(self::_getTableName())
+		return $db->getQueryBuilderSelect(self::_getTableName())
 				->loadObjectList(self::_getClassName());
-		foreach ($items as $item) {
-			$item->fixTypes();
-		}
-		return $items;
 	}
 	
 	public static function getAllIDs() {
