@@ -105,6 +105,7 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	
 	public function addOption($option) {
 		$this->options[] = $option;
+		return $this;
 	}
 
 	public function build() {
