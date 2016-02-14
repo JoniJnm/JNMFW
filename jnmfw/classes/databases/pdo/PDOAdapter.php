@@ -12,17 +12,22 @@ use JNMFW\exceptions\JNMDBException;
 class PDOAdapter implements \JNMFW\classes\databases\DBAdapter {
 	/**
 	 * Conexión PDO
-	 * @var PDO
+	 * @var \PDO
 	 */
 	private $conn;
 	
 	/**
-	 * @var PDOStatement 
+	 * @var \PDOStatement
 	 */
 	private $lastRes;
-	
-	public function __construct($dsn, $user, $pass, $options = array()) {
-		$this->conn = new \PDO($dsn, $user, $pass, $options);
+
+	public function __construct($nativeConnection) {
+		if ($nativeConnection instanceof \PDO) {
+			$this->conn = $nativeConnection;
+		}
+		else {
+			throw new \InvalidArgumentException('The connection should be a PDO object');
+		}
 	}
 	
 	public function __destruct() {

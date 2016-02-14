@@ -114,7 +114,7 @@ abstract class DBConnection {
 	/**
 	 * Prepara un array de indetificadores para ser insertador
 	 * con seguridad
-	 * @param string $values
+	 * @param string[] $values
 	 */
 	public function quoteNames($values, $complete=true) {
 		$arr = array();
@@ -140,7 +140,7 @@ abstract class DBConnection {
 	/**
 	 * Devuelte la primera fila de la consulta como objeto. Null si hubo error. Objeto vacío si no hubo resultados
 	 * @param string $query La consulta SQL
-	 * @return Un objeto stdclass con los valores devueltos por MySQL
+	 * @return stdClass Un objeto stdclass con los valores devueltos por MySQL
 	 */
 	public function loadObject($query, $class_name = "stdClass"){
 		$res = $this->initAccess($query);
@@ -187,7 +187,7 @@ abstract class DBConnection {
 	 * Devuelte el valor de la primera fila y columna a elegir de la consulta. False en caso de error o no resultados encontrados
 	 * @param string $query La consulta SQL
 	 * @param int $col El número de columna a obtener (por defecto la primera, es decir número 0)
-	 * @return El valor de la primera fila y columna
+	 * @return string|int|float El valor de la primera fila y columna
 	 */
 	public function loadValue($query, $col = 0) {
 		$res = $this->initAccess($query);
@@ -234,7 +234,7 @@ abstract class DBConnection {
 	
 	/**
 	 * Returns DBResource to loop it manually
-	 * @param string query
+	 * @param string $query
 	 * @return DBResource
 	 */
 	public function loadResource($query) {

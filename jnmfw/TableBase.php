@@ -3,6 +3,7 @@
 namespace JNMFW;
 
 use JNMFW\classes\databases\DBConnection;
+use JNMFW\classes\databases\DBFactory;
 
 abstract class TableBase {
 	private $cols = null;
@@ -119,7 +120,7 @@ abstract class TableBase {
 	}
 	
 	/**
-	 * @return BaseTable
+	 * @return TableBase
 	 */
 	static protected function getDummyItem() {
 		$className = get_called_class();
@@ -145,6 +146,6 @@ abstract class TableBase {
 	 * @return DBConnection
 	 */
 	protected static function getDB() {
-		return \JNMFW\classes\databases\DBFactory::getInstance();
+		return DBFactory::getInstance();
 	}
 }

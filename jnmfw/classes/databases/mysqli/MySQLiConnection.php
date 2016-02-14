@@ -33,13 +33,4 @@ class MySQLiConnection extends DBConnection {
 	public function getAsyncPoll($queries) {
 		return new MySQLiPoll($this, $queries);
 	}
-
-	//needed for async poll
-	
-	/**
-	 * @return \mysqli
-	 */
-	public function createNewNativeConnection() {
-		return $this->conn->createNewNativeConnection();
-	}
 }

@@ -6,13 +6,13 @@ use JNMFW\classes\databases\DBDriver;
 use JNMFW\exceptions\JNMDBConnectionException;
 
 class PDODriver extends DBDriver {
-	private $dns;
+	private $dsn;
 	private $user;
 	private $pass;
 	private $options;
 	
 	public function __construct($dsn, $user, $pass, $options = array()) {
-		$this->dns = $dsn;
+		$this->dsn = $dsn;
 		$this->user = $user;
 		$this->pass = $pass;
 		$this->options = $options;

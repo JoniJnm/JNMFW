@@ -2,8 +2,6 @@
 
 namespace JNMFW\classes\databases;
 
-use JNMFW\classes\databases\DBConnection;
-use JNMFW\classes\databases\DBDriver;
 
 // *************************************************************************
 // Clase Base de Datos - gestiona la información de la Base de Datos
@@ -81,7 +79,7 @@ abstract class DBFactory {
 	 * Registra la instancia por defecto que se obtendrá al llamar a getInstance() sin parámetros
 	 */
 	static public function registerDefaultInstance(DBDriver $driver) {
-		return self::registerIntance('default', $driver);
+		self::registerIntance('default', $driver);
 	}
 	
 	/**

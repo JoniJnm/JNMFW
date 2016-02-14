@@ -22,7 +22,7 @@ class MySQLiResource implements \JNMFW\classes\databases\DBResource {
 	
 	/**
 	 * Constructor para instanciar esta clase y usarla como si fuera de tipo mysqli_result
-	 * @param mysqli_result $resource
+	 * @param \mysqli_result $resource
 	 */
 	public function __construct($resource) {
 		$this->res = $resource;

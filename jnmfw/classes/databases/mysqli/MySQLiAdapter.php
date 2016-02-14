@@ -12,7 +12,7 @@ use JNMFW\exceptions\JNMDBException;
 class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter {
 	/**
 	 * Conexión MySQLi
-	 * @var mysqli
+	 * @var \mysqli
 	 */
 	private $conn;
 	

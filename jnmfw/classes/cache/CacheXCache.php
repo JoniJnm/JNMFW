@@ -57,7 +57,7 @@ class CacheXCache implements ICache {
 	}
 	
 	public function clear() {
-		xcache_clear_cache(XC_TYPE_VAR);
+		xcache_clear_cache(\XC_TYPE_VAR);
 		return true;
 	}
 }

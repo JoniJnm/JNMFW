@@ -2,14 +2,16 @@
 
 namespace JNMFW\classes\cache;
 
+use JNMFW\exceptions\JNMException;
+
 class CacheRedis implements ICache {
 	/**
-	 * @var Redis
+	 * @var \Redis
 	 */
 	private $obj;
 	
 	function __construct($hosts, $timeout = 0) {
-		$this->obj = new Redis();
+		$this->obj = new \Redis();
 		if (!is_array($hosts)) {
 			$hosts = array($hosts);
 		}

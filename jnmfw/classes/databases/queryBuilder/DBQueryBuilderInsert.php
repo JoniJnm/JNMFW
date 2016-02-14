@@ -3,6 +3,9 @@
 namespace JNMFW\classes\databases\queryBuilder;
 
 interface DBQueryBuilderInsert extends DBQueryBuilder {
+	/**
+	 * @return DBQueryBuilderInsert
+	 */
 	public function columns($columns);
 	
 	/**
@@ -11,7 +14,10 @@ interface DBQueryBuilderInsert extends DBQueryBuilder {
 	 * @return DBQueryBuilderInsert
 	 */
 	public function data($row);
-	
+
+	/**
+	 * @return DBQueryBuilderInsert
+	 */
 	public function clearData();
 	
 	/**

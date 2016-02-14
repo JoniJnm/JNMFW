@@ -4,6 +4,7 @@ namespace JNMFW\classes\databases;
 
 use JNMFW\classes\databases\DBAdapter;
 use JNMFW\classes\databases\DBConnection;
+use JNMFW\exceptions\JNMDBException;
 
 abstract class DBDriver {
 	private $prefix = null;

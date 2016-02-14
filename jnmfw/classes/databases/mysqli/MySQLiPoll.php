@@ -99,7 +99,7 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll {
 	public function loadValueArray($key, $col = 0) {
 		$res = $this->initAccess($key);
 		$values = $this->db->parseValueArray($res, $col);
-		$this->endAccess($res, count($values));
+		$this->endAccess($res, count($values), $key);
 		return $values;
 	}
 	

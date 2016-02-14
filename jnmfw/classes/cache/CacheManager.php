@@ -362,7 +362,10 @@ class CacheManager {
 		
 		return $out;
 	}
-	
+
+	/**
+	 * @param $cache ICache
+	 */
 	private function getMultiAux($cache, $needKeys, &$out, $map, &$save) {
 		$aux = $cache->getMulti($needKeys);
 		$morekeys = array();
@@ -382,7 +385,6 @@ class CacheManager {
 	}
 	
 	public function exists($key, $scope = self::SCOPE_REQUEST_DEFAULT) {
-		$realkey = $this->getRealKey($key);
 		$scope = $this->computeScope($scope);
 		
 		/*
@@ -461,15 +463,15 @@ class CacheManager {
 		$out = array();
 		if ($this->useLocalScope($scope)) {
 			$cache = $this->getLocal();
-			$class = new \ReflectionClass($this->getLocal());
+			$class = new \ReflectionClass($cache);
 			$name = preg_replace('/^Cache/', '', $class->getShortName());
-			$out[$name] = $this->getLocal()->clear();
+			$out[$name] = $cache->clear();
 		}
 		if ($this->useExternalScope($scope)) {
 			$cache = $this->getExternal();
 			$class = new \ReflectionClass($cache);
 			$name = preg_replace('/^Cache/', '', $class->getShortName());
-			$out[$name] = $this->getLocal()->clear();
+			$out[$name] = $cache->clear();
 		}
 		return $out;
 	}

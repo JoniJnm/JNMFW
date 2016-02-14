@@ -26,7 +26,6 @@ abstract class HLog {
 	}
 	
 	static public function error($msg, $trace = null) {
-		$trace = array();
 		if (!$trace && $trace !== false) {
 			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		}

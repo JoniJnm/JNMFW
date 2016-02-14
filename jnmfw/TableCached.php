@@ -107,8 +107,8 @@ abstract class TableCached extends TableBase {
 	}
 	
 	public static function getAll() {
-		$ids = $this->getAllIDs();
-		return $this->getMulti($ids);
+		$ids = self::getAllIDs();
+		return self::getMulti($ids);
 	}
 	
 	/**
