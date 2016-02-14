@@ -234,7 +234,7 @@ class Filter {
 	/**
 	 * Devuelve un array, null si es inválido o no existe
 	 * @param string $key
-	 * @return String
+	 * @return mixed
 	 */
 	public function getJSON($key) {
 		$source = $this->isset_else($key, null);
