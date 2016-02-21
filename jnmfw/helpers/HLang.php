@@ -33,6 +33,11 @@ abstract class HLang {
 		}
 	}
 	
+	public static function getr($key, $dic, $encodeHTML = true) {
+		$msg = static::get($key, $encodeHTML);
+		return str_replace(array_keys($dic), array_values($dic), $msg);
+	}
+	
 	public static function getUserLang() {
 		return static::$lang;
 	}
