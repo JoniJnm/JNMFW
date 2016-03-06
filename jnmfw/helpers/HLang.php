@@ -3,39 +3,33 @@
 namespace JNMFW\helpers;
 
 abstract class HLang {
-	private static $lang;
-	private static $default;
-	private static $namespace;
+	static private $dic = array();
 	
-	public static function init($user_lang, $default_lang, $namespace) {
-		static::$lang = $user_lang;
-		static::$default = $default_lang;
-		static::$namespace = $namespace;
+	public static function init($iso_lang, $dir) {
+		$file = $dir.'/'.$iso_lang.'.php';
+		if (file_exists($file)) {
+			$_LANG = array();
+			include_once($file);
+			if (isset($_LANG) && is_array($_LANG)) {
+				static::$dic = $_LANG;
+			}
+		}
 	}
 	
-	public static function get($key, $encodeHTML = true) {
-		if (defined('\\'.static::$namespace.'\Lang'.static::$lang.'::'.$key)) {
-			$out = constant('\\'.static::$namespace.'\Lang'.static::$lang.'::'.$key);
+	public static function translate($text, $replace = array(), $encodeHTML = true) {
+		$hash = md5($text);
+		if (isset(static::$dic[$hash])) {
+			$text = static::$dic[$hash];
 		}
-		elseif (defined('\\'.static::$namespace.'\Lang'.static::$default.'::'.$key)) {
-			HLog::warning("Clave de idioma '$key' no traducida para ".static::$lang);
-			$out = constant('\\'.static::$namespace.'\Lang'.static::$default.'::'.$key);
-		}
-		else {
-			HLog::warning("Clave de idioma '$key' no definida");
-			$out = $key;
+		if ($replace) {
+			$text = str_replace(array_keys($replace), array_values($replace), $text);
 		}
 		if ($encodeHTML) {
-			return htmlspecialchars($out, ENT_QUOTES | ENT_HTML5);
+			return htmlspecialchars($text, ENT_QUOTES | ENT_HTML5);
 		}
 		else {
-			return $out;
+			return $text;
 		}
-	}
-	
-	public static function getr($key, $dic, $encodeHTML = true) {
-		$msg = static::get($key, $encodeHTML);
-		return str_replace(array_keys($dic), array_values($dic), $msg);
 	}
 	
 	public static function getUserLang() {

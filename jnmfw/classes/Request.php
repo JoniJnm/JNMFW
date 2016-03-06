@@ -2,6 +2,8 @@
 
 namespace JNMFW\classes;
 
+use JNMFW\helpers\HServer;
+
 class Request extends Filter {
 	/**
 	 * Filtro sobre $_COOKIE
@@ -53,6 +55,27 @@ class Request extends Filter {
 	
 	public function getMethod() {
 		return $this->method;
+	}
+	
+	public function getFile($key) {
+		if (!isset($_FILES[$key]['error']) || is_array($_FILES[$key]['error'])) {
+			if ($this->isStrict()) HServer::sendInvalidParam($key);
+			return null;
+		}
+		
+		switch ($_FILES[$key]['error']) {
+			case UPLOAD_ERR_OK:
+				break;
+			case UPLOAD_ERR_NO_FILE:
+				throw new RuntimeException('No file sent');
+			case UPLOAD_ERR_INI_SIZE:
+			case UPLOAD_ERR_FORM_SIZE:
+				throw new RuntimeException('Exceeded filesize limit');
+			default:
+				throw new RuntimeException('Unknown errors');
+		}
+		
+		return $_FILES[$key]['tmp_name'];
 	}
 	
 	/**

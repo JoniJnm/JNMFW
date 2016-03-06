@@ -2,6 +2,7 @@
 
 namespace JNMFW\classes;
 
+use JNMFW\helpers\HLang;
 use JNMFW\classes\databases\DBFactory;
 use JNMFW\helpers\HLog;
 
@@ -113,7 +114,14 @@ class Server extends Singleton {
 		$this->sendStatus(500, true);
 	}
 	
-	public function sendInvalidRequest($msg_user, $param, $log = true) {
+	public function sendInvalidParameter($param, $log = true) {
+		$msg_user = HLang::translate('Parameter %s invalid', array(
+			'%s' => strtoupper($param)
+		));
+		$this->sendInvalidRequest($param, $msg_user, $log);
+	}
+	
+	public function sendInvalidRequest($param, $msg_user, $log = true) {
 		if ($log) HLog::error($msg_user);
 		$this->sendStatus(412);
 		$data = array('msg' => $msg_user, 'invalid_param' => $param);
