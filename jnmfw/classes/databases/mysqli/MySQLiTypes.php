@@ -2,10 +2,11 @@
 
 namespace JNMFW\classes\databases\mysqli;
 
-abstract class MySQLiTypes {
+abstract class MySQLiTypes
+{
 	const INTEGER = 'integer';
 	const FLOAT = 'float';
-	
+
 	//http://php.net/manual/es/mysqli.constants.php
 	public static $TYPES = array(
 		MYSQLI_TYPE_DECIMAL => self::FLOAT,

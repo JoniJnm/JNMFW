@@ -2,11 +2,13 @@
 
 namespace JNMFW\helpers;
 
-abstract class HLang {
+abstract class HLang
+{
 	static private $dic = array();
-	
-	public static function init($iso_lang, $dir) {
-		$file = $dir.'/'.$iso_lang.'.php';
+
+	public static function init($iso_lang, $dir)
+	{
+		$file = $dir . '/' . $iso_lang . '.php';
 		if (file_exists($file)) {
 			$_LANG = array();
 			include_once($file);
@@ -15,8 +17,9 @@ abstract class HLang {
 			}
 		}
 	}
-	
-	public static function translate($text, $replace = array(), $encodeHTML = true) {
+
+	public static function translate($text, $replace = array(), $encodeHTML = true)
+	{
 		$hash = md5($text);
 		if (isset(static::$dic[$hash])) {
 			$text = static::$dic[$hash];
@@ -26,13 +29,13 @@ abstract class HLang {
 		}
 		if ($encodeHTML) {
 			return htmlspecialchars($text, ENT_QUOTES | ENT_HTML5);
-		}
-		else {
+		} else {
 			return $text;
 		}
 	}
-	
-	public static function getUserLang() {
+
+	public static function getUserLang()
+	{
 		return static::$lang;
 	}
 }

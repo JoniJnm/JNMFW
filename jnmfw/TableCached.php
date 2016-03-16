@@ -5,36 +5,43 @@ namespace JNMFW;
 use JNMFW\classes\cache\CacheManager;
 use JNMFW\exceptions\JNMException;
 
-abstract class TableCached extends TableBase {
+abstract class TableCached extends TableBase
+{
 	private $dirty = false;
-	
-	public function isDirty() {
+
+	public function isDirty()
+	{
 		return $this->dirty;
 	}
-	
-	public function insert() {
+
+	public function insert()
+	{
 		$ok = parent::insert();
 		return $ok && $this->cacheUpdate();
 	}
-	
-	public function delete() {
+
+	public function delete()
+	{
 		$ok = parent::delete();
 		return $ok && $this->cacheDelete();
 	}
-	
-	public function update() {
+
+	public function update()
+	{
 		$ok = parent::update();
 		return $ok && $this->cacheUpdate();
 	}
-	
-	private function cacheDelete() {
+
+	private function cacheDelete()
+	{
 		$this->dirty = true;
 		$cache = self::getCache();
 		$key = $this->getKeyCache();
 		return $cache->delete($key);
 	}
-	
-	private function cacheUpdate() {
+
+	private function cacheUpdate()
+	{
 		if ($this->dirty) {
 			throw new JNMException("Trying to store a dirty object");
 		}
@@ -42,40 +49,48 @@ abstract class TableCached extends TableBase {
 		$key = $this->getKeyCache();
 		return $cache->set($key, $this);
 	}
-	
-	private function getKeyCache() {
+
+	private function getKeyCache()
+	{
 		$pk = $this->getPrimaryKey();
 		$id = $this->$pk;
 		$prefix = (new \ReflectionClass($this))->getShortName();
-		return $prefix.'-'.$id;
+		return $prefix . '-' . $id;
 	}
-	
-	private static function getKeyCacheByID($id) {
+
+	private static function getKeyCacheByID($id)
+	{
 		$item = self::getDummyItem();
 		$prefix = (new \ReflectionClass($item))->getShortName();
-		return $prefix.'-'.$id;
+		return $prefix . '-' . $id;
 	}
-	
+
 	// STATIC
-	
-	public static function get($id) {
+
+	public static function get($id)
+	{
 		$cache = self::getCache();
 		$key = self::getKeyCacheByID($id);
 		$item = $cache->get($key);
-		if ($item) return $item;
-		
+		if ($item) {
+			return $item;
+		}
+
 		$item = parent::get($id);
 		if ($item) {
 			$cache->set($key, $item);
 		}
 		return $item;
 	}
-	
-	public static function getMulti($ids) {
-		if (!$ids) return array();
-		
+
+	public static function getMulti($ids)
+	{
+		if (!$ids) {
+			return array();
+		}
+
 		$pk = self::_getPrimaryKey();
-		
+
 		$cache = self::getCache();
 
 		$keys = array();
@@ -90,7 +105,7 @@ abstract class TableCached extends TableBase {
 		}
 
 		$ids = array_diff($ids, $ids_in_cache);
-		
+
 		if ($ids) {
 			$more = parent::getMulti($ids);
 			$items = array();
@@ -99,22 +114,24 @@ abstract class TableCached extends TableBase {
 				$items[$key] = $item;
 			}
 			$cache->setMulti($items);
-			
+
 			$out = array_merge($out, $more);
 		}
-		
+
 		return $out;
 	}
-	
-	public static function getAll() {
+
+	public static function getAll()
+	{
 		$ids = self::getAllIDs();
 		return self::getMulti($ids);
 	}
-	
+
 	/**
 	 * @return CacheManager
 	 */
-	private static function getCache() {
+	private static function getCache()
+	{
 		return CacheManager::getInstance();
 	}
 }

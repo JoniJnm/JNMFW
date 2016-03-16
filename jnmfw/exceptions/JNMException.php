@@ -2,6 +2,7 @@
 
 namespace JNMFW\exceptions;
 
-class JNMException extends \Exception {
-	
+class JNMException extends \Exception
+{
+
 }

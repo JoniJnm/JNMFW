@@ -2,6 +2,7 @@
 
 namespace JNMFW\classes\databases\queryBuilder;
 
-interface DBQueryBuilder {
+interface DBQueryBuilder
+{
 	public function build();
 }

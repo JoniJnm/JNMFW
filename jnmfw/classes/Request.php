@@ -4,30 +4,32 @@ namespace JNMFW\classes;
 
 use JNMFW\helpers\HServer;
 
-class Request extends Filter {
+class Request extends Filter
+{
 	/**
 	 * Filtro sobre $_COOKIE
 	 * @var Filter
 	 */
 	public $cookie;
-	
+
 	/**
 	 * Filtro sobre $_SERVER
 	 * @var Filter
 	 */
 	public $server;
-	
+
 	/**
 	 * @var Request
 	 */
 	private static $instance = null;
-	
+
 	private $method;
-	
+
 	/**
 	 * Desde fuera llamar a getInstance()
 	 */
-	public function __construct($_ = null) {
+	public function __construct($_ = null)
+	{
 		$method = filter_input(INPUT_POST, '_method');
 		if (!$method) {
 			$method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
@@ -37,32 +39,35 @@ class Request extends Filter {
 		if ($method == 'put') {
 			$data = null;
 			parse_str(file_get_contents("php://input"), $data);
-			if (!$data) $data = array();
-		}
-		elseif ($method == 'get') {
+			if (!$data) {
+				$data = array();
+			}
+		} elseif ($method == 'get') {
 			$data = $_GET;
-		}
-		elseif ($method == 'post') {
+		} elseif ($method == 'post') {
 			$data = \array_merge($_GET, $_POST);
-		}
-		else {
+		} else {
 			$data = array();
 		}
 		parent::__construct($data);
 		$this->cookie = new Filter($_COOKIE);
 		$this->server = new Filter($_SERVER);
 	}
-	
-	public function getMethod() {
+
+	public function getMethod()
+	{
 		return $this->method;
 	}
-	
-	public function getFile($key) {
+
+	public function getFile($key)
+	{
 		if (!isset($_FILES[$key]['error']) || is_array($_FILES[$key]['error'])) {
-			if ($this->isStrict()) HServer::sendInvalidParam($key);
+			if ($this->isStrict()) {
+				HServer::sendInvalidParam($key);
+			}
 			return null;
 		}
-		
+
 		switch ($_FILES[$key]['error']) {
 			case UPLOAD_ERR_OK:
 				break;
@@ -74,23 +79,25 @@ class Request extends Filter {
 			default:
 				throw new RuntimeException('Unknown errors');
 		}
-		
+
 		return $_FILES[$key]['tmp_name'];
 	}
-	
+
 	/**
 	 * Obtiene la instacia del Objeto singleton Request
 	 * El filtro principal es merge($_GET, $_POST)
 	 * @return Request
 	 */
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		if (static::$instance === null) {
 			static::$instance = new static;
 		}
 		return static::$instance;
 	}
-	
-	public function setStrictMode($strict) {
+
+	public function setStrictMode($strict)
+	{
 		parent::setStrictMode($strict);
 		$this->cookie->setStrictMode($strict);
 		$this->server->setStrictMode($strict);

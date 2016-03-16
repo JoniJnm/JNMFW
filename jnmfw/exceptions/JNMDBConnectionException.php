@@ -2,6 +2,7 @@
 
 namespace JNMFW\exceptions;
 
-class JNMDBConnectionException extends JNMDBException {
-	
+class JNMDBConnectionException extends JNMDBException
+{
+
 }

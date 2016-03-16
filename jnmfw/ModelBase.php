@@ -2,30 +2,32 @@
 
 namespace JNMFW;
 
-use JNMFW\ObjBase;
-use JNMFW\TableCached;
-
-abstract class ModelBase extends ModelSimple {
+abstract class ModelBase extends ModelSimple
+{
 	private $objs = array();
-	
-	protected function getByPrimaryKey($id, $tableName, $objName) {
+
+	protected function getByPrimaryKey($id, $tableName, $objName)
+	{
 		if (!isset($this->objs[$objName])) {
 			$this->objs[$objName] = array();
 		}
 		$dirty = $this->isDirty($objName, $id);
 		if ($dirty) {
 			$item = $tableName::get($id);
-			if (!$item) return null;
+			if (!$item) {
+				return null;
+			}
 			$this->objs[$objName][$id] = new $objName($item);
 		}
 		return $this->objs[$objName][$id];
 	}
-	
+
 	/**
 	 * @param ObjBase $obj
 	 * @return boolean
 	 */
-	private function isDirty($objName, $id) {
+	private function isDirty($objName, $id)
+	{
 		if (!isset($this->objs[$objName][$id])) {
 			return true;
 		}
@@ -36,8 +38,9 @@ abstract class ModelBase extends ModelSimple {
 		}
 		return false;
 	}
-	
-	protected function getMultiByPrimaryKey($ids, $tableName, $objName) {
+
+	protected function getMultiByPrimaryKey($ids, $tableName, $objName)
+	{
 		if (!isset($this->objs[$objName])) {
 			$this->objs[$objName] = array();
 		}
@@ -47,16 +50,17 @@ abstract class ModelBase extends ModelSimple {
 			$dirty = $this->isDirty($objName, $id);
 			if ($dirty) {
 				$dirtys[] = $id;
-			}
-			else {
+			} else {
 				$out[] = $this->objs[$objName][$id];
 			}
 		}
-		
+
 		if ($dirtys) {
 			$items = $tableName::getMulti($dirtys);
 			foreach ($items as $item) {
-				if (!$item) continue;
+				if (!$item) {
+					continue;
+				}
 				$obj = new $objName($item);
 				$out[] = $obj;
 				$pk = $item->getPrimaryKey();
@@ -64,11 +68,12 @@ abstract class ModelBase extends ModelSimple {
 				$this->objs[$objName][$id] = $obj;
 			}
 		}
-		
+
 		return $out;
 	}
-	
-	protected function getMulti($tableName, $objName) {
+
+	protected function getMulti($tableName, $objName)
+	{
 		$ids = $tableName::getAllIDs();
 		return $this->getMultiByPrimaryKey($ids, $tableName, $objName);
 	}
