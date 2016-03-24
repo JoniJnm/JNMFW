@@ -19,7 +19,7 @@ class Filter
 		$this->strict = $strict;
 	}
 
-	private function isStrict()
+	protected function isStrict()
 	{
 		return $this->strict;
 	}
