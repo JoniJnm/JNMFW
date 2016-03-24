@@ -120,9 +120,10 @@ class Server extends Singleton
 
 	public function sendInvalidParameter($param, $log = true)
 	{
-		$msg_user = HLang::translate('Parameter %s invalid', array(
-			'%s' => strtoupper($param)
-		));
+		$msg_user = HLang::translate('Parameter %s invalid',
+			array(
+				'%s' => strtoupper($param)
+			));
 		$this->sendInvalidRequest($param, $msg_user, $log);
 	}
 

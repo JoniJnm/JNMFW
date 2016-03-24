@@ -378,9 +378,10 @@ class CacheManager
 			$this->request->setMulti($save_request);
 		}
 
-		$out = array_filter($out, function ($v) {
-			return $v !== null;
-		});
+		$out = array_filter($out,
+			function ($v) {
+				return $v !== null;
+			});
 
 		$key = implode(',', $keys);
 		$this->log('getMulti', $key, gettype($out));
