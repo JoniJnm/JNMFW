@@ -72,12 +72,12 @@ class Request extends Filter
 			case UPLOAD_ERR_OK:
 				break;
 			case UPLOAD_ERR_NO_FILE:
-				throw new RuntimeException('No file sent');
+				throw new \RuntimeException('No file sent');
 			case UPLOAD_ERR_INI_SIZE:
 			case UPLOAD_ERR_FORM_SIZE:
-				throw new RuntimeException('Exceeded filesize limit');
+				throw new \RuntimeException('Exceeded filesize limit');
 			default:
-				throw new RuntimeException('Unknown errors');
+				throw new \RuntimeException('Unknown errors');
 		}
 
 		return $_FILES[$key]['tmp_name'];

@@ -3,6 +3,7 @@
 namespace JNMFW;
 
 use JNMFW\classes\databases\DBConnection;
+use JNMFW\classes\databases\DBFactory;
 
 abstract class ObjBase
 {
@@ -14,7 +15,7 @@ abstract class ObjBase
 
 	public function __construct($item)
 	{
-		$this->db = \JNMFW\classes\databases\DBFactory::getInstance();
+		$this->db = DBFactory::getInstance();
 		$this->item = $item;
 	}
 

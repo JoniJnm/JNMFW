@@ -2,6 +2,7 @@
 
 namespace JNMFW\classes\cache;
 
+use JNMFW\classes\databases\DBFactory;
 use JNMFW\helpers\HLog;
 use JNMFW\helpers\HTimer;
 
@@ -587,6 +588,6 @@ class CacheManager
 
 	private function inTransaction()
 	{
-		return \JNMFW\classes\databases\DBFactory::getInstance()->inTransaction();
+		return DBFactory::getInstance()->inTransaction();
 	}
 }

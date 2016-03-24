@@ -33,9 +33,4 @@ abstract class HLang
 			return $text;
 		}
 	}
-
-	public static function getUserLang()
-	{
-		return static::$lang;
-	}
 }

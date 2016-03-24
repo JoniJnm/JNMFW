@@ -2,12 +2,14 @@
 
 namespace JNMFW\classes\databases\pdo;
 
+use JNMFW\classes\databases\DBResource;
+
 /**
  * Clase para adaptar un recurso devuelto por mysql_connect para ser usado como un recurso de MySQLi
  * Más información: http://www.php.net/manual/es/class.mysqli-result.php
  */
 
-class PDOResource implements \JNMFW\classes\databases\DBResource
+class PDOResource implements DBResource
 {
 	/**
 	 * El recurso pdo

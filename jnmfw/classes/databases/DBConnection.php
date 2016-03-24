@@ -158,7 +158,7 @@ abstract class DBConnection
 	/**
 	 * Devuelte la primera fila de la consulta como objeto. Null si hubo error. Objeto vacío si no hubo resultados
 	 * @param string $query La consulta SQL
-	 * @return stdClass Un objeto stdclass con los valores devueltos por MySQL
+	 * @return \stdClass Un objeto stdclass con los valores devueltos por MySQL
 	 */
 	public function loadObject($query, $class_name = "stdClass")
 	{

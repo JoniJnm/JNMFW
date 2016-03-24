@@ -2,11 +2,13 @@
 
 namespace JNMFW\classes\databases\mysqli;
 
+use JNMFW\classes\databases\DBResource;
+
 /**
  * Clase para adaptar un recurso devuelto por mysql_connect para ser usado como un recurso de MySQLi
  * Más información: http://www.php.net/manual/class.mysqli-result.php
  */
-class MySQLiResource implements \JNMFW\classes\databases\DBResource
+class MySQLiResource implements DBResource
 {
 	/**
 	 * El recurso mysql

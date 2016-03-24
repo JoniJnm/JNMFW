@@ -2,13 +2,14 @@
 
 namespace JNMFW\classes\databases\pdo;
 
+use JNMFW\classes\databases\DBAdapter;
 use JNMFW\exceptions\JNMDBException;
 
 /**
  * Clase para adaptar el uso de PDO como si fuera una instancia de MySQLi
  * Más información: http://www.php.net/manual/es/class.mysqli.php	
  */
-class PDOAdapter implements \JNMFW\classes\databases\DBAdapter
+class PDOAdapter implements DBAdapter
 {
 	/**
 	 * Conexión PDO

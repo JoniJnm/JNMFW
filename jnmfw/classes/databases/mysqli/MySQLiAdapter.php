@@ -2,13 +2,14 @@
 
 namespace JNMFW\classes\databases\mysqli;
 
+use JNMFW\classes\databases\DBAdapter;
 use JNMFW\exceptions\JNMDBException;
 
 /**
  * Clase para adaptar el uso de MySQL como si fuera una instancia de MySQLi
  * Más información: http://www.php.net/manual/es/class.mysqli.php	
  */
-class MySQLiAdapter implements \JNMFW\classes\databases\DBAdapter
+class MySQLiAdapter implements DBAdapter
 {
 	/**
 	 * Conexión MySQLi

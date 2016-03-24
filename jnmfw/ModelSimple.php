@@ -3,6 +3,7 @@
 namespace JNMFW;
 
 use JNMFW\classes\databases\DBConnection;
+use JNMFW\classes\databases\DBFactory;
 
 abstract class ModelSimple extends classes\Singleton
 {
@@ -13,6 +14,6 @@ abstract class ModelSimple extends classes\Singleton
 
 	protected function __construct()
 	{
-		$this->db = \JNMFW\classes\databases\DBFactory::getInstance();
+		$this->db = DBFactory::getInstance();
 	}
 }

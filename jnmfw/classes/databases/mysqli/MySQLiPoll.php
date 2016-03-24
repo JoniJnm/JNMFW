@@ -2,10 +2,11 @@
 
 namespace JNMFW\classes\databases\mysqli;
 
+use JNMFW\classes\databases\DBPoll;
 use JNMFW\exceptions\JNMDBException;
 use JNMFW\helpers\HTimer;
 
-class MySQLiPoll implements \JNMFW\classes\databases\DBPoll
+class MySQLiPoll implements DBPoll
 {
 	/**
 	 * @var MySQLiConnection
@@ -78,8 +79,9 @@ class MySQLiPoll implements \JNMFW\classes\databases\DBPoll
 	public function execute($key)
 	{
 		$res = $this->initAccess($key);
-		$this->endAccess($res, $this->getAffectedRows(), $key);
-		return $this->getAffectedRows();
+		$link = $this->getLinkByKey($key);
+		$this->endAccess($res, $link->affected_rows, $key);
+		return $link->affected_rows;
 	}
 
 	public function loadObject($key, $class_name = "stdClass")
