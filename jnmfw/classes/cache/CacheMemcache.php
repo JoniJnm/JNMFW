@@ -22,7 +22,8 @@ class CacheMemcache implements ICache
 				$host = explode(':', $host);
 				$ip = $host[0];
 				$port = $host[1];
-			} else {
+			}
+			else {
 				$ip = $host;
 				$port = 6379;
 			}

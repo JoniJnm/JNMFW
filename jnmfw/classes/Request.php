@@ -42,11 +42,14 @@ class Request extends Filter
 			if (!$data) {
 				$data = array();
 			}
-		} elseif ($method == 'get') {
+		}
+		elseif ($method == 'get') {
 			$data = $_GET;
-		} elseif ($method == 'post') {
+		}
+		elseif ($method == 'post') {
 			$data = \array_merge($_GET, $_POST);
-		} else {
+		}
+		else {
 			$data = array();
 		}
 		parent::__construct($data);

@@ -26,7 +26,8 @@ class PDOAdapter implements DBAdapter
 	{
 		if ($nativeConnection instanceof \PDO) {
 			$this->conn = $nativeConnection;
-		} else {
+		}
+		else {
 			throw new \InvalidArgumentException('The connection should be a PDO object');
 		}
 	}
@@ -48,9 +49,11 @@ class PDOAdapter implements DBAdapter
 	{
 		if (is_null($value)) {
 			return 'NULL';
-		} elseif ($value === true) {
+		}
+		elseif ($value === true) {
 			$value = 1;
-		} elseif ($value === false) {
+		}
+		elseif ($value === false) {
 			$value = 0;
 		}
 		return $this->conn->quote($value);

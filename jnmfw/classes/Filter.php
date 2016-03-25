@@ -81,9 +81,11 @@ class Filter
 		$out = \trim(\strip_tags($source));
 		if ($out) {
 			return $out;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -100,9 +102,11 @@ class Filter
 		//TODO: check HTML
 		if ($source) {
 			return $source;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -125,9 +129,11 @@ class Filter
 		$result = \filter_var($source, \FILTER_VALIDATE_INT, array('options' => $options));
 		if ($result !== false) {
 			return $result;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -142,9 +148,11 @@ class Filter
 		$out = $this->getInt($key, $def, 0, $max_range);
 		if ($out !== false) {
 			return $out;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -171,9 +179,11 @@ class Filter
 
 		if ($result !== false) {
 			return $result;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -190,9 +200,11 @@ class Filter
 		$result = \filter_var($source, \FILTER_VALIDATE_BOOLEAN, array('flags' => \FILTER_NULL_ON_FAILURE));
 		if ($result !== null) {
 			return $result;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -203,9 +215,11 @@ class Filter
 		$modif = $caseSensitive ? '' : 'i';
 		if (\preg_match("/^{$regex}$/{$modif}", $source)) {
 			return $source;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -259,9 +273,11 @@ class Filter
 		$result = \filter_var($source, \FILTER_VALIDATE_IP, $options);
 		if ($result) {
 			return $result;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -278,9 +294,11 @@ class Filter
 		$result = \filter_var($source, \FILTER_VALIDATE_EMAIL);
 		if ($result) {
 			return $result;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -297,9 +315,11 @@ class Filter
 		$result = \filter_var($source, \FILTER_VALIDATE_URL);
 		if ($result) {
 			return $result;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}
@@ -315,9 +335,11 @@ class Filter
 		$result = @json_decode($source, true);
 		if ($result) {
 			return $result;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -333,9 +355,11 @@ class Filter
 		$source = $this->isset_else($key, null);
 		if ($source) {
 			return $source;
-		} elseif ($this->isStrict()) {
+		}
+		elseif ($this->isStrict()) {
 			HServer::sendInvalidParam($key);
-		} else {
+		}
+		else {
 			return $def;
 		}
 	}

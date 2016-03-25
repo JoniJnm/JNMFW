@@ -118,7 +118,8 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	{
 		if (is_array($columns)) {
 			$this->groups = array_merge($this->groups, $columns);
-		} else {
+		}
+		else {
 			$this->groups[] = $columns;
 		}
 		return $this;
@@ -144,7 +145,8 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		}
 		if ($this->cols) {
 			$sql .= $this->db->quoteNames($this->cols, false);
-		} else {
+		}
+		else {
 			$sql .= '*';
 		}
 		$sql .= ' FROM ' . $this->db->quoteName($this->table);

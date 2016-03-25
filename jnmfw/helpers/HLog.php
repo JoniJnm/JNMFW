@@ -67,7 +67,8 @@ abstract class HLog
 		foreach ($trace as $t) {
 			if (isset($t['file'])) {
 				$calls[] = $t['function'] . '() at ' . basename($t['file']) . ':' . $t['line'];
-			} else {
+			}
+			else {
 				$calls[] = $t['function'] . '()';
 			}
 		}
@@ -91,7 +92,8 @@ abstract class HLog
 		if (self::$displayErrors) {
 			if (php_sapi_name() == 'cli') {
 				echo $log;
-			} else {
+			}
+			else {
 				echo nl2br($log);
 			}
 		}

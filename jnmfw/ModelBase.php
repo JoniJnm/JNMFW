@@ -50,7 +50,8 @@ abstract class ModelBase extends ModelSimple
 			$dirty = $this->isDirty($objName, $id);
 			if ($dirty) {
 				$dirtys[] = $id;
-			} else {
+			}
+			else {
 				$out[] = $this->objs[$objName][$id];
 			}
 		}

@@ -87,10 +87,12 @@ class CacheManager
 		if ($this->isEnabledExternal()) {
 			$this->scope_default = self::SCOPE_EXTERNAL;
 			$this->scope_request_default = self::SCOPE_REQUEST_EXTERNAL;
-		} elseif ($this->isEnabledLocal()) {
+		}
+		elseif ($this->isEnabledLocal()) {
 			$this->scope_default = self::SCOPE_LOCAL;
 			$this->scope_request_default = self::SCOPE_REQUEST_LOCAL;
-		} else {
+		}
+		else {
 			$this->scope_default = self::SCOPE_REQUEST;
 			$this->scope_request_default = self::SCOPE_REQUEST;
 		}
@@ -112,7 +114,8 @@ class CacheManager
 		//change auxiliary value by real
 		if ($scope == self::SCOPE_DEFAULT) {
 			$scope = $this->scope_default;
-		} elseif ($scope == self::SCOPE_REQUEST_DEFAULT) {
+		}
+		elseif ($scope == self::SCOPE_REQUEST_DEFAULT) {
 			$scope = $this->scope_request_default;
 		}
 
@@ -122,9 +125,11 @@ class CacheManager
 		) {
 			if ($this->isEnabledExternal()) {
 				$scope |= self::SCOPE_EXTERNAL;
-			} elseif ($this->isEnabledLocal()) {
+			}
+			elseif ($this->isEnabledLocal()) {
 				$scope |= self::SCOPE_LOCAL;
-			} else {
+			}
+			else {
 				$scope |= self::SCOPE_REQUEST;
 			}
 		}
@@ -402,7 +407,8 @@ class CacheManager
 			$value = isset($aux[$key]) ? $aux[$key] : null;
 			if ($value === null) {
 				$morekeys[] = $key;
-			} else {
+			}
+			else {
 				$save[$key] = $value;
 				$j = $map[$key];
 				$out[$j] = $value;
@@ -511,7 +517,8 @@ class CacheManager
 	{
 		if ($this->exists($objkey . '_key')) {
 			$key = $this->get($objkey . '_key');
-		} else {
+		}
+		else {
 			$key = substr(md5(microtime()), 0, 10);
 			$this->set($objkey . '_key', $key);
 		}
@@ -550,7 +557,8 @@ class CacheManager
 		$prefix = $this->getPrefixServer();
 		if ($prefix) {
 			return $prefix . '-' . $key;
-		} else {
+		}
+		else {
 			return $key;
 		}
 	}

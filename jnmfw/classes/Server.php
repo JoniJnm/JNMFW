@@ -75,7 +75,8 @@ class Server extends Singleton
 			if ($close) {
 				if ($statusCode >= 100 && $statusCode <= 299) {
 					$this->closeSuccess();
-				} else {
+				}
+				else {
 					$this->sendJSON(array(
 						'http_status' => array(
 							'code' => $statusCode,
@@ -85,7 +86,8 @@ class Server extends Singleton
 					$this->closeError();
 				}
 			}
-		} else {
+		}
+		else {
 			$this->sendServerError("No existe el status " . $statusCode);
 		}
 	}
@@ -167,7 +169,8 @@ class Server extends Singleton
 			$data = array('msg' => $msg_user);
 			$this->sendJSON($data);
 			$this->closeError();
-		} else {
+		}
+		else {
 			$this->sendStatus(403, true);
 		}
 	}

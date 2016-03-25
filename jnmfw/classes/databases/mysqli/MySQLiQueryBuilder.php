@@ -35,7 +35,8 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder
 	{
 		if (is_array($columns)) {
 			$this->cols = array_merge($this->cols, $columns);
-		} else {
+		}
+		else {
 			$this->cols[] = $columns;
 		}
 		return $this;

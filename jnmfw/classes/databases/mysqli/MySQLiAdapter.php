@@ -21,7 +21,8 @@ class MySQLiAdapter implements DBAdapter
 	{
 		if ($nativeConnection instanceof \mysqli) {
 			$this->conn = $nativeConnection;
-		} else {
+		}
+		else {
 			throw new \InvalidArgumentException('The connection should be a mysqli object');
 		}
 	}
@@ -43,9 +44,11 @@ class MySQLiAdapter implements DBAdapter
 	{
 		if (is_null($value)) {
 			return 'NULL';
-		} elseif ($value === true) {
+		}
+		elseif ($value === true) {
 			$value = 1;
-		} elseif ($value === false) {
+		}
+		elseif ($value === false) {
 			$value = 0;
 		}
 		return "'" . $this->conn->real_escape_string($value) . "'";
@@ -56,9 +59,11 @@ class MySQLiAdapter implements DBAdapter
 		$res = $this->conn->query($query);
 		if ($res === true) {
 			return true;
-		} elseif (!$res) {
+		}
+		elseif (!$res) {
 			throw new JNMDBException($this->conn->error . ":\n" . $query, $this->conn->errno);
-		} else {
+		}
+		else {
 			return new MySQLiResource($res);
 		}
 	}

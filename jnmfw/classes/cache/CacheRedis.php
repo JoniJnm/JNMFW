@@ -23,7 +23,8 @@ class CacheRedis implements ICache
 				$host = explode(':', $host);
 				$ip = $host[0];
 				$port = $host[1];
-			} else {
+			}
+			else {
 				$ip = $host;
 				$port = 6379;
 			}
@@ -85,7 +86,8 @@ class CacheRedis implements ICache
 			$key = $keys[$i];
 			if ($item === null) {
 				$out[$key] = $item;
-			} else {
+			}
+			else {
 				$out[$key] = unserialize($item);
 			}
 		}

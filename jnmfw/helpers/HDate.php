@@ -44,7 +44,8 @@ abstract class HDate
 		if (\is_numeric($date)) {
 			$fech = new \DateTime(null);
 			$fech->setTimestamp($date);
-		} else {
+		}
+		else {
 			$fech = new \DateTime($date);
 		}
 		$fech->setTimezone(static::getDateTimeZoneUTC());

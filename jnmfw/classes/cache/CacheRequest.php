@@ -59,7 +59,8 @@ class CacheRequest implements ICache
 		if ($this->exists($key)) {
 			unset($this->data[$key]);
 			return true;
-		} else {
+		}
+		else {
 			return false;
 		}
 	}

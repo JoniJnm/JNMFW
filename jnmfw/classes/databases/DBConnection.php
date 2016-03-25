@@ -137,7 +137,8 @@ abstract class DBConnection
 		}
 		if ($complete) {
 			return '(' . \implode(',', $arr) . ')';
-		} else {
+		}
+		else {
 			return \implode(', ', $arr);
 		}
 	}
@@ -205,7 +206,8 @@ abstract class DBConnection
 		while ($row = $res->fetch_object($class_name)) {
 			if ($keycol) {
 				$array[$row->$keycol] = $row;
-			} else {
+			}
+			else {
 				$array[] = $row;
 			}
 		}
@@ -360,10 +362,12 @@ abstract class DBConnection
 	{
 		if ($res === true) {
 			HTimer::end('DB', $nrows . ' affected rows : ' . $this->query);
-		} elseif (!$res) {
+		}
+		elseif (!$res) {
 			$msg = "Unkown DB Error in query:\n" . $this->query;
 			throw new JNMDBException($msg);
-		} else {
+		}
+		else {
 			HTimer::end('DB', $nrows . ' rows : ' . $this->query);
 			$res->free();
 		}
@@ -378,7 +382,8 @@ abstract class DBConnection
 	{
 		if ($query instanceof queryBuilder\DBQueryBuilder) {
 			$this->query = $query->build();
-		} else {
+		}
+		else {
 			$this->query = $query;
 		}
 		$out = $this->conn->query($query);

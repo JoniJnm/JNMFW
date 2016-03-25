@@ -27,7 +27,8 @@ abstract class DBFactory
 	{
 		if (!\preg_match('#^[\w]+$#', $name)) {
 			throw new \InvalidArgumentException("El nombre de la instancia (" . $name . ") es inválido");
-		} elseif (self::instanceExists($name)) {
+		}
+		elseif (self::instanceExists($name)) {
 			throw new \LogicException("La instancia (" . $name . ") ya existe");
 		}
 		self::$drivers[$name] = $driver;
@@ -71,7 +72,8 @@ abstract class DBFactory
 			$connection = $driver->createConnection();
 			if ($newConnection) {
 				return $connection;
-			} elseif (!isset(self::$connections[$name])) {
+			}
+			elseif (!isset(self::$connections[$name])) {
 				self::$connections[$name] = $connection;
 			}
 		}

@@ -160,9 +160,11 @@ class MySQLiPoll implements DBPoll
 		$query = $this->getQueryByKey($key);
 		if ($res === true) {
 			HTimer::end('DB Async', $nrows . ' affected rows : ' . $query);
-		} elseif (!$res) {
+		}
+		elseif (!$res) {
 			throw new JNMDBException("Unkown DB Error:\n" . $query);
-		} else {
+		}
+		else {
 			HTimer::end('DB Async', $nrows . ' rows : ' . $query);
 			$res->free();
 		}

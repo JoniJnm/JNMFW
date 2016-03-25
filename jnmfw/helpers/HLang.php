@@ -29,7 +29,8 @@ abstract class HLang
 		}
 		if ($encodeHTML) {
 			return htmlspecialchars($text, ENT_QUOTES | ENT_HTML5);
-		} else {
+		}
+		else {
 			return $text;
 		}
 	}

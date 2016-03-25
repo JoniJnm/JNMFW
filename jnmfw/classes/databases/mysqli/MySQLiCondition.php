@@ -97,7 +97,8 @@ class MySQLiCondition implements DBCondition
 				$to[] = $this->db->quote($value);
 			}
 			$this->wheres[] = str_replace($from, $to, $condition);
-		} else {
+		}
+		else {
 			$this->wheres[] = $condition;
 		}
 		return $this;
