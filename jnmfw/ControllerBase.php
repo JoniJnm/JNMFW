@@ -23,8 +23,7 @@ class ControllerBase
 	 */
 	protected $route;
 
-	public function __construct(Route $route)
-	{
+	public function __construct(Route $route) {
 		classes\databases\DBFactory::getInstance()->transactionBegin();
 		$this->request = Request::getInstance();
 		$this->request->setStrictMode(true);

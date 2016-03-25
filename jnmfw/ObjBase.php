@@ -13,8 +13,7 @@ abstract class ObjBase
 	protected $db;
 	protected $item;
 
-	public function __construct($item)
-	{
+	public function __construct($item) {
 		$this->db = DBFactory::getInstance();
 		$this->item = $item;
 	}
@@ -22,8 +21,7 @@ abstract class ObjBase
 	/**
 	 * @return TableBase
 	 */
-	public function getItem()
-	{
+	public function getItem() {
 		return $this->item;
 	}
 }

@@ -6,8 +6,7 @@ abstract class HLang
 {
 	static private $dic = array();
 
-	public static function init($iso_lang, $dir)
-	{
+	public static function init($iso_lang, $dir) {
 		$file = $dir . '/' . $iso_lang . '.php';
 		if (file_exists($file)) {
 			$_LANG = array();
@@ -18,8 +17,7 @@ abstract class HLang
 		}
 	}
 
-	public static function translate($text, $replace = array(), $encodeHTML = true)
-	{
+	public static function translate($text, $replace = array(), $encodeHTML = true) {
 		$hash = md5($text);
 		if (isset(static::$dic[$hash])) {
 			$text = static::$dic[$hash];

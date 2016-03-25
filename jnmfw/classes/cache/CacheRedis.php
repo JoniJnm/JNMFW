@@ -11,8 +11,7 @@ class CacheRedis implements ICache
 	 */
 	private $obj;
 
-	function __construct($hosts, $timeout = 0)
-	{
+	function __construct($hosts, $timeout = 0) {
 		$this->obj = new \Redis();
 		if (!is_array($hosts)) {
 			$hosts = array($hosts);
@@ -38,26 +37,22 @@ class CacheRedis implements ICache
 		}
 	}
 
-	public static function isEnabled()
-	{
+	public static function isEnabled() {
 		return extension_loaded('redis');
 	}
 
-	public function set($key, $value, $ttl = null)
-	{
+	public function set($key, $value, $ttl = null) {
 		return $this->obj->set($key, serialize($value), $ttl);
 	}
 
-	public function add($key, $value, $ttl = null)
-	{
+	public function add($key, $value, $ttl = null) {
 		if ($this->obj->setnx($key, $value)) {
 			return $this->set($key, $value, $ttl); //setnx doesn't accept the param ttl
 		}
 		return false;
 	}
 
-	public function get($key)
-	{
+	public function get($key) {
 		$ret = $this->obj->get($key);
 		if (!$ret) {
 			return null;
@@ -65,8 +60,7 @@ class CacheRedis implements ICache
 		return unserialize($ret);
 	}
 
-	public function setMulti($items, $ttl = null)
-	{
+	public function setMulti($items, $ttl = null) {
 		//serialize_each($items);
 		//return $this->obj->mset($items) //mset doesn't accept the param ttl
 		$multi = $this->obj->multi();
@@ -76,8 +70,7 @@ class CacheRedis implements ICache
 		return $multi->exec();
 	}
 
-	public function getMulti($keys)
-	{
+	public function getMulti($keys) {
 		$items = $this->obj->getMultiple($keys);
 		$count = count($items);
 		$out = array();
@@ -94,24 +87,20 @@ class CacheRedis implements ICache
 		return $out;
 	}
 
-	public function exists($key)
-	{
+	public function exists($key) {
 		return $this->obj->exists($key);
 	}
 
-	public function delete($key)
-	{
+	public function delete($key) {
 		return $this->obj->delete($key) > 0;
 	}
 
-	public function deleteMulti($keys)
-	{
+	public function deleteMulti($keys) {
 		//the function delete accepts an array of keys
 		return $this->obj->delete($keys) > 0;
 	}
 
-	public function clear()
-	{
+	public function clear() {
 		return $this->obj->flushAll();
 	}
 }

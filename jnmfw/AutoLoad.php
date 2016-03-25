@@ -2,10 +2,7 @@
 
 namespace JNMFW;
 
-use JNMFW\exceptions\JNMException;
-
-function jnmfw_autoload($className, $base, $root)
-{
+function jnmfw_autoload($className, $base, $root) {
 	if (\strpos($className, $base . '\\') !== 0) {
 		return;
 	}

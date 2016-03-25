@@ -23,8 +23,7 @@ abstract class DBFactory
 	 * Registra una instancia de base de datos para poder luego obtenerla con getInstance($name)
 	 * @param string $name nombre de la instancia
 	 */
-	static public function registerIntance($name, DBDriver $driver)
-	{
+	static public function registerIntance($name, DBDriver $driver) {
 		if (!\preg_match('#^[\w]+$#', $name)) {
 			throw new \InvalidArgumentException("El nombre de la instancia (" . $name . ") es inválido");
 		}
@@ -38,8 +37,7 @@ abstract class DBFactory
 	 * Does a transaction rollback in all opened connections
 	 * This method is used when an error occurs
 	 */
-	static public function rollbackAllConnections()
-	{
+	static public function rollbackAllConnections() {
 		foreach (self::$connections as $connection) {
 			$connection->transactionRollback();
 		}
@@ -49,8 +47,7 @@ abstract class DBFactory
 	 * Does a transaction commit in all opened connections
 	 * This method is used when the connection ends successfully
 	 */
-	static public function commitAllConnections()
-	{
+	static public function commitAllConnections() {
 		foreach (self::$connections as $connection) {
 			$connection->transactionCommit();
 		}
@@ -62,8 +59,7 @@ abstract class DBFactory
 	 * @param boolean $newConnection create new DB connection
 	 * @return DBConnection La instancia del objeto de la base de datos
 	 */
-	static public function getInstance($name = 'default', $newConnection = false)
-	{
+	static public function getInstance($name = 'default', $newConnection = false) {
 		if (!self::instanceExists($name)) {
 			throw new \InvalidArgumentException("La instancia '" . $name . "' no existe");
 		}
@@ -83,8 +79,7 @@ abstract class DBFactory
 	/**
 	 * Registra la instancia por defecto que se obtendrá al llamar a getInstance() sin parámetros
 	 */
-	static public function registerDefaultInstance(DBDriver $driver)
-	{
+	static public function registerDefaultInstance(DBDriver $driver) {
 		self::registerIntance('default', $driver);
 	}
 
@@ -92,8 +87,7 @@ abstract class DBFactory
 	 * @param string $name nombre de la instancia
 	 * @return boolean true si existe, false en caso contrario
 	 */
-	static public function instanceExists($name)
-	{
+	static public function instanceExists($name) {
 		return isset(self::$drivers[$name]);
 	}
 }

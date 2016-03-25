@@ -6,32 +6,27 @@ class CacheRequest implements ICache
 {
 	private $data = array();
 
-	public static function isEnabled()
-	{
+	public static function isEnabled() {
 		return true;
 	}
 
-	public function set($key, $value, $ttl = null)
-	{
+	public function set($key, $value, $ttl = null) {
 		$this->data[$key] = $value;
 		return true;
 	}
 
-	public function add($key, $value, $ttl = null)
-	{
+	public function add($key, $value, $ttl = null) {
 		if (!$this->exists($key)) {
 			return $this->set($key, $value, $ttl);
 		}
 		return false;
 	}
 
-	public function get($key)
-	{
+	public function get($key) {
 		return isset($this->data[$key]) ? $this->data[$key] : null;
 	}
 
-	public function setMulti($items, $ttl = null)
-	{
+	public function setMulti($items, $ttl = null) {
 		$ok = true;
 		foreach ($items as $key => $value) {
 			$ok &= $this->set($key, $value, $ttl);
@@ -39,8 +34,7 @@ class CacheRequest implements ICache
 		return $ok;
 	}
 
-	public function getMulti($keys)
-	{
+	public function getMulti($keys) {
 		$out = array();
 		foreach ($keys as $key) {
 			$out[$key] = $this->get($key);
@@ -48,14 +42,12 @@ class CacheRequest implements ICache
 		return $out;
 	}
 
-	public function exists($key)
-	{
+	public function exists($key) {
 		return isset($this->data[$key]);
 		//&& $this->get($key) !== null; //el resto de ICache comprueba que no sea falso
 	}
 
-	public function delete($key)
-	{
+	public function delete($key) {
 		if ($this->exists($key)) {
 			unset($this->data[$key]);
 			return true;
@@ -65,8 +57,7 @@ class CacheRequest implements ICache
 		}
 	}
 
-	public function deleteMulti($keys)
-	{
+	public function deleteMulti($keys) {
 		$ok = true;
 		foreach ($keys as $key) {
 			$ok &= $this->delete($key);
@@ -74,8 +65,7 @@ class CacheRequest implements ICache
 		return $ok;
 	}
 
-	public function clear()
-	{
+	public function clear() {
 		unset($this->data);
 		$this->data = array();
 		return true;

@@ -12,8 +12,7 @@ abstract class ModelSimple extends classes\Singleton
 	 */
 	protected $db;
 
-	protected function __construct()
-	{
+	protected function __construct() {
 		$this->db = DBFactory::getInstance();
 	}
 }

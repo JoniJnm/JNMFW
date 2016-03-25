@@ -6,13 +6,11 @@ abstract class HTimer
 {
 	static private $times = array();
 
-	static public function init($name)
-	{
+	static public function init($name) {
 		self::$times[$name] = microtime(true);
 	}
 
-	static public function end($name, $msg = '')
-	{
+	static public function end($name, $msg = '') {
 		$time = round(self::get($name), 4);
 		$line = $name . ' - ' . $time . ' msecs';
 		if ($msg) {
@@ -21,8 +19,7 @@ abstract class HTimer
 		HLog::verbose($line);
 	}
 
-	static public function get($name)
-	{
+	static public function get($name) {
 		return microtime(true) - self::$times[$name];
 	}
 }

@@ -11,8 +11,7 @@ class CacheMemcache implements ICache
 	 */
 	private $obj;
 
-	function __construct($hosts)
-	{
+	function __construct($hosts) {
 		$this->obj = new \Memcached();
 		if (!is_array($hosts)) {
 			$hosts = array($hosts);
@@ -33,54 +32,44 @@ class CacheMemcache implements ICache
 		}
 	}
 
-	public static function isEnabled()
-	{
+	public static function isEnabled() {
 		return extension_loaded('Memcached');
 	}
 
-	public function set($key, $value, $ttl = null)
-	{
+	public function set($key, $value, $ttl = null) {
 		return $this->obj->set($key, $value, $ttl);
 	}
 
-	public function add($key, $value, $ttl = null)
-	{
+	public function add($key, $value, $ttl = null) {
 		return $this->obj->add($key, $value, $ttl);
 	}
 
-	public function get($key)
-	{
+	public function get($key) {
 		return $this->obj->get($key);
 	}
 
-	public function setMulti($items, $ttl = null)
-	{
+	public function setMulti($items, $ttl = null) {
 		return $this->obj->setMulti($items, $ttl);
 	}
 
-	public function getMulti($keys)
-	{
+	public function getMulti($keys) {
 		//las keys del array devuelto se corresponde con la key a obtener
 		return $this->obj->getMulti($keys);
 	}
 
-	public function exists($key)
-	{
+	public function exists($key) {
 		return $this->obj->get($key) !== null;
 	}
 
-	public function delete($key)
-	{
+	public function delete($key) {
 		return $this->obj->delete($key);
 	}
 
-	public function deleteMulti($keys)
-	{
+	public function deleteMulti($keys) {
 		return $this->obj->deleteMulti($keys);
 	}
 
-	public function clear()
-	{
+	public function clear() {
 		return $this->obj->flush();
 	}
 }

@@ -28,8 +28,7 @@ class Request extends Filter
 	/**
 	 * Desde fuera llamar a getInstance()
 	 */
-	public function __construct($_ = null)
-	{
+	public function __construct($_ = null) {
 		$method = filter_input(INPUT_POST, '_method');
 		if (!$method) {
 			$method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
@@ -57,13 +56,11 @@ class Request extends Filter
 		$this->server = new Filter($_SERVER);
 	}
 
-	public function getMethod()
-	{
+	public function getMethod() {
 		return $this->method;
 	}
 
-	public function getFile($key)
-	{
+	public function getFile($key) {
 		if (!isset($_FILES[$key]['error']) || is_array($_FILES[$key]['error'])) {
 			if ($this->isStrict()) {
 				HServer::sendInvalidParam($key);
@@ -91,16 +88,14 @@ class Request extends Filter
 	 * El filtro principal es merge($_GET, $_POST)
 	 * @return Request
 	 */
-	public static function getInstance()
-	{
+	public static function getInstance() {
 		if (static::$instance === null) {
 			static::$instance = new static;
 		}
 		return static::$instance;
 	}
 
-	public function setStrictMode($strict)
-	{
+	public function setStrictMode($strict) {
 		parent::setStrictMode($strict);
 		$this->cookie->setStrictMode($strict);
 		$this->server->setStrictMode($strict);

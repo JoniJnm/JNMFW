@@ -12,16 +12,14 @@ class PDODriver extends DBDriver
 	private $pass;
 	private $options;
 
-	public function __construct($dsn, $user, $pass, $options = array())
-	{
+	public function __construct($dsn, $user, $pass, $options = array()) {
 		$this->dsn = $dsn;
 		$this->user = $user;
 		$this->pass = $pass;
 		$this->options = $options;
 	}
 
-	public function createNativeConnection()
-	{
+	public function createNativeConnection() {
 		$conn = new \PDO($this->dsn, $this->user, $this->pass, $this->options);
 		if ($conn->errorCode()) {
 			throw new JNMDBConnectionException($conn->errorInfo(), $conn->errorCode());
@@ -29,14 +27,12 @@ class PDODriver extends DBDriver
 		return $conn;
 	}
 
-	public function createAdapter()
-	{
+	public function createAdapter() {
 		$nativeConnection = $this->createNativeConnection();
 		return new PDOAdapter($nativeConnection);
 	}
 
-	public function createConnection()
-	{
+	public function createConnection() {
 		$adapter = $this->createAdapter();
 		return new PDOConnection($adapter, $this->getPrefix(), $this);
 	}

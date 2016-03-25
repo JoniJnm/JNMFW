@@ -22,8 +22,7 @@ class PDOAdapter implements DBAdapter
 	 */
 	private $lastRes;
 
-	public function __construct($nativeConnection)
-	{
+	public function __construct($nativeConnection) {
 		if ($nativeConnection instanceof \PDO) {
 			$this->conn = $nativeConnection;
 		}
@@ -32,21 +31,18 @@ class PDOAdapter implements DBAdapter
 		}
 	}
 
-	public function __destruct()
-	{
+	public function __destruct() {
 		$this->close();
 	}
 
 	/**
 	 * @return \PDO
 	 */
-	public function getNativeConnection()
-	{
+	public function getNativeConnection() {
 		return $this->conn;
 	}
 
-	public function quote($value)
-	{
+	public function quote($value) {
 		if (is_null($value)) {
 			return 'NULL';
 		}
@@ -59,8 +55,7 @@ class PDOAdapter implements DBAdapter
 		return $this->conn->quote($value);
 	}
 
-	public function query($query)
-	{
+	public function query($query) {
 		$res = $this->conn->query($query);
 		if (!$res) {
 			throw new JNMDBException($this->conn->errorInfo() . ":\n" . $query, $this->conn->errorCode());
@@ -69,33 +64,27 @@ class PDOAdapter implements DBAdapter
 		return new PDOResource($res);
 	}
 
-	public function getAffectedRows()
-	{
+	public function getAffectedRows() {
 		return $this->lastRes->rowCount();
 	}
 
-	public function getInsertedID()
-	{
+	public function getInsertedID() {
 		return $this->conn->lastInsertId();
 	}
 
-	public function transactionBegin()
-	{
+	public function transactionBegin() {
 		$this->conn->beginTransaction();
 	}
 
-	public function commit()
-	{
+	public function commit() {
 		$this->conn->commit();
 	}
 
-	public function rollback()
-	{
+	public function rollback() {
 		$this->conn->rollBack();
 	}
 
-	public function close()
-	{
+	public function close() {
 		$this->conn = null;
 	}
 }

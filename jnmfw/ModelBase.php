@@ -6,8 +6,7 @@ abstract class ModelBase extends ModelSimple
 {
 	private $objs = array();
 
-	protected function getByPrimaryKey($id, $tableName, $objName)
-	{
+	protected function getByPrimaryKey($id, $tableName, $objName) {
 		if (!isset($this->objs[$objName])) {
 			$this->objs[$objName] = array();
 		}
@@ -26,8 +25,7 @@ abstract class ModelBase extends ModelSimple
 	 * @param ObjBase $obj
 	 * @return boolean
 	 */
-	private function isDirty($objName, $id)
-	{
+	private function isDirty($objName, $id) {
 		if (!isset($this->objs[$objName][$id])) {
 			return true;
 		}
@@ -39,8 +37,7 @@ abstract class ModelBase extends ModelSimple
 		return false;
 	}
 
-	protected function getMultiByPrimaryKey($ids, $tableName, $objName)
-	{
+	protected function getMultiByPrimaryKey($ids, $tableName, $objName) {
 		if (!isset($this->objs[$objName])) {
 			$this->objs[$objName] = array();
 		}
@@ -73,8 +70,7 @@ abstract class ModelBase extends ModelSimple
 		return $out;
 	}
 
-	protected function getMulti($tableName, $objName)
-	{
+	protected function getMulti($tableName, $objName) {
 		$ids = $tableName::getAllIDs();
 		return $this->getMultiByPrimaryKey($ids, $tableName, $objName);
 	}

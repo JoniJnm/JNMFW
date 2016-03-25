@@ -15,77 +15,64 @@ class MySQLiCondition implements DBCondition
 	private $wheres = array();
 	private $glue = 'AND';
 
-	public function __construct(DBConnection $db)
-	{
+	public function __construct(DBConnection $db) {
 		$this->db = $db;
 	}
 
-	public function setGlueAnd()
-	{
+	public function setGlueAnd() {
 		$this->glue = 'AND';
 		return $this;
 	}
 
-	public function setGlueOr()
-	{
+	public function setGlueOr() {
 		$this->glue = 'OR';
 		return $this;
 	}
 
-	public function where($column, $value, $op = '=')
-	{
+	public function where($column, $value, $op = '=') {
 		$this->wheres[] = $this->db->quoteName($column) . ' ' . $op . ' ' . $this->db->quote($value);
 		return $this;
 	}
 
-	public function whereCondition(DBCondition $condition)
-	{
+	public function whereCondition(DBCondition $condition) {
 		if (!$condition->isEmpty()) {
 			$this->wheres[] = '(' . $condition->build() . ')';
 		}
 		return $this;
 	}
 
-	public function whereNull($column)
-	{
+	public function whereNull($column) {
 		return $this->where($column, null, 'IS');
 	}
 
-	public function whereNotNull($column)
-	{
+	public function whereNotNull($column) {
 		return $this->where($column, null, 'IS NOT');
 	}
 
-	public function whereColumns($col1, $col2, $op = '=')
-	{
+	public function whereColumns($col1, $col2, $op = '=') {
 		$this->wheres[] = $this->db->quoteName($col1) . ' ' . $op . ' ' . $this->db->quoteName($col2);
 		return $this;
 	}
 
-	public function whereLike($column, $value)
-	{
+	public function whereLike($column, $value) {
 		return $this->where($column, $value, 'LIKE');
 	}
 
-	public function whereNotLike($column, $value)
-	{
+	public function whereNotLike($column, $value) {
 		return $this->where($column, $value, 'NOT LIKE');
 	}
 
-	public function whereIn($column, $values)
-	{
+	public function whereIn($column, $values) {
 		$this->wheres[] = $this->db->quoteName($column) . ' IN ' . $this->db->quoteArray($values);
 		return $this;
 	}
 
-	public function whereNotIn($column, $values)
-	{
+	public function whereNotIn($column, $values) {
 		$this->wheres[] = $this->db->quoteName($column) . ' NOT IN ' . $this->db->quoteArray($values);
 		return $this;
 	}
 
-	public function whereRaw($condition, $data = null)
-	{
+	public function whereRaw($condition, $data = null) {
 		if (!preg_match('/\s*\(/', $condition)) {
 			$condition = '(' . $condition . ')';
 		}
@@ -104,13 +91,11 @@ class MySQLiCondition implements DBCondition
 		return $this;
 	}
 
-	public function isEmpty()
-	{
+	public function isEmpty() {
 		return !$this->wheres;
 	}
 
-	public function build()
-	{
+	public function build() {
 		if ($this->isEmpty()) {
 			return '';
 		}

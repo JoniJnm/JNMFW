@@ -24,8 +24,7 @@ class MySQLiResource implements DBResource
 	 * Constructor para instanciar esta clase y usarla como si fuera de tipo mysqli_result
 	 * @param \mysqli_result $resource
 	 */
-	public function __construct($resource)
-	{
+	public function __construct($resource) {
 		$this->res = $resource;
 		$fields = $this->res->fetch_fields();
 		$nfield = count($fields);
@@ -40,13 +39,11 @@ class MySQLiResource implements DBResource
 		}
 	}
 
-	public function __destruct()
-	{
+	public function __destruct() {
 		$this->free();
 	}
 
-	public function fetch_object($class_name = "stdClass")
-	{
+	public function fetch_object($class_name = "stdClass") {
 		$obj = $this->res->fetch_object($class_name);
 		if ($obj) {
 			$this->fixObjectTypes($obj);
@@ -54,8 +51,7 @@ class MySQLiResource implements DBResource
 		return $obj;
 	}
 
-	public function fetch_row()
-	{
+	public function fetch_row() {
 		$arr = $this->res->fetch_row();
 		if ($arr) {
 			$this->fixArrayNumberTypes($arr);
@@ -63,8 +59,7 @@ class MySQLiResource implements DBResource
 		return $arr;
 	}
 
-	public function fetch_array()
-	{
+	public function fetch_array() {
 		$arr = $this->res->fetch_array(\MYSQLI_ASSOC);
 		if ($arr) {
 			$this->fixArrayNameTypes($arr);
@@ -72,19 +67,16 @@ class MySQLiResource implements DBResource
 		return $arr;
 	}
 
-	public function fetch_value($column_number = 0)
-	{
+	public function fetch_value($column_number = 0) {
 		$row = $this->fetch_row();
 		return $row ? $row[$column_number] : null;
 	}
 
-	public function getNumRows()
-	{
+	public function getNumRows() {
 		return $this->res->num_rows;
 	}
 
-	private function fixObjectTypes(&$obj)
-	{
+	private function fixObjectTypes(&$obj) {
 		foreach ($this->fields_col_name as $name => $type) {
 			if ($obj->$name === null) {
 				continue;
@@ -93,8 +85,7 @@ class MySQLiResource implements DBResource
 		}
 	}
 
-	private function fixArrayNameTypes(&$arr)
-	{
+	private function fixArrayNameTypes(&$arr) {
 		foreach ($this->fields_col_name as $name => $type) {
 			if ($arr[$name] === null) {
 				continue;
@@ -103,8 +94,7 @@ class MySQLiResource implements DBResource
 		}
 	}
 
-	private function fixArrayNumberTypes(&$arr)
-	{
+	private function fixArrayNumberTypes(&$arr) {
 		foreach ($this->fields_col_number as $i => $type) {
 			if ($arr[$i] === null) {
 				continue;
@@ -113,8 +103,7 @@ class MySQLiResource implements DBResource
 		}
 	}
 
-	public function free()
-	{
+	public function free() {
 		if (!$this->freed) {
 			$this->freed = true;
 			$this->res->free();

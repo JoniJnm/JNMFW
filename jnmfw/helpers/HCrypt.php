@@ -4,8 +4,7 @@ namespace JNMFW\helpers;
 
 abstract class HCrypt
 {
-	static public function mc_encrypt($encrypt, $key)
-	{
+	static public function mc_encrypt($encrypt, $key) {
 		$encrypt = \serialize($encrypt);
 		$iv = \mcrypt_create_iv(\mcrypt_get_iv_size(\MCRYPT_RIJNDAEL_256, \MCRYPT_MODE_CBC), \MCRYPT_DEV_URANDOM);
 		$key = \pack('H*', $key);
@@ -15,8 +14,7 @@ abstract class HCrypt
 		return $encoded;
 	}
 
-	static public function mc_decrypt($decrypt, $key)
-	{
+	static public function mc_decrypt($decrypt, $key) {
 		$decrypt = \explode('|', $decrypt);
 		$decoded = \base64_decode($decrypt[0]);
 		$iv = \base64_decode($decrypt[1]);

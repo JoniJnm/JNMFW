@@ -14,8 +14,7 @@ class MySQLiDriver extends DBDriver
 	protected $dbname;
 	protected $port;
 
-	public function __construct($host, $user, $pass, $dbname = '', $port = 3306)
-	{
+	public function __construct($host, $user, $pass, $dbname = '', $port = 3306) {
 		$this->host = $host;
 		$this->user = $user;
 		$this->pass = $pass;
@@ -23,8 +22,7 @@ class MySQLiDriver extends DBDriver
 		$this->port = $port;
 	}
 
-	public function createNativeConnection()
-	{
+	public function createNativeConnection() {
 		$conn = new \mysqli($this->host, $this->user, $this->pass, $this->dbname, $this->port);
 		if ($conn->connect_errno) {
 			throw new JNMDBConnectionException($conn->connect_error, $conn->connect_errno);
@@ -38,14 +36,12 @@ class MySQLiDriver extends DBDriver
 		return $conn;
 	}
 
-	public function createAdapter()
-	{
+	public function createAdapter() {
 		$nativeConnection = $this->createNativeConnection();
 		return new MySQLiAdapter($nativeConnection);
 	}
 
-	public function createConnection()
-	{
+	public function createConnection() {
 		$adapter = $this->createAdapter();
 		return new MySQLiConnection($adapter, $this->getPrefix(), $this);
 	}

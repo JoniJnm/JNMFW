@@ -48,8 +48,7 @@ class CacheManager
 	 */
 	private $external;
 
-	public function __construct()
-	{
+	public function __construct() {
 		$this->request = new CacheRequest();
 		$this->computeDefaultScope();
 	}
@@ -57,8 +56,7 @@ class CacheManager
 	/**
 	 * @param ICache $driver
 	 */
-	public function setLocalCache($driver)
-	{
+	public function setLocalCache($driver) {
 		$this->local = $driver;
 		$this->computeDefaultScope();
 	}
@@ -66,24 +64,20 @@ class CacheManager
 	/**
 	 * @param ICache $driver
 	 */
-	public function setExternalCache($driver)
-	{
+	public function setExternalCache($driver) {
 		$this->external = $driver;
 		$this->computeDefaultScope();
 	}
 
-	public function setPrefix($prefix)
-	{
+	public function setPrefix($prefix) {
 		$this->prefix = $prefix;
 	}
 
-	public function setDefaultTTL($ttl)
-	{
+	public function setDefaultTTL($ttl) {
 		$this->default_ttl = $ttl;
 	}
 
-	private function computeDefaultScope()
-	{
+	private function computeDefaultScope() {
 		if ($this->isEnabledExternal()) {
 			$this->scope_default = self::SCOPE_EXTERNAL;
 			$this->scope_request_default = self::SCOPE_REQUEST_EXTERNAL;
@@ -101,16 +95,14 @@ class CacheManager
 	/**
 	 * @return CacheManager
 	 */
-	static public function getInstance()
-	{
+	static public function getInstance() {
 		if (self::$instance == null) {
 			self::$instance = new static();
 		}
 		return self::$instance;
 	}
 
-	private function computeScope($scope)
-	{
+	private function computeScope($scope) {
 		//change auxiliary value by real
 		if ($scope == self::SCOPE_DEFAULT) {
 			$scope = $this->scope_default;
@@ -139,47 +131,39 @@ class CacheManager
 		return $scope;
 	}
 
-	private function computeTTL($ttl)
-	{
+	private function computeTTL($ttl) {
 		return $ttl === null || $ttl < 0 ? $this->default_ttl : $ttl;
 	}
 
 	/* Check is Enabled */
 
-	public function isEnabledRequest()
-	{
+	public function isEnabledRequest() {
 		return true;
 	}
 
-	public function isEnabledLocal()
-	{
+	public function isEnabledLocal() {
 		return $this->local != null;
 	}
 
-	public function isEnabledExternal()
-	{
+	public function isEnabledExternal() {
 		return $this->external != null;
 	}
 
 	/* Check Scope */
 
-	private function useRequestScope($scope)
-	{
+	private function useRequestScope($scope) {
 		return $scope & self::SCOPE_REQUEST;
 	}
 
-	private function useLocalScope($scope)
-	{
+	private function useLocalScope($scope) {
 		return $scope & self::SCOPE_LOCAL && $this->isEnabledLocal();
 	}
 
-	private function useExternalScope($scope)
-	{
+	private function useExternalScope($scope) {
 		return $scope & self::SCOPE_EXTERNAL && $this->isEnabledExternal();
 	}
 
-	private function useAnyScope($scope)
-	{
+	private function useAnyScope($scope) {
 		return $this->useRequestScope($scope) || $this->useLocalScope($scope) || $this->useExternalScope($scope);
 	}
 
@@ -188,23 +172,20 @@ class CacheManager
 	/**
 	 * @return ICache
 	 */
-	private function getLocal()
-	{
+	private function getLocal() {
 		return $this->local;
 	}
 
 	/**
 	 * @return ICache
 	 */
-	private function getExternal()
-	{
+	private function getExternal() {
 		return $this->external;
 	}
 
 	/* ICache */
 
-	public function set($key, $value, $ttl = self::DEFAULT_TTL, $scope = self::SCOPE_REQUEST_DEFAULT)
-	{
+	public function set($key, $value, $ttl = self::DEFAULT_TTL, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$realkey = $this->getRealKey($key);
 		$scope = $this->computeScope($scope);
 		$ttl = $this->computeTTL($ttl);
@@ -234,8 +215,7 @@ class CacheManager
 		return $ret;
 	}
 
-	public function add($key, $value, $ttl = self::DEFAULT_TTL, $scope = self::SCOPE_REQUEST_DEFAULT)
-	{
+	public function add($key, $value, $ttl = self::DEFAULT_TTL, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$realkey = $this->getRealKey($key);
 		$scope = $this->computeScope($scope);
 		$ttl = $this->computeTTL($ttl);
@@ -265,8 +245,7 @@ class CacheManager
 		return $ret;
 	}
 
-	public function get($key, $scope = self::SCOPE_REQUEST_DEFAULT)
-	{
+	public function get($key, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$realkey = $this->getRealKey($key);
 		$scope = $this->computeScope($scope);
 
@@ -301,8 +280,7 @@ class CacheManager
 		return $value;
 	}
 
-	public function setMulti($items, $ttl = self::DEFAULT_TTL, $scope = self::SCOPE_REQUEST_DEFAULT)
-	{
+	public function setMulti($items, $ttl = self::DEFAULT_TTL, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$scope = $this->computeScope($scope);
 		$ttl = $this->computeTTL($ttl);
 
@@ -337,8 +315,7 @@ class CacheManager
 		return $ret;
 	}
 
-	public function getMulti($keys, $scope = self::SCOPE_REQUEST_DEFAULT)
-	{
+	public function getMulti($keys, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$scope = $this->computeScope($scope);
 		$keys = array_unique($keys);
 		$out = array();
@@ -398,8 +375,7 @@ class CacheManager
 	/**
 	 * @param $cache ICache
 	 */
-	private function getMultiAux($cache, $needKeys, &$out, $map, &$save)
-	{
+	private function getMultiAux($cache, $needKeys, &$out, $map, &$save) {
 		$aux = $cache->getMulti($needKeys);
 		$morekeys = array();
 		for ($i = 0; $i < count($aux); $i++) {
@@ -417,8 +393,7 @@ class CacheManager
 		return $morekeys;
 	}
 
-	public function exists($key, $scope = self::SCOPE_REQUEST_DEFAULT)
-	{
+	public function exists($key, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$scope = $this->computeScope($scope);
 
 		/*
@@ -430,8 +405,7 @@ class CacheManager
 		return $this->get($key, $scope) !== null;
 	}
 
-	public function delete($key, $scope = self::SCOPE_REQUEST_DEFAULT)
-	{
+	public function delete($key, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$realkey = $this->getRealKey($key);
 		$scope = $this->computeScope($scope);
 
@@ -460,8 +434,7 @@ class CacheManager
 		return $ret;
 	}
 
-	public function deleteMulti($keys, $scope = self::SCOPE_REQUEST_DEFAULT)
-	{
+	public function deleteMulti($keys, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$scope = $this->computeScope($scope);
 		$realkeys = array();
 		foreach ($keys as $key) {
@@ -494,8 +467,7 @@ class CacheManager
 		return $ret;
 	}
 
-	public function clear($scope = self::SCOPE_ALL)
-	{
+	public function clear($scope = self::SCOPE_ALL) {
 		$scope = $this->computeScope($scope);
 		$out = array();
 		if ($this->useLocalScope($scope)) {
@@ -513,8 +485,7 @@ class CacheManager
 		return $out;
 	}
 
-	public function getKeyCache($objkey)
-	{
+	public function getKeyCache($objkey) {
 		if ($this->exists($objkey . '_key')) {
 			$key = $this->get($objkey . '_key');
 		}
@@ -525,8 +496,7 @@ class CacheManager
 		return $key;
 	}
 
-	public function deleteKeyCache($objkey, $scope = self::SCOPE_REQUEST_DEFAULT)
-	{
+	public function deleteKeyCache($objkey, $scope = self::SCOPE_REQUEST_DEFAULT) {
 		$realkey = $objkey . '_key';
 		if ($this->inTransaction()) {
 			$this->addDeletedKey($realkey, $scope);
@@ -534,26 +504,22 @@ class CacheManager
 		return $this->delete($realkey, $scope);
 	}
 
-	public function getNumCacheAccesses()
-	{
+	public function getNumCacheAccesses() {
 		return $this->numCacheAccesses;
 	}
 
 	/* PRIVATE */
 
-	private function initLog()
-	{
+	private function initLog() {
 		HTimer::init('Cache');
 	}
 
-	private function log($action, $key, $result)
-	{
+	private function log($action, $key, $result) {
 		$val = is_string($result) ? $result : var_export($result, true);
 		HTimer::end('Cache', $action . ' ' . $key . ' ' . $val);
 	}
 
-	private function getRealKey($key)
-	{
+	private function getRealKey($key) {
 		$prefix = $this->getPrefixServer();
 		if ($prefix) {
 			return $prefix . '-' . $key;
@@ -563,13 +529,11 @@ class CacheManager
 		}
 	}
 
-	private function getPrefixServer()
-	{
+	private function getPrefixServer() {
 		return $this->prefix;
 	}
 
-	private function addDeletedKey($key, $scope)
-	{
+	private function addDeletedKey($key, $scope) {
 		//if (strpos($key, '_lock_') !== null) return;
 		if (!isset($this->deletedKeys[$scope])) {
 			$this->deletedKeys[$scope] = array();
@@ -577,8 +541,7 @@ class CacheManager
 		$this->deletedKeys[$scope][] = $key;
 	}
 
-	private function addDeletedKeys($keys, $scope)
-	{
+	private function addDeletedKeys($keys, $scope) {
 		foreach ($keys as $key) {
 			$this->addDeletedKey($key, $scope);
 		}
@@ -587,15 +550,13 @@ class CacheManager
 	/**
 	 * Borra las claves que han sido borradas durante una transacción
 	 */
-	public function clearDeletedKeys()
-	{
+	public function clearDeletedKeys() {
 		foreach ($this->deletedKeys as $scope => $keys) {
 			$this->deleteMulti($keys, $scope);
 		}
 	}
 
-	private function inTransaction()
-	{
+	private function inTransaction() {
 		return DBFactory::getInstance()->inTransaction();
 	}
 }

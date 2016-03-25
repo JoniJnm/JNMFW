@@ -23,13 +23,11 @@ abstract class DBDriver
 	 */
 	abstract public function createNativeConnection();
 
-	public function setPrefix($prefix)
-	{
+	public function setPrefix($prefix) {
 		$this->prefix = $prefix;
 	}
 
-	public function getPrefix()
-	{
+	public function getPrefix() {
 		return $this->prefix;
 	}
 }

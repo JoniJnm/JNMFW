@@ -17,8 +17,7 @@ class MySQLiAdapter implements DBAdapter
 	 */
 	private $conn;
 
-	public function __construct($nativeConnection)
-	{
+	public function __construct($nativeConnection) {
 		if ($nativeConnection instanceof \mysqli) {
 			$this->conn = $nativeConnection;
 		}
@@ -27,21 +26,18 @@ class MySQLiAdapter implements DBAdapter
 		}
 	}
 
-	public function __destruct()
-	{
+	public function __destruct() {
 		$this->close();
 	}
 
 	/**
 	 * @return \mysqli
 	 */
-	public function getNativeConnection()
-	{
+	public function getNativeConnection() {
 		return $this->conn;
 	}
 
-	public function quote($value)
-	{
+	public function quote($value) {
 		if (is_null($value)) {
 			return 'NULL';
 		}
@@ -54,8 +50,7 @@ class MySQLiAdapter implements DBAdapter
 		return "'" . $this->conn->real_escape_string($value) . "'";
 	}
 
-	public function query($query)
-	{
+	public function query($query) {
 		$res = $this->conn->query($query);
 		if ($res === true) {
 			return true;
@@ -68,35 +63,29 @@ class MySQLiAdapter implements DBAdapter
 		}
 	}
 
-	public function getAffectedRows()
-	{
+	public function getAffectedRows() {
 		return $this->conn->affected_rows;
 	}
 
-	public function getInsertedID()
-	{
+	public function getInsertedID() {
 		return $this->conn->insert_id;
 	}
 
-	public function transactionBegin()
-	{
+	public function transactionBegin() {
 		$this->conn->autocommit(false);
 	}
 
-	public function commit()
-	{
+	public function commit() {
 		$this->conn->commit();
 		$this->conn->autocommit(true);
 	}
 
-	public function rollback()
-	{
+	public function rollback() {
 		$this->conn->rollback();
 		$this->conn->autocommit(true);
 	}
 
-	public function close()
-	{
+	public function close() {
 		$this->conn->close();
 	}
 }

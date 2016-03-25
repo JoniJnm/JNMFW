@@ -65,8 +65,7 @@ class Server extends Singleton
 		510 => 'Not Extended'
 	);
 
-	private function sendStatus($statusCode, $close = false)
-	{
+	private function sendStatus($statusCode, $close = false) {
 		if (isset($this->status_codes[$statusCode])) {
 			$status_string = $statusCode . ' ' . $this->status_codes[$statusCode];
 			if (php_sapi_name() != 'cli') {
@@ -95,33 +94,28 @@ class Server extends Singleton
 	/**
 	 * @return Server
 	 */
-	public static function getInstance()
-	{
+	public static function getInstance() {
 		return parent::getInstance();
 	}
 
-	public function sendOK()
-	{
+	public function sendOK() {
 		$this->sendJSON(null);
 		$this->closeSuccess();
 	}
 
-	public function sendNotFound($msg_log = null)
-	{
+	public function sendNotFound($msg_log = null) {
 		if ($msg_log) {
 			HLog::error($msg_log);
 		}
 		$this->sendStatus(404, true);
 	}
 
-	public function sendServerError($msg_log)
-	{
+	public function sendServerError($msg_log) {
 		HLog::error($msg_log);
 		$this->sendStatus(500, true);
 	}
 
-	public function sendInvalidParameter($param, $log = true)
-	{
+	public function sendInvalidParameter($param, $log = true) {
 		$msg_user = HLang::translate('Parameter %s invalid',
 			array(
 				'%s' => strtoupper($param)
@@ -129,8 +123,7 @@ class Server extends Singleton
 		$this->sendInvalidRequest($param, $msg_user, $log);
 	}
 
-	public function sendInvalidRequest($param, $msg_user, $log = true)
-	{
+	public function sendInvalidRequest($param, $msg_user, $log = true) {
 		if ($log) {
 			HLog::error($msg_user);
 		}
@@ -141,8 +134,7 @@ class Server extends Singleton
 		$this->closeError();
 	}
 
-	public function sendConflict($msg_user, $errno = null)
-	{
+	public function sendConflict($msg_user, $errno = null) {
 		HLog::error($msg_user);
 		$this->sendStatus(409);
 		$data = $this->createOutputError($msg_user);
@@ -153,18 +145,15 @@ class Server extends Singleton
 		$this->closeError();
 	}
 
-	public function sendSessionTimeout()
-	{
+	public function sendSessionTimeout() {
 		$this->sendStatus(419, true);
 	}
 
-	public function sendUnauthorized()
-	{
+	public function sendUnauthorized() {
 		$this->sendStatus(401, true);
 	}
 
-	public function sendForbidden($msg_user = null)
-	{
+	public function sendForbidden($msg_user = null) {
 		if ($msg_user) {
 			$this->sendStatus(403);
 			$data = $this->createOutputError($msg_user);
@@ -176,8 +165,7 @@ class Server extends Singleton
 		}
 	}
 
-	public function sendData($data)
-	{
+	public function sendData($data) {
 		$this->sendJSON($data);
 		$this->closeSuccess();
 	}
@@ -191,30 +179,25 @@ class Server extends Singleton
 		);
 	}
 
-	private function sendJSON($data)
-	{
+	private function sendJSON($data) {
 		\header('Content-type: application/json');
 		echo \json_encode($data);
 	}
 
-	private function transactionCommit()
-	{
+	private function transactionCommit() {
 		DBFactory::commitAllConnections();
 	}
 
-	private function transactionRollback()
-	{
+	private function transactionRollback() {
 		DBFactory::rollbackAllConnections();
 	}
 
-	private function closeSuccess()
-	{
+	private function closeSuccess() {
 		$this->transactionCommit();
 		exit;
 	}
 
-	private function closeError()
-	{
+	private function closeError() {
 		HLog::warning('Close error', true);
 		$this->transactionRollback();
 		exit($this->PROCESS_STATUS_END_ERROR_NUMBER);

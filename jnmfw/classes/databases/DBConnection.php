@@ -37,8 +37,7 @@ abstract class DBConnection
 	 * Constructor
 	 * @param DBAdapter $conn La conexión devuelta por connect()
 	 */
-	public function __construct(DBAdapter $adapter, $prefix = null, $driver = null)
-	{
+	public function __construct(DBAdapter $adapter, $prefix = null, $driver = null) {
 		$this->conn = $adapter;
 		$this->prefix = $prefix;
 		$this->driver = $driver;
@@ -84,8 +83,7 @@ abstract class DBConnection
 	 * @param mixed $value
 	 * @return string
 	 */
-	public function quote($value)
-	{
+	public function quote($value) {
 		return $this->conn->quote($value);
 	}
 
@@ -94,8 +92,7 @@ abstract class DBConnection
 	 * del tipo INSERT VALUES o SELECT IN
 	 * @param mixed[] $values
 	 */
-	public function quoteArray($values)
-	{
+	public function quoteArray($values) {
 		$arr = array();
 		foreach ($values as $value) {
 			$arr[] = $this->quote($value);
@@ -108,8 +105,7 @@ abstract class DBConnection
 	 * para ser insertado con seguridad.
 	 * @param string $value
 	 */
-	public function quoteName($value)
-	{
+	public function quoteName($value) {
 		if ($this->prefix && substr($value, 0, 3) == '#__') {
 			$value = str_replace('#__', $this->prefix, $value);
 		}
@@ -129,8 +125,7 @@ abstract class DBConnection
 	 * con seguridad
 	 * @param string[] $values
 	 */
-	public function quoteNames($values, $complete = true)
-	{
+	public function quoteNames($values, $complete = true) {
 		$arr = array();
 		foreach ($values as $value) {
 			$arr[] = $this->quoteName($value);
@@ -148,8 +143,7 @@ abstract class DBConnection
 	 * @param string $query La instrucción SQL
 	 * @return boolean Devuelve el número de filas afectadas, -1 en caso de error
 	 */
-	public function execute($query)
-	{
+	public function execute($query) {
 		$res = $this->initAccess($query);
 		$nrows = $this->getAffectedRows();
 		$this->endAccess($res, $nrows);
@@ -161,8 +155,7 @@ abstract class DBConnection
 	 * @param string $query La consulta SQL
 	 * @return \stdClass Un objeto stdclass con los valores devueltos por MySQL
 	 */
-	public function loadObject($query, $class_name = "stdClass")
-	{
+	public function loadObject($query, $class_name = "stdClass") {
 		$res = $this->initAccess($query);
 		$obj = $this->parseObject($res, $class_name);
 		$this->endAccess($res, $obj ? 1 : 0);
@@ -172,8 +165,7 @@ abstract class DBConnection
 	/**
 	 * @param DBResource $res
 	 */
-	public function parseObject($res, $class_name = "stdClass")
-	{
+	public function parseObject($res, $class_name = "stdClass") {
 		if (!$res) {
 			return false;
 		}
@@ -186,8 +178,7 @@ abstract class DBConnection
 	 * @param string $keycol Columna para crear los índices del array
 	 * @return array de objetos stdclass
 	 */
-	public function loadObjectList($query, $class_name = "stdClass", $keycol = null)
-	{
+	public function loadObjectList($query, $class_name = "stdClass", $keycol = null) {
 		$res = $this->initAccess($query);
 		$array = $this->parseObjectList($res, $class_name, $keycol);
 		$this->endAccess($res, count($array));
@@ -197,8 +188,7 @@ abstract class DBConnection
 	/**
 	 * @param DBResource $res
 	 */
-	public function parseObjectList($res, $class_name = "stdClass", $keycol = null)
-	{
+	public function parseObjectList($res, $class_name = "stdClass", $keycol = null) {
 		if (!$res) {
 			return false;
 		}
@@ -220,8 +210,7 @@ abstract class DBConnection
 	 * @param int $col El número de columna a obtener (por defecto la primera, es decir número 0)
 	 * @return string|int|float El valor de la primera fila y columna
 	 */
-	public function loadValue($query, $col = 0)
-	{
+	public function loadValue($query, $col = 0) {
 		$res = $this->initAccess($query);
 		$value = $this->parseValue($res, $col);
 		$this->endAccess($res, $value === false ? 0 : 1);
@@ -231,8 +220,7 @@ abstract class DBConnection
 	/**
 	 * @param DBResource $res
 	 */
-	public function parseValue($res, $col)
-	{
+	public function parseValue($res, $col) {
 		if (!$res) {
 			return false;
 		}
@@ -246,8 +234,7 @@ abstract class DBConnection
 	 * @param int $col El número de columna a obtener (por defecto la primera, es decir número 0)
 	 * @return array de valores
 	 */
-	public function loadValueArray($query, $col = 0)
-	{
+	public function loadValueArray($query, $col = 0) {
 		$res = $this->initAccess($query);
 		$values = $this->parseValueArray($res, $col);
 		$this->endAccess($res, count($values));
@@ -257,8 +244,7 @@ abstract class DBConnection
 	/**
 	 * @param DBResource $res
 	 */
-	public function parseValueArray($res, $col)
-	{
+	public function parseValueArray($res, $col) {
 		$array = null;
 		if ($res) {
 			$array = array();
@@ -274,8 +260,7 @@ abstract class DBConnection
 	 * @param string $query
 	 * @return DBResource
 	 */
-	public function loadResource($query)
-	{
+	public function loadResource($query) {
 		return $this->query($query);
 	}
 
@@ -283,8 +268,7 @@ abstract class DBConnection
 	 * Devuelve el número de filas afectadas en la última operación MySQL
 	 * @return int El número de filas afectadas
 	 */
-	public function getAffectedRows()
-	{
+	public function getAffectedRows() {
 		return $this->conn->getAffectedRows();
 	}
 
@@ -292,16 +276,14 @@ abstract class DBConnection
 	 * Devuelve el id de la última fila generada (para inser con auto_increment)
 	 *
 	 */
-	public function getLastInsertedId()
-	{
+	public function getLastInsertedId() {
 		return $this->conn->getInsertedID();
 	}
 
 	/**
 	 * Inicio de una transacción
 	 */
-	public function transactionBegin()
-	{
+	public function transactionBegin() {
 		HLog::verbose("DB Transaction BEGIN");
 		$this->conn->transactionBegin();
 		$this->intransaction = true;
@@ -310,8 +292,7 @@ abstract class DBConnection
 	/**
 	 * Commit de una transacción
 	 */
-	public function transactionCommit()
-	{
+	public function transactionCommit() {
 		HLog::verbose("DB Transaction COMMIT");
 		$this->conn->commit();
 		$this->intransaction = false;
@@ -320,25 +301,21 @@ abstract class DBConnection
 	/**
 	 * Rollback de una transacción
 	 */
-	public function transactionRollback()
-	{
+	public function transactionRollback() {
 		HLog::verbose("DB Transaction ROLLBACK");
 		$this->conn->rollback();
 		$this->intransaction = false;
 	}
 
-	public function inTransaction()
-	{
+	public function inTransaction() {
 		return $this->intransaction;
 	}
 
-	public function close()
-	{
+	public function close() {
 		return $this->conn->close();
 	}
 
-	public function getDriver()
-	{
+	public function getDriver() {
 		if ($this->driver === null) {
 			throw new JNMDBException('Connection created without driver');
 		}
@@ -348,8 +325,7 @@ abstract class DBConnection
 	/**
 	 * Inicia el acceso
 	 */
-	protected function initAccess($query)
-	{
+	protected function initAccess($query) {
 		HTimer::init('DB');
 		return $this->query($query);
 	}
@@ -358,8 +334,7 @@ abstract class DBConnection
 	 * Finaliza el acceso
 	 * @param DBResource $res Resultado
 	 */
-	protected function endAccess($res, $nrows)
-	{
+	protected function endAccess($res, $nrows) {
 		if ($res === true) {
 			HTimer::end('DB', $nrows . ' affected rows : ' . $this->query);
 		}
@@ -378,8 +353,7 @@ abstract class DBConnection
 	 * @param string|queryBuilder\DBQueryBuilder $query La consulta SQL
 	 * @return DBResource resultado de la consulta
 	 */
-	protected function query($query)
-	{
+	protected function query($query) {
 		if ($query instanceof queryBuilder\DBQueryBuilder) {
 			$this->query = $query->build();
 		}

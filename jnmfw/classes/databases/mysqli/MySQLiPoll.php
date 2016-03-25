@@ -23,8 +23,7 @@ class MySQLiPoll implements DBPoll
 	 */
 	private $queries;
 
-	public function __construct(MySQLiConnection $db, $queries)
-	{
+	public function __construct(MySQLiConnection $db, $queries) {
 		if (!self::isAvaiable()) {
 			throw new \RuntimeException("Can't make async query, mysqlnd extension is not installed");
 		}
@@ -41,13 +40,11 @@ class MySQLiPoll implements DBPoll
 		}
 	}
 
-	static public function isAvaiable()
-	{
+	static public function isAvaiable() {
 		return defined('MYSQLI_ASYNC') && extension_loaded('mysqlnd');
 	}
 
-	public function wait()
-	{
+	public function wait() {
 		HTimer::init('DB Async wait');
 		$read = $error = $reject = array();
 		do {
@@ -58,12 +55,12 @@ class MySQLiPoll implements DBPoll
 				break;
 			}
 			usleep(50);
-		} while (true);
+		}
+		while (true);
 		HTimer::end('DB Async wait');
 	}
 
-	public function free()
-	{
+	public function free() {
 		foreach ($this->links as $link) {
 			$link->close();
 		}
@@ -71,53 +68,46 @@ class MySQLiPoll implements DBPoll
 		$this->queries = array();
 	}
 
-	public function __destruct()
-	{
+	public function __destruct() {
 		$this->free();
 	}
 
-	public function execute($key)
-	{
+	public function execute($key) {
 		$res = $this->initAccess($key);
 		$link = $this->getLinkByKey($key);
 		$this->endAccess($res, $link->affected_rows, $key);
 		return $link->affected_rows;
 	}
 
-	public function loadObject($key, $class_name = "stdClass")
-	{
+	public function loadObject($key, $class_name = "stdClass") {
 		$res = $this->initAccess($key);
 		$obj = $this->db->parseObject($res, $class_name);
 		$this->endAccess($res, $obj ? 1 : 0, $key);
 		return $obj;
 	}
 
-	public function loadObjectList($key, $class_name = "stdClass", $keycol = null)
-	{
+	public function loadObjectList($key, $class_name = "stdClass", $keycol = null) {
 		$res = $this->initAccess($key);
 		$array = $this->db->parseObjectList($res, $class_name, $keycol);
 		$this->endAccess($res, count($array), $key);
 		return $array;
 	}
 
-	public function loadValue($key, $col = 0)
-	{
+	public function loadValue($key, $col = 0) {
 		$res = $this->initAccess($key);
 		$value = $this->db->parseValue($res, $col);
 		$this->endAccess($res, $value === false ? 0 : 1, $key);
 		return $value;
 	}
 
-	public function loadValueArray($key, $col = 0)
-	{
+	public function loadValueArray($key, $col = 0) {
 		$res = $this->initAccess($key);
 		$values = $this->db->parseValueArray($res, $col);
 		$this->endAccess($res, count($values), $key);
 		return $values;
 	}
 
-	private function freeQueryByKey($key)
-	{
+	private function freeQueryByKey($key) {
 		$link = $this->getLinkByKey($key);
 		if (!$link) {
 			throw new \InvalidArgumentException("Invalid key " . $key);
@@ -130,18 +120,15 @@ class MySQLiPoll implements DBPoll
 	/**
 	 * @return \mysqli
 	 */
-	private function getLinkByKey($key)
-	{
+	private function getLinkByKey($key) {
 		return isset($this->links[$key]) ? $this->links[$key] : null;
 	}
 
-	private function getQueryByKey($key)
-	{
+	private function getQueryByKey($key) {
 		return isset($this->queries[$key]) ? $this->queries[$key] : null;
 	}
 
-	private function initAccess($key)
-	{
+	private function initAccess($key) {
 		HTimer::init('DB Async');
 		$link = $this->getLinkByKey($key);
 		if (!$link) {
@@ -155,8 +142,7 @@ class MySQLiPoll implements DBPoll
 		return $res;
 	}
 
-	protected function endAccess($res, $nrows, $key)
-	{
+	protected function endAccess($res, $nrows, $key) {
 		$query = $this->getQueryByKey($key);
 		if ($res === true) {
 			HTimer::end('DB Async', $nrows . ' affected rows : ' . $query);

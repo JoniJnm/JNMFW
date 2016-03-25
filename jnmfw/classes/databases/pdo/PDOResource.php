@@ -22,43 +22,35 @@ class PDOResource implements DBResource
 	 * Constructor para instanciar esta clase y usarla como si fuera de tipo mysqli_result
 	 * @param \PDOStatement $resource
 	 */
-	public function __construct(\PDOStatement $resource)
-	{
+	public function __construct(\PDOStatement $resource) {
 		$this->res = $resource;
 	}
 
-	public function __destruct()
-	{
+	public function __destruct() {
 		$this->free();
 	}
 
-	public function fetch_object($class_name = "stdClass")
-	{
+	public function fetch_object($class_name = "stdClass") {
 		return $this->res->fetchObject($class_name);
 	}
 
-	public function fetch_row()
-	{
+	public function fetch_row() {
 		return $this->res->fetch(\PDO::FETCH_ASSOC);
 	}
 
-	public function fetch_array()
-	{
+	public function fetch_array() {
 		return $this->res->fetch(\PDO::FETCH_NUM);
 	}
 
-	public function fetch_value($column_number = 0)
-	{
+	public function fetch_value($column_number = 0) {
 		return $this->res->fetchColumn($column_number);
 	}
 
-	public function getNumRows()
-	{
+	public function getNumRows() {
 		return $this->res->rowCount();
 	}
 
-	public function free()
-	{
+	public function free() {
 		if (!$this->freed) {
 			$this->freed = true;
 			$this->res->closeCursor();

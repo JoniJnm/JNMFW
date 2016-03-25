@@ -13,63 +13,55 @@ class Route
 	private $method;
 	private $funcs = array();
 
-	public function __construct($path)
-	{
+	public function __construct($path) {
 		$this->request = Request::getInstance();
 		$this->path = $path;
 		$this->method = $this->request->getMethod();
 	}
 
-	public function getParts()
-	{
+	public function getParts() {
 		return $this->getPathParts($this->path);
 	}
 
 	/**
 	 * @return Route
 	 */
-	public function get($path, $func = null)
-	{
+	public function get($path, $func = null) {
 		return $this->addTask('get', $path, $func);
 	}
 
 	/**
 	 * @return Route
 	 */
-	public function post($path, $func = null)
-	{
+	public function post($path, $func = null) {
 		return $this->addTask('post', $path, $func);
 	}
 
 	/**
 	 * @return Route
 	 */
-	public function put($path, $func = null)
-	{
+	public function put($path, $func = null) {
 		return $this->addTask('put', $path, $func);
 	}
 
 	/**
 	 * @return Route
 	 */
-	public function delete($path, $func = null)
-	{
+	public function delete($path, $func = null) {
 		return $this->addTask('delete', $path, $func);
 	}
 
 	/**
 	 * @return Route
 	 */
-	public function allways($path, $func = null)
-	{
+	public function allways($path, $func = null) {
 		return $this->addTask('allways', $path, $func);
 	}
 
 	/**
 	 * @return Route
 	 */
-	public function addDefaults()
-	{
+	public function addDefaults() {
 		return $this
 			->get('/', 'fetchAll')
 			->get('/:id', 'fetch')
@@ -79,8 +71,7 @@ class Route
 			->delete('/:id', 'destroy');
 	}
 
-	public function run($controller)
-	{
+	public function run($controller) {
 		if ($this->funcs) {
 			foreach ($this->funcs as $func) {
 				$call = array($controller, $func);
@@ -91,8 +82,7 @@ class Route
 		}
 	}
 
-	private function addTask($method, $path, $func)
-	{
+	private function addTask($method, $path, $func) {
 		if ($this->method === $method || $this->method === 'allways') {
 			$match = null;
 			$path = $this->fixPath($path);
@@ -118,8 +108,7 @@ class Route
 		return $this;
 	}
 
-	private function getPathParts($path)
-	{
+	private function getPathParts($path) {
 		$path = $this->fixPath($path);
 		if (!$path) {
 			return array();
@@ -127,8 +116,7 @@ class Route
 		return explode('/', $path);
 	}
 
-	private function fixPath($path)
-	{
+	private function fixPath($path) {
 		return preg_replace('#/+#', '/', trim($path, '/'));
 	}
 }

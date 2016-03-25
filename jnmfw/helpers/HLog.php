@@ -14,55 +14,47 @@ abstract class HLog
 	static private $file;
 	static private $displayErrors = false;
 
-	static public function setFile($file)
-	{
+	static public function setFile($file) {
 		self::$file = $file;
 	}
 
-	static public function setDisplayErrors($display)
-	{
+	static public function setDisplayErrors($display) {
 		self::$displayErrors = (bool)$display;
 	}
 
-	static public function setLevel($level)
-	{
+	static public function setLevel($level) {
 		self::$level = $level;
 	}
 
-	static public function error($msg, $trace = null)
-	{
+	static public function error($msg, $trace = null) {
 		if (!$trace && $trace !== false) {
 			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		}
 		self::log(static::LEVEL_ERROR, 'ERROR', $msg, $trace);
 	}
 
-	static public function warning($msg, $trace = null)
-	{
+	static public function warning($msg, $trace = null) {
 		if ($trace === true) {
 			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		}
 		self::log(static::LEVEL_WARNING, 'WARNING', $msg, $trace);
 	}
 
-	static public function debug($msg, $trace = null)
-	{
+	static public function debug($msg, $trace = null) {
 		if ($trace === true) {
 			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		}
 		self::log(static::LEVEL_DEBUG, 'DEBUG', $msg, $trace);
 	}
 
-	static public function verbose($msg, $trace = null)
-	{
+	static public function verbose($msg, $trace = null) {
 		if ($trace === true) {
 			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		}
 		self::log(static::LEVEL_VERBOSE, 'VERBOSE', $msg, $trace);
 	}
 
-	static private function traceToString($trace)
-	{
+	static private function traceToString($trace) {
 		$calls = array();
 		foreach ($trace as $t) {
 			if (isset($t['file'])) {
@@ -75,8 +67,7 @@ abstract class HLog
 		return implode("\n", $calls);
 	}
 
-	static private function log($level, $label, $msg, $trace = null)
-	{
+	static private function log($level, $label, $msg, $trace = null) {
 		if ($level < self::$level) {
 			return;
 		}
