@@ -7,7 +7,12 @@ interface DBQueryBuilderUpdate extends DBQueryBuilder
 	/**
 	 * @return DBQueryBuilderUpdate
 	 */
-	public function set($data, $autoQuote = true);
+	public function set($data);
+
+	/**
+	 * @return DBQueryBuilderUpdate
+	 */
+	public function setRaw($data);
 
 	/**
 	 * @return DBQueryBuilderUpdate

@@ -17,12 +17,17 @@ class MySQLiQueryBuilderUpdate extends MySQLiQueryBuilder implements DBQueryBuil
 		$this->tableAlias = $alias;
 	}
 
-	public function set($data, $autoQuote = true)
+	public function set($data)
 	{
 		foreach ($data as $key => $value) {
-			if ($autoQuote) {
-				$value = $this->db->quote($value);
-			}
+			$value = $this->db->quote($value);
+			$this->set[] = $this->db->quoteName($key) . '=' . $value;
+		}
+		return $this;
+	}
+
+	public function setRaw($data) {
+		foreach ($data as $key => $value) {
 			$this->set[] = $this->db->quoteName($key) . '=' . $value;
 		}
 		return $this;
