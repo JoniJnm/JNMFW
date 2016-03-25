@@ -135,7 +135,8 @@ class Server extends Singleton
 			HLog::error($msg_user);
 		}
 		$this->sendStatus(412);
-		$data = array('msg' => $msg_user, 'invalid_param' => $param);
+		$data = $this->createOutputError($msg_user);
+		$data['invalid_param'] = $param;
 		$this->sendJSON($data);
 		$this->closeError();
 	}
@@ -144,7 +145,7 @@ class Server extends Singleton
 	{
 		HLog::error($msg_user);
 		$this->sendStatus(409);
-		$data = array('msg' => $msg_user);
+		$data = $this->createOutputError($msg_user);
 		if ($errno) {
 			$data['errno'] = $errno;
 		}
@@ -166,7 +167,7 @@ class Server extends Singleton
 	{
 		if ($msg_user) {
 			$this->sendStatus(403);
-			$data = array('msg' => $msg_user);
+			$data = $this->createOutputError($msg_user);
 			$this->sendJSON($data);
 			$this->closeError();
 		}
@@ -179,6 +180,15 @@ class Server extends Singleton
 	{
 		$this->sendJSON($data);
 		$this->closeSuccess();
+	}
+
+	private function createOutputError($msg) {
+		return array(
+			'dialog' => array(
+				'type' => 'error',
+				'msg' => $msg
+			)
+		);
 	}
 
 	private function sendJSON($data)
