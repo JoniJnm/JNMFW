@@ -11,10 +11,9 @@ function jnmfw_autoload($className, $base, $root)
 	}
 	$path = \str_replace('\\', '/', \substr($className, strlen($base))) . '.php';
 	$file = $root . $path;
-	if (!\file_exists($file)) {
-		throw new JNMException("Couldn't load class $className");
+	if (file_exists($file)) {
+		require($file);
 	}
-	require($file);
 }
 
 \spl_autoload_register(function ($className) {
