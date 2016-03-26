@@ -23,7 +23,11 @@ abstract class HLang
 			$text = static::$dic[$hash];
 		}
 		if ($replace) {
-			$text = str_replace(array_keys($replace), array_values($replace), $text);
+			$keys = array_keys($replace);
+			$keys = array_map(function($key) {
+				return '{'.$key.'}';
+			}, $keys);
+			$text = str_replace($keys, array_values($replace), $text);
 		}
 		if ($encodeHTML) {
 			return htmlspecialchars($text, ENT_QUOTES | ENT_HTML5);
