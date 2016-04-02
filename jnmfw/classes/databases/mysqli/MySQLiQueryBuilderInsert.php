@@ -10,6 +10,10 @@ class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuil
 	private $values = array();
 	private $onDuplicate = array();
 
+	public function addOption($option) {
+		return parent::addOption($option);
+	}
+
 	public function columns($columns) {
 		return parent::columns($columns);
 	}
@@ -63,7 +67,9 @@ class MySQLiQueryBuilderInsert extends MySQLiQueryBuilder implements DBQueryBuil
 	}
 
 	public function build() {
-		$sql = 'INSERT INTO ' . $this->db->quoteName($this->table);
+		$sql = 'INSERT ';
+		$sql .= parent::buildOptions();
+		$sql .= 'INTO ' . $this->db->quoteName($this->table);
 		$sql .= ' ' . $this->db->quoteNames($this->cols);
 		$sql .= ' VALUES ' . implode(', ', $this->values);
 		if ($this->onDuplicate) {

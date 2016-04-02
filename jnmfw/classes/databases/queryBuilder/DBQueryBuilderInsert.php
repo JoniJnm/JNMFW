@@ -7,6 +7,11 @@ interface DBQueryBuilderInsert extends DBQueryBuilder
 	/**
 	 * @return DBQueryBuilderInsert
 	 */
+	public function addOption($option);
+
+	/**
+	 * @return DBQueryBuilderInsert
+	 */
 	public function columns($columns);
 
 	/**

@@ -7,6 +7,11 @@ interface DBQueryBuilderSelect extends DBQueryBuilder
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
+	public function addOption($option);
+
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
 	public function columns($columns);
 
 	/**
@@ -103,11 +108,6 @@ interface DBQueryBuilderSelect extends DBQueryBuilder
 	 * @return DBQueryBuilderSelect
 	 */
 	public function limit($limit, $offset = 0);
-
-	/**
-	 * @return DBQueryBuilderSelect
-	 */
-	public function addOption($option);
 
 	public function loadObject($class_name = "stdClass");
 

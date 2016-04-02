@@ -15,6 +15,7 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder
 	protected $table;
 	protected $cols = array();
 	protected $joins = array();
+	protected $options = array();
 
 	/**
 	 * @var DBCondition
@@ -28,6 +29,11 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder
 		$this->db = $db;
 		$this->table = $table;
 		$this->condition = $db->createConditionAnds();
+	}
+
+	protected function addOption($option) {
+		$this->options[] = $option;
+		return $this;
 	}
 
 	protected function columns($columns) {
@@ -122,6 +128,13 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder
 	protected function whereRaw($condition, $data = null) {
 		$this->condition->whereRaw($condition, $data);
 		return $this;
+	}
+
+	protected function buildOptions() {
+		if ($this->options) {
+			return implode(' ', $this->options) . ' ';
+		}
+		return '';
 	}
 
 	protected function buildWhere() {

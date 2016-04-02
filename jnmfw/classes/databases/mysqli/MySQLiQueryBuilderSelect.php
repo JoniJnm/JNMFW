@@ -11,11 +11,14 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	private $orders = array();
 	private $limit = '';
 	private $tableAlias;
-	private $options = array();
 
 	public function __construct($db, $table, $alias = null) {
 		parent::__construct($db, $table);
 		$this->tableAlias = $alias;
+	}
+
+	public function addOption($option) {
+		return parent::addOption($option);
 	}
 
 	public function columns($columns) {
@@ -110,16 +113,9 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		return $this;
 	}
 
-	public function addOption($option) {
-		$this->options[] = $option;
-		return $this;
-	}
-
 	public function build() {
 		$sql = 'SELECT ';
-		if ($this->options) {
-			$sql .= implode(' ', $this->options) . ' ';
-		}
+		$sql .= parent::buildOptions();
 		if ($this->cols) {
 			$sql .= $this->db->quoteNames($this->cols, false);
 		}
