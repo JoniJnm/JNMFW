@@ -67,8 +67,25 @@ class Request extends Filter
 			}
 			return null;
 		}
+		$this->checkError($_FILES[$key]['error']);
+		return $_FILES[$key]['tmp_name'];
+	}
 
-		switch ($_FILES[$key]['error']) {
+	public function getFiles($key) {
+		if (!isset($_FILES[$key]['error']) || !is_array($_FILES[$key]['error'])) {
+			if ($this->isStrict()) {
+				HServer::sendInvalidParam($key);
+			}
+			return null;
+		}
+		foreach ($_FILES[$key]['error'] as $error) {
+			$this->checkError($error);
+		}
+		return $_FILES[$key]['tmp_name'];
+	}
+
+	private function checkError($error) {
+		switch ($error) {
 			case UPLOAD_ERR_OK:
 				break;
 			case UPLOAD_ERR_NO_FILE:
@@ -79,8 +96,6 @@ class Request extends Filter
 			default:
 				throw new \RuntimeException('Unknown errors');
 		}
-
-		return $_FILES[$key]['tmp_name'];
 	}
 
 	/**
