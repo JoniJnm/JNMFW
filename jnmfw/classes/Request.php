@@ -76,7 +76,7 @@ class Request extends Filter
 			if ($this->isStrict()) {
 				HServer::sendInvalidParam($key);
 			}
-			return null;
+			return array();
 		}
 		foreach ($_FILES[$key]['error'] as $error) {
 			$this->checkError($error);
