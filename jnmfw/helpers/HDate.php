@@ -4,18 +4,6 @@ namespace JNMFW\helpers;
 
 abstract class HDate
 {
-	static public function getNullDate() {
-		return '0000-00-00';
-	}
-
-	static public function getNullDateTime() {
-		return '0000-00-00 00:00:00';
-	}
-
-	static public function isNullDate($date) {
-		return empty($date) || $date == self::getNullDate() || $date == self::getNullDateTime();
-	}
-
 	/**
 	 * Devuelve la fecha y hora en formato YYYY-mm-dd
 	 * @param string $date En cualquier formato válido: http://www.php.net/manual/es/datetime.formats.php
