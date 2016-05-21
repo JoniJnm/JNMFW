@@ -84,8 +84,12 @@ class Request extends Filter
 			}
 			return array();
 		}
-		foreach ($_FILES[$key]['error'] as $error) {
+		foreach ($_FILES[$key]['error'] as $pos => $error) {
 			$this->checkError($error);
+			$newPath = $_FILES[$key]['tmp_name'][$pos] . '.' . pathinfo($_FILES[$key]['name'][$pos], PATHINFO_EXTENSION);
+			if (rename($_FILES[$key]['tmp_name'][$pos], $newPath)) {
+				$_FILES[$key]['tmp_name'][$pos] = $newPath;
+			}
 		}
 		return $_FILES[$key]['tmp_name'];
 	}

@@ -23,4 +23,12 @@ abstract class HUtf8
 	static public function substr($str, $start, $length = null) {
 		return mb_substr($str, $start, $length, 'UTF-8');
 	}
+
+	static public function strtolower($str) {
+		return mb_strtolower($str, 'UTF-8');
+	}
+
+	static public function strtoupper($str) {
+		return mb_strtoupper($str, 'UTF-8');
+	}
 }
