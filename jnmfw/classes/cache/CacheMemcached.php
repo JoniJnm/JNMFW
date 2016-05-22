@@ -4,7 +4,7 @@ namespace JNMFW\classes\cache;
 
 use JNMFW\exceptions\JNMException;
 
-class CacheMemcache implements ICache
+class CacheMemcached implements ICache
 {
 	/**
 	 * @var \Memcached
@@ -24,9 +24,9 @@ class CacheMemcache implements ICache
 			}
 			else {
 				$ip = $host;
-				$port = 6379;
+				$port = 11211;
 			}
-			if ($this->obj->addServer($ip, $port)) {
+			if (!$this->obj->addServer($ip, $port)) {
 				throw new JNMException("Can't add memcache server");
 			}
 		}
@@ -45,7 +45,11 @@ class CacheMemcache implements ICache
 	}
 
 	public function get($key) {
-		return $this->obj->get($key);
+		$ret = $this->obj->get($key);
+		if ($ret === false) {
+			return null;
+		}
+		return $ret;
 	}
 
 	public function setMulti($items, $ttl = null) {
@@ -54,11 +58,13 @@ class CacheMemcache implements ICache
 
 	public function getMulti($keys) {
 		//las keys del array devuelto se corresponde con la key a obtener
-		return $this->obj->getMulti($keys);
+		return array_map(function($value) {
+			return $value === false ? null : $value;
+		}, $this->obj->getMulti($keys));
 	}
 
 	public function exists($key) {
-		return $this->obj->get($key) !== null;
+		return $this->get($key) !== null;
 	}
 
 	public function delete($key) {
