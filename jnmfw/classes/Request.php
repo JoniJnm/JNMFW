@@ -29,31 +29,37 @@ class Request extends Filter
 	 * Desde fuera llamar a getInstance()
 	 */
 	public function __construct($_ = null) {
+		$this->cookie = new Filter($_COOKIE);
+		$this->server = new Filter($_SERVER);
+
 		$method = filter_input(INPUT_POST, '_method');
 		if (!$method) {
 			$method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
 		}
 		$method = strtolower($method);
 		$this->method = $method;
-		if ($method == 'put') {
-			$data = null;
-			parse_str(file_get_contents("php://input"), $data);
-			if (!$data) {
-				$data = array();
-			}
-		}
-		elseif ($method == 'get') {
+
+		if ($method == 'get') {
 			$data = $_GET;
 		}
-		elseif ($method == 'post') {
-			$data = \array_merge($_GET, $_POST);
+		elseif ($method == 'put' || $method == 'post') {
+			$body = file_get_contents("php://input");
+			$contentType = $this->server->get('CONTENT_TYPE');
+			if (strpos($contentType, 'application/json') === 0) {
+				$bodyData = json_decode($body, true);
+			}
+			elseif (strpos($contentType, 'application/x-www-form-urlencoded') === 0) {
+				parse_str($body, $bodyData);
+			}
+			else {
+				$bodyData = array();
+			}
+			$data = \array_merge($_GET, $_POST, $bodyData);
 		}
 		else {
 			$data = array();
 		}
 		parent::__construct($data);
-		$this->cookie = new Filter($_COOKIE);
-		$this->server = new Filter($_SERVER);
 	}
 
 	public function getMethod() {
