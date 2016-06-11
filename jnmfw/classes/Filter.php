@@ -182,6 +182,25 @@ class Filter
 	}
 
 	/**
+	 * @param string $key
+	 * @param float|int $def
+	 * @param null $max_range
+	 * @return float
+	 */
+	public function getUFloat($key, $def = 0, $max_range = null) {
+		$out = $this->getFloat($key, $def, 0, $max_range);
+		if ($out !== false) {
+			return $out;
+		}
+		elseif ($this->isStrict()) {
+			HServer::sendInvalidParam($key);
+		}
+		else {
+			return $def;
+		}
+	}
+
+	/**
 	 * Devuelve TRUE para "1", "true", "on" y "yes". Devuelve FALSE en caso contrario.
 	 * @param string $key
 	 * @param boolean $def
