@@ -105,7 +105,9 @@ class Filter
 	/**
 	 * @param string $key
 	 * @param integer $def
-	 * @return integer
+	 * @param null $min_range
+	 * @param null $max_range
+	 * @return int
 	 */
 	public function getInt($key, $def = 0, $min_range = null, $max_range = null) {
 		$source = $this->isset_else($key, null);
@@ -131,7 +133,8 @@ class Filter
 	/**
 	 * @param string $key
 	 * @param integer $def
-	 * @return integer
+	 * @param null $max_range
+	 * @return int
 	 */
 	public function getUInt($key, $def = 0, $max_range = null) {
 		$out = $this->getInt($key, $def, 0, $max_range);
@@ -148,7 +151,9 @@ class Filter
 
 	/**
 	 * @param string $key
-	 * @param float $def
+	 * @param float|int $def
+	 * @param null $min_range
+	 * @param null $max_range
 	 * @return float
 	 */
 	public function getFloat($key, $def = 0, $min_range = null, $max_range = null) {
@@ -179,7 +184,7 @@ class Filter
 	/**
 	 * Devuelve TRUE para "1", "true", "on" y "yes". Devuelve FALSE en caso contrario.
 	 * @param string $key
-	 * @param string $def
+	 * @param boolean $def
 	 * @return boolean
 	 */
 	public function getBool($key, $def = false) {
