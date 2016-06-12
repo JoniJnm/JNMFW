@@ -22,7 +22,7 @@ abstract class ServiceBase extends ServiceSimple
 	}
 
 	/**
-	 * @param ObjBase $obj
+	 * @param ModelBase $obj
 	 * @return boolean
 	 */
 	private function isDirty($objName, $id) {
