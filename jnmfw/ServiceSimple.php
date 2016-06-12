@@ -5,7 +5,7 @@ namespace JNMFW;
 use JNMFW\classes\databases\DBConnection;
 use JNMFW\classes\databases\DBFactory;
 
-abstract class ModelSimple extends classes\Singleton
+abstract class ServiceSimple extends classes\Singleton
 {
 	/**
 	 * @var DBConnection

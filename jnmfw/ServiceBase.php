@@ -2,7 +2,7 @@
 
 namespace JNMFW;
 
-abstract class ModelBase extends ModelSimple
+abstract class ServiceBase extends ServiceSimple
 {
 	private $objs = array();
 
