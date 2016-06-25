@@ -84,22 +84,30 @@ class Request extends Filter
 			}
 			return array();
 		}
+		$ret = array();
 		foreach ($_FILES[$key]['error'] as $pos => $error) {
+			if ($error == UPLOAD_ERR_NO_FILE) {
+				if ($this->isStrict()) {
+					throw new \RuntimeException('No file sent');
+				}
+				else {
+					continue;
+				}
+			}
 			$this->checkError($error);
 			$newPath = $_FILES[$key]['tmp_name'][$pos] . '.' . pathinfo($_FILES[$key]['name'][$pos], PATHINFO_EXTENSION);
 			if (rename($_FILES[$key]['tmp_name'][$pos], $newPath)) {
 				$_FILES[$key]['tmp_name'][$pos] = $newPath;
+				$ret[] = $newPath;
 			}
 		}
-		return $_FILES[$key]['tmp_name'];
+		return $ret;
 	}
 
 	private function checkError($error) {
 		switch ($error) {
 			case UPLOAD_ERR_OK:
 				break;
-			case UPLOAD_ERR_NO_FILE:
-				throw new \RuntimeException('No file sent');
 			case UPLOAD_ERR_INI_SIZE:
 			case UPLOAD_ERR_FORM_SIZE:
 				throw new \RuntimeException('Exceeded filesize limit');
