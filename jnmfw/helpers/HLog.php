@@ -26,6 +26,23 @@ abstract class HLog
 		self::$level = $level;
 	}
 
+	static public function exception(\Exception $e, $level = HLog::LEVEL_ERROR) {
+		$msg = $e->getMessage().' '.basename($e->getFile()).':'.$e->getLine();
+		$trace = $e->getTrace();
+		if ($level == HLog::LEVEL_ERROR) {
+			self::error($msg, $trace);
+		}
+		elseif ($level == HLog::LEVEL_WARNING) {
+			self::warning($msg, $trace);
+		}
+		elseif ($level == HLog::LEVEL_DEBUG) {
+			self::debug($msg, $trace);
+		}
+		elseif ($level == HLog::LEVEL_VERBOSE) {
+			self::verbose($msg, $trace);
+		}
+	}
+
 	static public function error($msg, $trace = null) {
 		if (!$trace && $trace !== false) {
 			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
