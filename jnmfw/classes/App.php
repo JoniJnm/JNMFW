@@ -9,6 +9,11 @@ class App
 {
 	private $paths = array();
 	private $redirects = array();
+	private $request;
+
+	public function __construct() {
+		$this->request = Request::getInstance();
+	}
 
 	/**
 	 * @return App
@@ -34,8 +39,11 @@ class App
 	/**
 	 * @return App
 	 */
-	public function redirect($from, $to) {
-		$this->redirects[$from] = $to;
+	public function redirect($from, $to, $method = null) {
+		$this->redirects[$from] = array(
+			'to' => $to,
+			'method' => $method
+		);
 		return $this;
 	}
 
@@ -80,15 +88,22 @@ class App
 	}
 
 	private function getRedirectPath($path) {
-		$parts1 = $this->getPathParts($path);
-		foreach ($this->redirects as $from => $to) {
-			$parts2 = $this->getPathParts($from);
-			if ($this->isPartsMatching($parts1, $parts2)) {
-				$parts1 = $this->diffParts($parts1, $parts2);
+		$partsCurrent = $this->getPathParts($path);
+		foreach ($this->redirects as $from => $redirect) {
+			$method = $redirect['method'];
+			$to = $redirect['to'];
+			if ($method && $this->request->getMethod() != $method) {
+				continue;
+			}
+			$partsFrom = $this->getPathParts($from);
+			if ($this->partsContains($partsCurrent, $partsFrom)) {
+				//a/5/e ($partsCurrent)
+				//a/:id ($partsFrom) => /c/$1 ($partsTo)
+				//c/5/e (result)
 				$partsTo = $this->getPathParts($to);
-				foreach ($parts1 as $part) {
-					$partsTo[] = $part;
-				}
+				$partsTo = $this->replacePartsVars($partsTo, $partsFrom, $partsCurrent);
+				$partsDiff = $this->diffParts($partsCurrent, $partsFrom);
+				$partsTo = array_merge($partsTo, $partsDiff);
 				return '/' . implode('/', $partsTo);
 			}
 		}
@@ -103,6 +118,24 @@ class App
 		return '/' . implode('/', $parts);
 	}
 
+	private function replacePartsVars($partsTo, $partsFrom, $partsCurrent) {
+		$map = array();
+		for ($i=0; $i<count($partsFrom); $i++) {
+			if (strpos($partsFrom[$i], ':') === 0) {
+				$map[] = $partsCurrent[$i];
+			}
+		}
+		if ($map) {
+			for ($i=0; $i<count($partsTo); $i++) {
+				$partsTo[$i] = preg_replace_callback('#\$([0-9]+)#', function($match) use ($map) {
+					$i = $match[1]-1;
+					return isset($map[$i]) ? $map[$i] : $match[0];
+				}, $partsTo[$i]);
+			}
+		}
+		return $partsTo;
+	}
+
 	private function diffParts($parts1, $parts2) {
 		return $this->consumeParts($parts1, count($parts2));
 	}
@@ -113,16 +146,19 @@ class App
 
 	private function getMatchParts($parts) {
 		foreach ($this->paths as $p) {
-			if ($this->isPartsMatching($parts, $p['parts'])) {
+			if ($this->partsContains($parts, $p['parts'])) {
 				return $p;
 			}
 		}
 		return null;
 	}
 
-	private function isPartsMatching($parts1, $parts2) {
+	private function partsContains($parts1, $parts2) {
 		for ($i = 0; $i < count($parts2); $i++) {
-			if (!isset($parts2[$i]) || $parts2[$i] != $parts1[$i]) {
+			if (!isset($parts2[$i])) {
+				return false;
+			}
+			if ($parts2[$i] != $parts1[$i] && strpos($parts2[$i], ':') === false) {
 				return false;
 			}
 		}
