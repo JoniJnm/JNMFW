@@ -17,6 +17,11 @@ interface DBQueryBuilderSelect extends DBQueryBuilder
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
+	public function columnsRaw($columns);
+
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
 	public function clearColumns();
 
 	/**

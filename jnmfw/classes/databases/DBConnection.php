@@ -104,13 +104,14 @@ abstract class DBConnection
 	 * Prepara un identificador (columnas, tablas, nombre de base de datos...)
 	 * para ser insertado con seguridad.
 	 * @param string $value
+	 * @return string
 	 */
 	public function quoteName($value) {
 		if ($this->prefix && substr($value, 0, 3) == '#__') {
 			$value = str_replace('#__', $this->prefix, $value);
 		}
 		if (!preg_match('/^[A-Z0-9_\.-]+$/i', $value)) {
-			return $value;
+			return str_replace(array("'", '"', ';', '`'), '', $value);
 		}
 		if (strpos($value, '.') === false) {
 			return '`' . $value . '`';

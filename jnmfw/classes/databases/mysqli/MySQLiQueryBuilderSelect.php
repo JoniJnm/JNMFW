@@ -25,6 +25,10 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		return parent::columns($columns);
 	}
 
+	public function columnsRaw($columns) {
+		return parent::columnsRaw($columns);
+	}
+
 	public function clearColumns() {
 		return parent::clearColumns();
 	}
@@ -116,8 +120,12 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 	public function build() {
 		$sql = 'SELECT ';
 		$sql .= parent::buildOptions();
-		if ($this->cols) {
-			$sql .= $this->db->quoteNames($this->cols, false);
+		$cols = array_map(function($col) {
+			return $this->db->quoteName($col);
+		}, $this->cols);
+		$cols = array_merge($cols, $this->colsRaw);
+		if ($cols) {
+			$sql .= implode(',', $cols);
 		}
 		else {
 			$sql .= '*';

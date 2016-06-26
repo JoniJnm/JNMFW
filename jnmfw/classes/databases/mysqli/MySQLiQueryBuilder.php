@@ -14,6 +14,7 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder
 	protected $db;
 	protected $table;
 	protected $cols = array();
+	protected $colsRaw = array();
 	protected $joins = array();
 	protected $options = array();
 
@@ -42,6 +43,16 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder
 		}
 		else {
 			$this->cols[] = $columns;
+		}
+		return $this;
+	}
+
+	protected function columnsRaw($columns) {
+		if (is_array($columns)) {
+			$this->colsRaw = array_merge($this->colsRaw, $columns);
+		}
+		else {
+			$this->colsRaw[] = $columns;
 		}
 		return $this;
 	}
