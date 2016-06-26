@@ -11,6 +11,10 @@ abstract class ModelBase
 	 * @var DBConnection
 	 */
 	protected $db;
+
+	/**
+	 * @var TableBase
+	 */
 	protected $item;
 
 	public function __construct($item) {
@@ -23,6 +27,10 @@ abstract class ModelBase
 	 */
 	public function getItem() {
 		return $this->item;
+	}
+
+	public function toArray() {
+		return $this->item->toArray();
 	}
 }
 

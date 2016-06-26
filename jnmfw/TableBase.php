@@ -34,6 +34,10 @@ abstract class TableBase
 		return $tmp;
 	}
 
+	public function toArray() {
+		return $this->getValues();
+	}
+
 	private function getClassName() {
 		return get_class($this);
 	}
