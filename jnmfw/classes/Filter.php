@@ -26,7 +26,23 @@ class Filter
 	}
 
 	protected function isset_else($key, $def) {
-		return isset($this->data[$key]) ? $this->data[$key] : $def;
+		if (strpos($key, '[') !== false) {
+			$key = str_replace(']', '', $key);
+			$data = $this->data;
+			$keys = explode('[', $key);
+			foreach ($keys as $key) {
+				if (isset($data[$key])) {
+					$data = $data[$key];
+				}
+				else {
+					return $def;
+				}
+			}
+			return $data ? $data : $def;
+		}
+		else {
+			return isset($this->data[$key]) ? $this->data[$key] : $def;
+		}
 	}
 
 	/**
