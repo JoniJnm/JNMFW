@@ -26,7 +26,7 @@ abstract class HLog
 		self::$level = $level;
 	}
 
-	static public function exception(\Exception $e, $level = HLog::LEVEL_ERROR) {
+	static public function exception($e, $level = HLog::LEVEL_ERROR) {
 		$msg = $e->getMessage().' '.basename($e->getFile()).':'.$e->getLine();
 		$trace = $e->getTrace();
 		if ($level == HLog::LEVEL_ERROR) {
