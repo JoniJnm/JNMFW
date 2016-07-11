@@ -59,6 +59,7 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder
 
 	protected function clearColumns() {
 		$this->cols = array();
+		$this->colsRaw = array();
 		return $this;
 	}
 
