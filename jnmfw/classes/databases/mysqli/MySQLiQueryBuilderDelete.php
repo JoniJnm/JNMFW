@@ -4,6 +4,7 @@ namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\queryBuilder\DBCondition;
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderDelete;
+use JNMFW\classes\databases\queryBuilder\DBQueryBuilderSelect;
 
 class MySQLiQueryBuilderDelete extends MySQLiQueryBuilder implements DBQueryBuilderDelete
 {
@@ -16,6 +17,10 @@ class MySQLiQueryBuilderDelete extends MySQLiQueryBuilder implements DBQueryBuil
 
 	public function innerJoin($table, $alias, $col1, $col2) {
 		return parent::innerJoin($table, $alias, $col1, $col2);
+	}
+
+	public function customJoinSelect($type, DBQueryBuilderSelect $select, $alias, DBCondition $condition) {
+		return parent::customJoinSelect($type, $select, $alias, $condition);
 	}
 
 	public function leftJoin($table, $alias, $col1, $col2) {

@@ -5,6 +5,7 @@ namespace JNMFW\classes\databases\mysqli;
 use JNMFW\classes\databases\DBConnection;
 use JNMFW\classes\databases\queryBuilder\DBCondition;
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilder;
+use JNMFW\classes\databases\queryBuilder\DBQueryBuilderSelect;
 
 abstract class MySQLiQueryBuilder implements DBQueryBuilder
 {
@@ -83,6 +84,12 @@ abstract class MySQLiQueryBuilder implements DBQueryBuilder
 
 	protected function customJoin($type, $table, $alias, DBCondition $condition) {
 		$this->joins[] = $type . ' JOIN ' . $this->db->quoteName($table) . ' AS ' . $alias
+			. ' ON ' . $condition->build();
+		return $this;
+	}
+
+	public function customJoinSelect($type, DBQueryBuilderSelect $select, $alias, DBCondition $condition) {
+		$this->joins[] = $type . ' JOIN ('.$select->build().') AS ' . $alias
 			. ' ON ' . $condition->build();
 		return $this;
 	}

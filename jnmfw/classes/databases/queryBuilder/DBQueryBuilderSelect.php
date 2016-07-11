@@ -47,6 +47,11 @@ interface DBQueryBuilderSelect extends DBQueryBuilder
 	/**
 	 * @return DBQueryBuilderSelect
 	 */
+	public function customJoinSelect($type, DBQueryBuilderSelect $select, $alias, DBCondition $condition);
+
+	/**
+	 * @return DBQueryBuilderSelect
+	 */
 	public function setGlueAnd();
 
 	/**

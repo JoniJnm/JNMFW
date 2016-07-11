@@ -49,6 +49,10 @@ class MySQLiQueryBuilderSelect extends MySQLiQueryBuilder implements DBQueryBuil
 		return parent::customJoin($type, $table, $alias, $condition);
 	}
 
+	public function customJoinSelect($type, DBQueryBuilderSelect $select, $alias, DBCondition $condition) {
+		return parent::customJoinSelect($type, $select, $alias, $condition);
+	}
+
 	public function setGlueAnd() {
 		return parent::setGlueAnd();
 	}

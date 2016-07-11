@@ -3,6 +3,7 @@
 namespace JNMFW\classes\databases\mysqli;
 
 use JNMFW\classes\databases\queryBuilder\DBCondition;
+use JNMFW\classes\databases\queryBuilder\DBQueryBuilderSelect;
 use JNMFW\classes\databases\queryBuilder\DBQueryBuilderUpdate;
 
 class MySQLiQueryBuilderUpdate extends MySQLiQueryBuilder implements DBQueryBuilderUpdate
@@ -45,6 +46,10 @@ class MySQLiQueryBuilderUpdate extends MySQLiQueryBuilder implements DBQueryBuil
 
 	public function customJoin($type, $table, $alias, DBCondition $condition) {
 		return parent::customJoin($type, $table, $alias, $condition);
+	}
+
+	public function customJoinSelect($type, DBQueryBuilderSelect $select, $alias, DBCondition $condition) {
+		return parent::customJoinSelect($type, $select, $alias, $condition);
 	}
 
 	public function setGlueAnd() {
