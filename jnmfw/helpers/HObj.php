@@ -4,6 +4,9 @@ namespace JNMFW\helpers;
 
 abstract class HObj {
 	static public function completeObjects(array $objs, $objKey, $getDataFunc, $itemKey, $setFunc) {
+		if (!$objs) {
+			return $objs;
+		}
 		if (!is_string($objKey) && !is_callable($objKey)) {
 			throw new \InvalidArgumentException('Invalid $objKey, must be string or function');
 		}
@@ -20,6 +23,9 @@ abstract class HObj {
 		}, $objs);
 
 		$data = $getDataFunc($objKeys);
+		if (!$data) {
+			return $objs;
+		}
 		$items = array();
 		foreach ($data as $item) {
 			if (is_string($itemKey)) {
