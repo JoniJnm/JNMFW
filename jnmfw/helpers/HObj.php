@@ -39,7 +39,7 @@ abstract class HObj {
 		$setMethod = null; //1:func direct, 2:func with object, 3:key
 		foreach ($objs as $obj) {
 			if (is_string($objKey)) {
-				$key = $obj->$itemKey;
+				$key = $obj->$objKey;
 			}
 			else {
 				$key = $objKey($obj);
