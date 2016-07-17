@@ -3,8 +3,19 @@
 namespace JNMFW\helpers;
 
 abstract class HObj {
+	/**
+	 * @param \stdClass[]|\stdClass $objs lista de objetos a completar
+	 * @param callable|string $objKey obtener ids de los objetos
+	 * @param callable $getDataFunc obtener datos usando los ids de los objetos
+	 * @param callable|string $itemKey asociar salida de datos con objeto
+	 * @param callable|string $setFunc setear dato con objeto
+	 * @return array|\stdClass
+	 */
 	static public function completeObjects(array $objs, $objKey, $getDataFunc, $itemKey, $setFunc) {
-		if (!$objs) {
+		if (!is_array($objs)) {
+			return self::completeObject($objs);
+		}
+		if (!count($objs)) {
 			return $objs;
 		}
 		if (!is_string($objKey) && !is_callable($objKey)) {
@@ -68,5 +79,10 @@ abstract class HObj {
 			}
 		}
 		return $objs;
+	}
+
+	static public function completeObject($obj, $objKey, $getDataFunc, $itemKey, $setFunc) {
+		$objs = self::completeObjects(array($obj), $objKey, $getDataFunc, $itemKey, $setFunc);
+		return $objs[0];
 	}
 }
