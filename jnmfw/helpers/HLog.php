@@ -13,6 +13,11 @@ abstract class HLog
 	static private $level = 2;
 	static private $file;
 	static private $displayErrors = false;
+	static private $infoAppendFunc;
+
+	static public function setInfoAppendFunc($func) {
+		self::$infoAppendFunc = $func;
+	}
 
 	static public function setFile($file) {
 		self::$file = $file;
@@ -90,7 +95,15 @@ abstract class HLog
 		}
 		$microtime = explode(' ', microtime());
 		$msecs = str_pad(floor($microtime[0] * 1000), 3, '0', STR_PAD_LEFT);
-		$log = date('d-m H:i:s', $microtime[1]) . '.' . $msecs . ' - ' . $label . ' - ' . $msg . "\n";
+		$log = date('d-m H:i:s', $microtime[1]) . '.' . $msecs . ' - ' . $label . ' - ';
+		if (self::$infoAppendFunc) {
+			$func = self::$infoAppendFunc;
+			$append = $func();
+			if ($append) {
+				$log .= $append . "\n";
+			}
+		}
+		$log .= $msg . "\n";
 		if ($trace) {
 			$log .= self::traceToString($trace) . "\n\n";
 		}
