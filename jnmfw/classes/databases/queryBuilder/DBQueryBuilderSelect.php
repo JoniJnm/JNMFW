@@ -5,117 +5,117 @@ namespace JNMFW\classes\databases\queryBuilder;
 interface DBQueryBuilderSelect extends DBQueryBuilder
 {
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function addOption($option);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function columns($columns);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function columnsRaw($columns);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function clearColumns();
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function innerJoin($table, $alias, $col1, $col2);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function leftJoin($table, $alias, $col1, $col2);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function rightJoin($table, $alias, $col1, $col2);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function customJoin($type, $table, $alias, DBCondition $condition);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function customJoinSelect($type, DBQueryBuilderSelect $select, $alias, DBCondition $condition);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function setGlueAnd();
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function setGlueOr();
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function where($column, $value, $op = '=');
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function whereCondition(DBCondition $condition);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function whereNull($column);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function whereNotNull($column);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function whereLike($column, $value);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function whereNotLike($column, $value);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function whereIn($column, $values);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function whereNotIn($column, $values);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function whereRaw($condition, $data = null);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function order($column, $direction = null);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function group($columns);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function limit($limit, $offset = 0);
 

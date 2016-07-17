@@ -5,82 +5,82 @@ namespace JNMFW\classes\databases\queryBuilder;
 interface DBQueryBuilderUpdate extends DBQueryBuilder
 {
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function set($data);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function setRaw($data);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function innerJoin($table, $alias, $col1, $col2);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function customJoin($type, $table, $alias, DBCondition $condition);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function customJoinSelect($type, DBQueryBuilderSelect $select, $alias, DBCondition $condition);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function setGlueAnd();
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function setGlueOr();
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function where($column, $value, $op = '=');
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function whereCondition(DBCondition $condition);
 
 	/**
-	 * @return DBQueryBuilderSelect
+	 * @return $this
 	 */
 	public function whereNull($column);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function whereNotNull($column);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function whereLike($column, $value);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function whereNotLike($column, $value);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function whereIn($column, $values);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function whereNotIn($column, $values);
 
 	/**
-	 * @return DBQueryBuilderUpdate
+	 * @return $this
 	 */
 	public function whereRaw($condition, $data = null);
 
