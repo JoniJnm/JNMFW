@@ -36,4 +36,9 @@ abstract class HLang
 			return $text;
 		}
 	}
+
+	public static function translateDev($text, $replace = array(), $encodeHTML = true) {
+		//the messages of translateDev won't be processed to be translated
+		return self::translate($text, $replace, $encodeHTML);
+	}
 }
