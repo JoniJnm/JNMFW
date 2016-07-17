@@ -118,6 +118,17 @@ class Filter
 		}
 	}
 
+	private function validateInt($val, $min_range, $max_range) {
+		$options = array();
+		if ($min_range !== null) {
+			$options['min_range'] = $min_range;
+		}
+		if ($max_range !== null) {
+			$options['max_range'] = $max_range;
+		}
+		return \filter_var($val, \FILTER_VALIDATE_INT, array('options' => $options));
+	}
+
 	/**
 	 * @param string $key
 	 * @param integer $def
@@ -127,14 +138,7 @@ class Filter
 	 */
 	public function getInt($key, $def = 0, $min_range = null, $max_range = null) {
 		$source = $this->isset_else($key, null);
-		$options = array();
-		if ($min_range !== null) {
-			$options['min_range'] = $min_range;
-		}
-		if ($max_range !== null) {
-			$options['max_range'] = $max_range;
-		}
-		$result = \filter_var($source, \FILTER_VALIDATE_INT, array('options' => $options));
+		$result = $this->validateInt($source, $min_range, $max_range);
 		if ($result !== false) {
 			return $result;
 		}
@@ -148,21 +152,45 @@ class Filter
 
 	/**
 	 * @param string $key
+	 * @param null $min_range
+	 * @param null $max_range
+	 * @return int[]
+	 */
+	public function getInts($key, $min_range = null, $max_range = null) {
+		$source = $this->getArray($key);
+		$out = array();
+		foreach ($source as $value) {
+			$result = $this->validateInt($value, $min_range, $max_range);
+			if ($result !== false) {
+				$out[] = $result;
+			}
+			elseif ($this->isStrict()) {
+				HServer::sendInvalidParam($key);
+			}
+			else {
+				return array();
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * @param string $key
 	 * @param integer $def
 	 * @param null $max_range
 	 * @return int
 	 */
 	public function getUInt($key, $def = 0, $max_range = null) {
-		$out = $this->getInt($key, $def, 0, $max_range);
-		if ($out !== false) {
-			return $out;
-		}
-		elseif ($this->isStrict()) {
-			HServer::sendInvalidParam($key);
-		}
-		else {
-			return $def;
-		}
+		return $this->getInt($key, $def, 0, $max_range);
+	}
+
+	/**
+	 * @param string $key
+	 * @param null $max_range
+	 * @return int
+	 */
+	public function getUInts($key, $max_range = null) {
+		return $this->getInts($key, 0, $max_range);
 	}
 
 	/**
@@ -204,16 +232,7 @@ class Filter
 	 * @return float
 	 */
 	public function getUFloat($key, $def = 0, $max_range = null) {
-		$out = $this->getFloat($key, $def, 0, $max_range);
-		if ($out !== false) {
-			return $out;
-		}
-		elseif ($this->isStrict()) {
-			HServer::sendInvalidParam($key);
-		}
-		else {
-			return $def;
-		}
+		return $this->getFloat($key, $def, 0, $max_range);
 	}
 
 	/**
@@ -379,6 +398,24 @@ class Filter
 		}
 		else {
 			return $def;
+		}
+	}
+
+	/**
+	 * Devuelve un array sin filtro
+	 * @param string $key
+	 * @return array
+	 */
+	public function getArray($key) {
+		$source = $this->isset_else($key, null);
+		if (is_array($source)) {
+			return $source;
+		}
+		elseif ($this->isStrict()) {
+			HServer::sendInvalidParam($key);
+		}
+		else {
+			return array();
 		}
 	}
 }
