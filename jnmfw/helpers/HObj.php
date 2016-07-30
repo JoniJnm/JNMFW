@@ -85,4 +85,24 @@ abstract class HObj {
 		$objs = self::completeObjects(array($obj), $objKey, $getDataFunc, $itemKey, $setFunc);
 		return $objs[0];
 	}
+
+	/**
+	 * @param \stdClass|array $dest
+	 * @param \stdClass|array $source
+	 */
+	static public function copy($dest, $source) {
+		if (is_object($source)) {
+			$source = get_object_vars($source);
+		}
+		if (is_array($dest)) {
+			foreach ($source as $key => $value) {
+				$dest[$key] = $value;
+			}
+		}
+		else {
+			foreach ($source as $key => $value) {
+				$dest->$key = $value;
+			}
+		}
+	}
 }
