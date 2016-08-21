@@ -286,7 +286,7 @@ class Filter
 	 * @return string
 	 */
 	public function getCmd($key, $def = '') {
-		return $this->getRegex('[A-Z0-9_\.-]+', $key, $def);
+		return $this->getRegex('[A-Z0-9_\.\-]+', $key, $def);
 	}
 
 	/**
