@@ -65,25 +65,11 @@ class Server extends Singleton
 		510 => 'Not Extended'
 	);
 
-	private function sendStatus($statusCode, $close = false) {
+	private function sendStatus($statusCode) {
 		if (isset($this->status_codes[$statusCode])) {
 			$status_string = $statusCode . ' ' . $this->status_codes[$statusCode];
 			if (php_sapi_name() != 'cli') {
 				\header(filter_input(INPUT_SERVER, 'SERVER_PROTOCOL') . ' ' . $status_string, true, $statusCode);
-			}
-			if ($close) {
-				if ($statusCode >= 100 && $statusCode <= 299) {
-					$this->closeSuccess();
-				}
-				else {
-					$this->sendJSON(array(
-						'http_status' => array(
-							'code' => $statusCode,
-							'message' => $this->status_codes[$statusCode]
-						)
-					));
-					$this->closeError();
-				}
 			}
 		}
 		else {
@@ -99,20 +85,48 @@ class Server extends Singleton
 	}
 
 	public function sendOK() {
-		$this->sendJSON(null);
-		$this->closeSuccess();
+		$this->sendResponse(
+			new Response()
+		);
+	}
+
+	/**
+	 * @param Response $response
+	 */
+	public function sendResponse(Response $response) {
+		$status = $response->getStatus();
+		$this->sendStatus($status);
+
+		if ($status >= 100 && $status < 400) {
+			$this->sendJSON($response->getOutputData());
+			$this->closeSuccess();
+		}
+		else {
+			$response->put('http_status', array(
+				'code' => $status,
+				'message' => $this->status_codes[$status]
+			));
+			$this->sendJSON($response->getOutputData());
+			$this->closeError();
+		}
 	}
 
 	public function sendNotFound($msg_log = null) {
 		if ($msg_log) {
 			HLog::error($msg_log);
 		}
-		$this->sendStatus(404, true);
+		$this->sendResponse(
+			(new Response())
+			->setStatus(StatusCodes::HTTP_NOT_FOUND)
+		);
 	}
 
 	public function sendServerError($msg_log) {
 		HLog::error($msg_log);
-		$this->sendStatus(500, true);
+		$this->sendResponse(
+			(new Response())
+				->setStatus(StatusCodes::HTTP_INTERNAL_SERVER_ERROR)
+		);
 	}
 
 	public function sendInvalidParameter($param, $log = true) {
@@ -127,22 +141,27 @@ class Server extends Singleton
 		if ($log) {
 			HLog::error($msg_user);
 		}
-		$this->sendStatus(412);
-		$data = $this->createOutputError($msg_user);
-		$data['invalid_param'] = $param;
-		$this->sendJSON($data);
-		$this->closeError();
+
+		$this->sendResponse(
+			(new Response())
+				->setStatus(StatusCodes::HTTP_PRECONDITION_FAILED)
+				->setDialogError($msg_user)
+				->put('invalid_param', $param)
+		);
 	}
 
 	public function sendConflict($msg_user, $errno = null) {
 		HLog::error($msg_user);
-		$this->sendStatus(409);
-		$data = $this->createOutputError($msg_user);
+
+		$response = (new Response())
+			->setStatus(StatusCodes::HTTP_CONFLICT)
+			->setDialogError($msg_user);
+
 		if ($errno) {
-			$data['errno'] = $errno;
+			$response->put('errno', $errno);
 		}
-		$this->sendJSON($data);
-		$this->closeError();
+
+		$this->sendResponse($response);
 	}
 
 	public function sendSessionTimeout() {
@@ -154,28 +173,20 @@ class Server extends Singleton
 	}
 
 	public function sendForbidden($msg_user = null) {
+		$response = (new Response())
+			->setStatus(StatusCodes::HTTP_FORBIDDEN)
+			->setDialogError($msg_user);
+
 		if ($msg_user) {
-			$this->sendStatus(403);
-			$data = $this->createOutputError($msg_user);
-			$this->sendJSON($data);
-			$this->closeError();
+			$response->setDialogError($msg_user);
 		}
-		else {
-			$this->sendStatus(403, true);
-		}
+
+		$this->sendResponse($response);
 	}
 
 	public function sendData($data) {
-		$this->sendJSON($data);
-		$this->closeSuccess();
-	}
-
-	private function createOutputError($msg) {
-		return array(
-			'dialog' => array(
-				'type' => 'error',
-				'msg' => $msg
-			)
+		$this->sendResponse(
+			new Response($data)
 		);
 	}
 
