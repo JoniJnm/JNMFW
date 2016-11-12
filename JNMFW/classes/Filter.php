@@ -84,10 +84,10 @@ class Filter
 	 * @param string $def
 	 * @return string
 	 */
-	public function getString($key, $def = '') {
+	public function getString($key, $def = '', $maxLegnth = 0) {
 		$source = $this->isset_else($key, $def);
 		$out = \trim(\strip_tags($source));
-		if ($out) {
+		if ($out && (!$maxLegnth || strlen($maxLegnth) <= $maxLegnth)) {
 			return $out;
 		}
 		elseif ($this->isStrict()) {
