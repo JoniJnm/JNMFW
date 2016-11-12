@@ -10,6 +10,9 @@ abstract class Singleton
 
 	}
 
+	/**
+	 * @return static
+	 */
 	public static function getInstance() {
 		$caller = get_called_class();
 		if (!isset(static::$instances[$caller])) {
