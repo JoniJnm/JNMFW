@@ -74,7 +74,15 @@ class Request extends Filter
 			return null;
 		}
 		$this->checkError($_FILES[$key]['error']);
-		return $_FILES[$key]['tmp_name'];
+
+		$newPath = $_FILES[$key]['tmp_name'] . '.' . pathinfo($_FILES[$key]['name'], PATHINFO_EXTENSION);
+		if (rename($_FILES[$key]['tmp_name'], $newPath)) {
+			$_FILES[$key]['tmp_name'] = $newPath;
+			return $newPath;
+		}
+		else {
+			throw new \Exception("Can not move temp file");
+		}
 	}
 
 	public function getFiles($key) {
