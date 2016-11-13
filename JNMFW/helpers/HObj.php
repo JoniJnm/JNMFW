@@ -12,9 +12,6 @@ abstract class HObj {
 	 * @return array|\stdClass
 	 */
 	static public function completeObjects(array $objs, $objKey, $getDataFunc, $itemKey, $setFunc) {
-		if (!is_array($objs)) {
-			return self::completeObject($objs);
-		}
 		if (!count($objs)) {
 			return $objs;
 		}
