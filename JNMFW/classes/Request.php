@@ -67,7 +67,7 @@ class Request extends Filter
 	}
 
 	public function getFile($key) {
-		if (!isset($_FILES[$key]['error']) || is_array($_FILES[$key]['error'])) {
+		if (!isset($_FILES[$key]['error']) || $_FILES[$key]['error'] === UPLOAD_ERR_NO_FILE || is_array($_FILES[$key]['error'])) {
 			if ($this->isStrict()) {
 				HServer::sendInvalidParam($key);
 			}
