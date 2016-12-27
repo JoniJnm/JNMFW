@@ -121,6 +121,12 @@ class Server extends Singleton
 		);
 	}
 
+	public function sendRedirect($url) {
+		$this->sendStatus(StatusCodes::HTTP_MOVED_PERMANENTLY);
+		header("Location: ".$url);
+		$this->closeSuccess();
+	}
+
 	public function sendServerError($msg_log) {
 		HLog::error($msg_log);
 		$this->sendResponse(
