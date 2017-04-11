@@ -1,4 +1,9 @@
 {
-    "name": "jonijnm/jnmfw",
-    "require": {}
+  "name": "jonijnm/jnmfw",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "JNMFW\\": "JNMFW/"
+    }
+  }
 }
